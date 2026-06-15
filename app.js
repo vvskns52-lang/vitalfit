@@ -1305,14 +1305,18 @@ class BodyGuide {
 
     this.partNameLabel.textContent = ex.name;
 
-    const categoryName = this.getCategoryKorean(ex.category);
+    const catKey = this.currentCategory || ex.category || 'workout';
+    const categoryName = this.getCategoryKorean(catKey);
     const bannerHTML = `
       <div class="exercise-guide-banner-card" style="width: 100%; padding: 24px 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); text-align: center; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); position: relative; overflow: hidden;">
-        <div style="position: absolute; top: -20px; right: -20px; font-size: 6rem; opacity: 0.03; font-weight: 900; pointer-events: none; color: var(--text-main); font-family: var(--font-title);">${ex.category.toUpperCase()}</div>
+        <div style="position: absolute; top: -20px; right: -20px; font-size: 6rem; opacity: 0.03; font-weight: 900; pointer-events: none; color: var(--text-main); font-family: var(--font-title);">${catKey.toUpperCase()}</div>
         <i data-lucide="dumbbell" style="width: 36px; height: 36px; color: var(--color-primary); margin: 0 auto 10px; filter: drop-shadow(0 0 5px var(--color-primary-glow));"></i>
         <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">${categoryName}</div>
       </div>
     `;
+
+    // YouTube Search URL
+    const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' 자세')}`;
 
     this.contentArea.innerHTML = `
       <div class="instruction-container">
@@ -1322,7 +1326,12 @@ class BodyGuide {
             <i data-lucide="crosshair" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>
             주요 자극 부위: ${ex.target}
           </div>
-          <p class="exercise-item-desc" style="font-size: 0.95rem; line-height: 1.5; color: #cbd5e1;">${ex.description}</p>
+          <p class="exercise-item-desc" style="font-size: 0.95rem; line-height: 1.5; color: #cbd5e1; margin-bottom: 12px;">${ex.description}</p>
+          
+          <a href="${youtubeSearchUrl}" target="_blank" class="btn btn-secondary" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171; background: rgba(239, 68, 68, 0.04); font-size: 0.8rem; padding: 8px 12px; display: inline-flex; width: 100%; justify-content: center; align-items: center; gap: 6px; font-weight: 700; text-decoration: none;">
+            <i data-lucide="youtube" style="width: 14px; height: 14px; color: #ef4444;"></i>
+            유튜브에서 올바른 자세 영상 찾아보기
+          </a>
         </div>
 
         <div>
