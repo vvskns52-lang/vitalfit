@@ -1647,6 +1647,7 @@ class TrainerAssistant {
 
     this.recommendRoutineBtn = document.getElementById('recommend-routine-btn');
     this.suggestedRoutineBox = document.getElementById('suggested-routine-box');
+    this.suggestedRoutineTitle = document.getElementById('suggested-routine-title');
     this.suggestedRoutineList = document.getElementById('suggested-routine-list');
     this.suggestedRoutineLevelTag = document.getElementById('suggested-routine-level-tag');
     this.suggestedRoutineGuideBox = document.getElementById('suggested-routine-guide-box');
