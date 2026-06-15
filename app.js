@@ -2705,3 +2705,8 @@ class WorkoutStopwatch {
     this.displayTime.textContent = `${hours}:${mins}:${secs}`;
   }
 }
+
+// Instantiate the app
+window.addEventListener('DOMContentLoaded', () => {
+  window.app = new VitalFitApp();
+});

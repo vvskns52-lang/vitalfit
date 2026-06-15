@@ -5,7 +5,7 @@
   <script>
     window.onerror = function(message, source, lineno, colno, error) {
       const errorMsg = `에러 발생: ${message}\n출처: ${source}\n라인: ${lineno}:${colno}\n에러 객체: ${error}`;
-      alert(errorMsg);
+      document.title = `ERR: ${message} at ${lineno}:${colno}`;
       const div = document.createElement('div');
       div.style.position = 'fixed';
       div.style.top = '0';
@@ -662,6 +662,6 @@
   </div>
 
   <!-- JavaScript Files -->
-  <script src="app.js"></script>
+  <script src="app.js?v=2.1"></script>
 </body>
 </html>
