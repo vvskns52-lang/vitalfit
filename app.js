@@ -1305,22 +1305,18 @@ class BodyGuide {
 
     this.partNameLabel.textContent = ex.name;
 
-    let imageHTML = '';
-    if (ex.image) {
-      imageHTML = `
-        <div class="exercise-guide-image-container">
-          <img src="${ex.image}" alt="${ex.name}" class="exercise-guide-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="exercise-guide-placeholder" style="display: none; width: 100%; height: 200px; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%); border-radius: var(--radius-md); padding: 20px;">
-            <i data-lucide="dumbbell" style="width: 32px; height: 32px; color: var(--color-secondary); margin-bottom: 8px;"></i>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary);">${this.getCategoryKorean(ex.category)} 트레이닝</span>
-          </div>
-        </div>
-      `;
-    }
+    const categoryName = this.getCategoryKorean(ex.category);
+    const bannerHTML = `
+      <div class="exercise-guide-banner-card" style="width: 100%; padding: 24px 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid var(--border-color); border-radius: var(--radius-md); text-align: center; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; font-size: 6rem; opacity: 0.03; font-weight: 900; pointer-events: none; color: var(--text-main); font-family: var(--font-title);">${ex.category.toUpperCase()}</div>
+        <i data-lucide="dumbbell" style="width: 36px; height: 36px; color: var(--color-primary); margin: 0 auto 10px; filter: drop-shadow(0 0 5px var(--color-primary-glow));"></i>
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">${categoryName}</div>
+      </div>
+    `;
 
     this.contentArea.innerHTML = `
       <div class="instruction-container">
-        ${imageHTML}
+        ${bannerHTML}
         <div class="card" style="margin-bottom: 0; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05);">
           <div class="exercise-item-target" style="font-size: 0.9rem; margin-bottom: 6px;">
             <i data-lucide="crosshair" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>
