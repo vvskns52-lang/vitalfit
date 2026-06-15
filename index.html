@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VITALFIT - 운동 & 식단 분석 피드백</title>
+  <title>VITALFIT - AI 전담 트레이너 & 운동일지</title>
   <link rel="stylesheet" href="style.css">
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -34,7 +34,7 @@
         </button>
       </div>
 
-      <!-- TAB 1: WORKOUT TRACKER -->
+      <!-- TAB 1: WORKOUT TRACKER (운동 일지 & 트레이너 코칭) -->
       <section id="tab-tracker" class="tab-content active">
         <!-- Logged Workouts Card -->
         <div class="card">
@@ -52,13 +52,40 @@
           </div>
         </div>
 
+        <!-- AI Trainer Coaching Card -->
+        <div class="card" id="trainer-coaching-card">
+          <h2 class="card-title">
+            <i data-lucide="sparkles"></i>
+            트레이너의 실시간 피드백
+          </h2>
+          <div class="feedback-box">
+            <div class="feedback-status" id="coaching-status-badge">
+              <i data-lucide="user-check" style="width: 14px; height: 14px;"></i>
+              <span>대기 중</span>
+            </div>
+            <p class="feedback-text" id="coaching-feedback-text">
+              오늘 운동을 시작해 보세요! 입력하신 세트 수와 총 운동량을 분석하여 전담 트레이너가 실시간 코칭과 주의사항을 알려드립니다.
+            </p>
+            <div class="feedback-metrics" style="grid-template-columns: 1fr 1fr;">
+              <div class="metric-item">
+                <div class="metric-val green" id="metric-total-sets">0 세트</div>
+                <div class="metric-lbl">총 완료 세트</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val blue" id="metric-total-volume">0 kg</div>
+                <div class="metric-lbl">총 훈련 볼륨</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Quick Add Workouts -->
         <div class="card">
           <h2 class="card-title">
             <i data-lucide="plus-circle"></i>
             빠른 운동 추가
           </h2>
-          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 12px;">원하는 운동을 탭하여 일지에 즉시 추가합니다.</p>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 12px;">원하는 부위를 탭하고 운동을 선택해 일지에 즉시 등록하세요.</p>
           
           <div class="quick-add-grid" id="quick-add-container" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 12px;">
             <!-- Dynamically populated body parts: 가슴, 등, 어깨, 하체, 팔, 복근 -->
@@ -66,15 +93,26 @@
           
           <!-- Container for displaying exercises of the selected body part -->
           <div id="quick-add-sub-container" style="display: none; padding-top: 12px; border-top: 1px dashed var(--border-color); animation: fadeIn 0.3s ease-out;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;" id="quick-add-sub-title">가슴 운동 선택</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;" id="quick-add-sub-title">운동 선택</span>
             <div class="quick-add-grid" id="quick-add-sub-list" style="grid-template-columns: repeat(2, 1fr); gap: 8px;">
               <!-- Dynamically populated exercises list -->
+            </div>
+          </div>
+
+          <!-- Custom Exercise Direct Input -->
+          <div id="custom-exercise-input-container" style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">원하는 운동이 목록에 없나요? 직접 입력해서 추가해 보세요.</span>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
+              <input type="text" id="custom-exercise-name" class="form-input" placeholder="예: 바벨 숄더 슈러그" style="padding: 8px 12px; font-size: 0.85rem;">
+              <button class="btn" id="custom-exercise-add-btn" style="padding: 8px 14px; font-size: 0.85rem; height: 38px;">
+                <i data-lucide="plus" style="width: 14px; height: 14px; vertical-align: middle;"></i> 추가
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- TAB 2: EXERCISE GUIDE (BODY MAP) -->
+      <!-- TAB 2: EXERCISE GUIDE (운동 백과) -->
       <section id="tab-guide" class="tab-content">
         <div class="card">
           <h2 class="card-title">
@@ -84,7 +122,6 @@
           <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 16px;">관심 있는 신체 부위를 선택하여 부위별 대표 웨이트 트레이닝 법과 상세 팁을 확인하세요.</p>
           
           <div class="body-map-container" id="body-map-list">
-            <!-- Dynamically populated body parts -->
             <div class="body-part-card" data-part="chest">
               <div class="body-part-info">
                 <span class="body-part-name">가슴 (Chest)</span>
@@ -148,42 +185,66 @@
         </div>
       </section>
 
-      <!-- TAB 3: DIET ANALYZER & FEEDBACK -->
-      <section id="tab-diet" class="tab-content">
-        <!-- User BMR Profile Settings Card -->
+      <!-- TAB 3: AI TRAINER & PROFILE (설정 및 BMR/루틴 제안) -->
+      <section id="tab-trainer" class="tab-content">
+        <!-- User Profile Settings Card -->
         <div class="card">
           <h2 class="card-title">
-            <i data-lucide="user"></i>
-            신체 프로필 & 기초대사량(BMR) 계산
+            <i data-lucide="user-check"></i>
+            트레이너 프로필 & 신체 설정
           </h2>
-          <div class="diet-form-grid" style="gap: 10px;">
-            <div style="display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 8px;">
+          <div class="profile-form-grid" style="gap: 12px;">
+            <!-- Row 1: 성별 & 나이 (2열) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
               <div class="form-group">
                 <label for="profile-gender">성별</label>
-                <select id="profile-gender" class="form-input" style="padding: 8px 10px; font-weight: 600;">
-                  <option value="male">남성 (Male)</option>
-                  <option value="female">여성 (Female)</option>
+                <select id="profile-gender" class="form-input" style="padding: 10px; font-weight: 600; width: 100%;">
+                  <option value="male">남성</option>
+                  <option value="female">여성</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="profile-age">나이 (세)</label>
-                <input type="number" id="profile-age" class="form-input" placeholder="세" value="28" style="padding: 8px 10px;">
-              </div>
-              <div class="form-group">
-                <label for="profile-height">키 (cm)</label>
-                <input type="number" id="profile-height" class="form-input" placeholder="cm" value="175" style="padding: 8px 10px;">
+                <input type="number" id="profile-age" class="form-input" placeholder="세" value="28" style="padding: 10px; width: 100%;">
               </div>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: flex-end;">
+            <!-- Row 2: 키 & 몸무게 (2열) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label for="profile-height">키 (cm)</label>
+                <input type="number" id="profile-height" class="form-input" placeholder="cm" value="175" style="padding: 10px; width: 100%;">
+              </div>
               <div class="form-group">
                 <label for="profile-weight">몸무게 (kg)</label>
-                <input type="number" id="profile-weight" class="form-input" placeholder="kg" value="70" style="padding: 8px 10px;">
+                <input type="number" id="profile-weight" class="form-input" placeholder="kg" value="70" style="padding: 10px; width: 100%;">
               </div>
-              <button class="btn" id="calculate-bmr-btn" style="padding: 10px; font-size: 0.9rem;">
-                <i data-lucide="calculator"></i> BMR 계산 및 설정
-              </button>
             </div>
+            
+            <!-- Row 3: 운동 목표 (1열) -->
+            <div class="form-group">
+              <label for="profile-goal">운동 목표</label>
+              <select id="profile-goal" class="form-input" style="padding: 10px; font-weight: 600; width: 100%;">
+                <option value="diet">다이어트 (지방 감량)</option>
+                <option value="bulk">벌크업 (근육량 증가)</option>
+                <option value="strength">스트렝스 (근력 향상)</option>
+              </select>
+            </div>
+            
+            <!-- Row 4: 현재 운동 수행 능력 (1열) -->
+            <div class="form-group">
+              <label for="profile-level">현재 운동 수행 능력</label>
+              <select id="profile-level" class="form-input" style="padding: 10px; font-weight: 600; width: 100%;">
+                <option value="beginner">입문자 (초보 헬린이)</option>
+                <option value="intermediate">중급자 (경력 1년 이상)</option>
+                <option value="advanced">상급자 (고경력자)</option>
+              </select>
+            </div>
+            
+            <!-- Row 5: 설정 저장 버튼 (1열) -->
+            <button class="btn" id="calculate-bmr-btn" style="padding: 12px; font-size: 0.95rem; width: 100%; margin-top: 4px;">
+              <i data-lucide="save" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> 설정 저장 및 계산
+            </button>
             
             <!-- Result Area -->
             <div id="bmr-result-box" style="margin-top: 10px; padding: 12px; background: rgba(59, 130, 246, 0.08); border: 1px dashed rgba(59, 130, 246, 0.2); border-radius: var(--radius-sm); font-size: 0.85rem; line-height: 1.5; display: none;">
@@ -192,172 +253,39 @@
           </div>
         </div>
 
-        <!-- Diet Entry Form -->
+        <!-- AI Routine Suggestion Card -->
         <div class="card">
           <h2 class="card-title">
-            <i data-lucide="utensils"></i>
-            식단 입력
+            <i data-lucide="clipboard-list"></i>
+            오늘의 맞춤 PT 루틴 추천
           </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 16px;">사용자의 목표와 레벨을 고려하여 최적의 부위별 할당 루틴을 제안합니다.</p>
           
-          <div class="diet-form-grid">
-            <!-- Meal photo upload simulator -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; margin-bottom: 8px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-              <div class="form-group" style="margin-bottom: 0;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">식사 사진 분석 (AI)</span>
-                <button class="btn btn-secondary" id="camera-trigger-btn" style="padding: 8px 12px; font-size: 0.8rem; width: auto;">
-                  <i data-lucide="camera" style="width: 14px; height: 14px;"></i> 사진 올리기
-                </button>
-                <input type="file" id="food-image-input" accept="image/*" style="display: none;">
-              </div>
-              <div style="display: flex; justify-content: flex-end;">
-                <!-- Thumbnail Preview -->
-                <div id="image-preview-box" style="width: 50px; height: 50px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); overflow: hidden; display: none; position: relative;">
-                  <img id="image-preview-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
-                  <button id="image-preview-remove" style="position: absolute; top:0; right:0; background: rgba(0,0,0,0.7); border:none; color:white; width:16px; height:16px; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius: 0 0 0 4px;">×</button>
-                </div>
-              </div>
-            </div>
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; margin-bottom: 16px;">
+            <select id="routine-split-select" class="form-input" style="font-weight: 600; padding: 10px;">
+              <option value="push">가슴 / 삼두 (밀기 루틴)</option>
+              <option value="pull">등 / 이두 (당기기 루틴)</option>
+              <option value="legs_shoulders">하체 / 어깨 (코어 및 하체)</option>
+            </select>
+            <button class="btn" id="recommend-routine-btn">
+              <i data-lucide="sparkles"></i> 루틴 추천받기
+            </button>
+          </div>
 
-            <!-- AI Analyzing Indicator -->
-            <div id="ai-analyzing-overlay" style="display: none; margin-bottom: 12px; padding: 12px; text-align: center; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm);">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--color-primary); font-weight: 700; font-size: 0.85rem;">
-                <i data-lucide="loader-2" class="spin" style="animation: spin 1s linear infinite; width: 16px; height: 16px;"></i>
-                <span>AI가 식단 사진을 정밀 분석하는 중...</span>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="food-name-input">음식명</label>
-                <input type="text" id="food-name-input" class="form-input" placeholder="예: 닭가슴살 100g, 고구마 등">
-              </div>
-              <div class="form-group">
-                <label for="food-cal-input">칼로리 (kcal)</label>
-                <input type="number" id="food-cal-input" class="form-input" placeholder="kcal">
-              </div>
+          <!-- Suggested Routine Preview Area -->
+          <div id="suggested-routine-box" style="display: none; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
+            <div style="font-weight: 700; color: var(--color-primary); font-size: 1rem; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+              <span id="suggested-routine-title">추천 루틴</span>
+              <span style="font-size:0.75rem; background: rgba(59,130,246,0.15); color:var(--color-secondary); padding: 2px 8px; border-radius: 10px;" id="suggested-routine-level-tag">초급자</span>
             </div>
             
-            <div class="form-row">
-              <div class="form-group">
-                <label for="food-protein-input">단백질 (g)</label>
-                <input type="number" id="food-protein-input" class="form-input" placeholder="g">
-              </div>
-              <button class="btn" id="add-food-btn" style="margin-top: 22px;">
-                <i data-lucide="plus"></i> 추가
-              </button>
+            <div id="suggested-routine-list" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 16px;">
+              <!-- Suggested exercises list items -->
             </div>
-          </div>
 
-          <!-- Quick Presets -->
-          <div style="margin-top: 16px;">
-            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">간편 자주 먹는 음식presets</span>
-            <div class="preset-grid">
-              <div class="preset-item" data-name="닭가슴살 1팩" data-cal="120" data-protein="23">
-                닭가슴살
-                <span class="preset-item-cal">120 kcal</span>
-              </div>
-              <div class="preset-item" data-name="햇반 1공기" data-cal="300" data-protein="5">
-                햇반 1공기
-                <span class="preset-item-cal">300 kcal</span>
-              </div>
-              <div class="preset-item" data-name="바나나 1개" data-cal="90" data-protein="1">
-                바나나 1개
-                <span class="preset-item-cal">90 kcal</span>
-              </div>
-              <div class="preset-item" data-name="달걀 2개" data-cal="150" data-protein="12">
-                달걀 2개
-                <span class="preset-item-cal">150 kcal</span>
-              </div>
-              <div class="preset-item" data-name="소고기 우둔살 100g" data-cal="140" data-protein="22">
-                소고기 100g
-                <span class="preset-item-cal">140 kcal</span>
-              </div>
-              <div class="preset-item" data-name="프로틴 쉐이크" data-cal="120" data-protein="24">
-                단백질 쉐이크
-                <span class="preset-item-cal">120 kcal</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Diet Records List -->
-          <div class="diet-records-list" id="diet-records-container">
-            <!-- Food items logged here -->
-          </div>
-        </div>
-
-        <!-- Diet Analysis Gauge & Macros Summary -->
-        <div class="card">
-          <h2 class="card-title">
-            <i data-lucide="pie-chart"></i>
-            오늘의 섭취 분석
-          </h2>
-          
-          <div class="diet-dashboard">
-            <!-- Circular Gauge for Calories -->
-            <div class="chart-container">
-              <svg class="chart-svg" width="140" height="140" viewBox="0 0 140 140">
-                <circle class="chart-bg" cx="70" cy="70" r="58"></circle>
-                <circle class="chart-progress" id="diet-gauge-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="364.4"></circle>
-              </svg>
-              <div class="chart-info">
-                <div class="chart-value" id="current-cal-val">0</div>
-                <div class="chart-label">/ 2000 kcal</div>
-              </div>
-            </div>
-            
-            <!-- Target Protein & Calorie Status -->
-            <div class="summary-macros">
-              <div class="macro-row">
-                <div class="macro-info">
-                  <span class="macro-name">단백질 섭취량</span>
-                  <span class="macro-value" id="protein-progress-text">0g / 120g</span>
-                </div>
-                <div class="macro-bar-bg">
-                  <div class="macro-bar-fill protein" id="protein-bar-fill" style="width: 0%;"></div>
-                </div>
-              </div>
-              
-              <div class="macro-row">
-                <div class="macro-info">
-                  <span class="macro-name">칼로리 충족률</span>
-                  <span class="macro-value" id="cal-percent-text">0%</span>
-                </div>
-                <div class="macro-bar-bg">
-                  <div class="macro-bar-fill carbs" id="cal-bar-fill" style="width: 0%;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Diet Feedback Card -->
-        <div class="card" id="diet-feedback-card" style="display: none;">
-          <h2 class="card-title">
-            <i data-lucide="sparkles"></i>
-            다이어트 피드백 & 팁
-          </h2>
-          <div class="feedback-box">
-            <div class="feedback-status" id="feedback-status-badge">
-              <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
-              <span>데이터 부족</span>
-            </div>
-            <p class="feedback-text" id="feedback-explanation">
-              식단을 최소 한 개 이상 추가해 주세요. 다이어트 칼로리 섭취량과 단백질 비율을 기반으로 최적의 피드백을 제공합니다.
-            </p>
-            <div class="feedback-metrics">
-              <div class="metric-item">
-                <div class="metric-val green" id="metric-cal-diff">0 kcal</div>
-                <div class="metric-lbl">목표 대비 칼로리</div>
-              </div>
-              <div class="metric-item">
-                <div class="metric-val blue" id="metric-protein-diff">0g</div>
-                <div class="metric-lbl">추가 필요 단백질</div>
-              </div>
-              <div class="metric-item">
-                <div class="metric-val amber" id="metric-advice-type">유지</div>
-                <div class="metric-lbl">식단 추천 조치</div>
-              </div>
-            </div>
+            <button class="btn" id="apply-routine-btn">
+              <i data-lucide="check-square"></i> 이 루틴 오늘 일지에 등록하기
+            </button>
           </div>
         </div>
       </section>
@@ -375,7 +303,6 @@
         </div>
       </div>
       
-      <!-- This content will be populated either as a list of exercises OR a single exercise detail -->
       <div id="guide-detail-content">
         <!-- Dynamically loaded list of exercises or exercise instructions -->
       </div>
@@ -391,9 +318,9 @@
         <i data-lucide="dumbbell"></i>
         <span>운동가이드</span>
       </button>
-      <button class="nav-item" data-tab="diet">
-        <i data-lucide="pie-chart"></i>
-        <span>식단분석</span>
+      <button class="nav-item" data-tab="trainer">
+        <i data-lucide="user-check"></i>
+        <span>AI트레이너</span>
       </button>
     </nav>
   </div>

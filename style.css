@@ -749,10 +749,10 @@ nav.bottom-nav {
   margin-bottom: 0;
 }
 
-/* --- TAB 3: DIET ANALYZER & FEEDBACK --- */
+/* --- TAB 3: USER PROFILE & SETTINGS --- */
 
-/* Food Log Form */
-.diet-form-grid {
+/* Profile Setup Form */
+.profile-form-grid {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -789,139 +789,6 @@ nav.bottom-nav {
   border-color: var(--color-primary);
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
 }
-
-.diet-records-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.diet-record-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color);
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-}
-
-.diet-record-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.diet-record-name {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.diet-record-macros {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.diet-record-cal {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-/* Diet Statistics Chart & Summary */
-.diet-dashboard {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 16px;
-  align-items: center;
-}
-
-/* SVG Circular Gauge Chart */
-.chart-container {
-  position: relative;
-  width: 140px;
-  height: 140px;
-  margin: 0 auto;
-}
-
-.chart-svg {
-  transform: rotate(-90deg);
-}
-
-.chart-bg {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
-  stroke-width: 12;
-}
-
-.chart-progress {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 12;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.8s ease-out;
-}
-
-.chart-info {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.chart-value {
-  font-family: var(--font-title);
-  font-size: 1.4rem;
-  font-weight: 800;
-}
-
-.chart-label {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.summary-macros {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.macro-row {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.macro-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.macro-name {
-  color: var(--text-muted);
-}
-
-.macro-bar-bg {
-  height: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.macro-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s ease-out;
-}
-
-.macro-bar-fill.carbs { background: var(--color-secondary); }
-.macro-bar-fill.protein { background: var(--color-primary); }
-.macro-bar-fill.fat { background: var(--color-accent); }
 
 /* Diet Feedback Card */
 .feedback-box {
@@ -991,57 +858,30 @@ nav.bottom-nav {
   color: var(--text-muted);
 }
 
-/* Quick diet presets */
-.preset-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.preset-item {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.preset-item:hover {
-  border-color: var(--color-primary);
-  background: rgba(16, 185, 129, 0.05);
-}
-
-.preset-item-cal {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--color-primary);
-  margin-top: 2px;
-  font-family: var(--font-title);
-  font-weight: 700;
-}
-
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Photo Thumbnail in Diet Log List */
-.diet-record-thumb {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: var(--transition);
+/* --- EXERCISE GUIDE IMAGE --- */
+.exercise-guide-image-container {
+  width: 100%;
+  max-height: 240px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.diet-record-thumb:hover {
-  transform: scale(1.1);
-  border-color: var(--color-primary);
+.exercise-guide-img {
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: cover;
+  display: block;
 }

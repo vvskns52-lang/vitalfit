@@ -6,6 +6,7 @@ const exercisesData = {
     {
       id: "bench_press",
       name: "벤치 프레스 (Bench Press)",
+      image: "images/bench_press.png",
       target: "가슴 전체 (대흉근), 삼두근, 전면 삼각근",
       description: "웨이트 트레이닝의 3대 운동 중 하나로, 가슴 전체의 질량과 근력을 올리는 최고의 운동입니다.",
       steps: [
@@ -116,6 +117,7 @@ const exercisesData = {
     {
       id: "deadlift",
       name: "데드리프트 (Deadlift)",
+      image: "images/deadlift.png",
       target: "광배근, 척추기립근, 둔근, 대퇴이두근",
       description: "전신 근육을 사용하는 최고의 웨이트 트레이닝 운동으로, 후면 사슬 전체를 단련합니다.",
       steps: [
@@ -337,6 +339,7 @@ const exercisesData = {
     {
       id: "squat",
       name: "스쿼트 (Squat)",
+      image: "images/squat.png",
       target: "대퇴사두근, 대둔근, 햄스트링, 코어",
       description: "하체 운동의 꽃이자 전신 근육과 호르몬 분비를 촉진하는 최고의 웨이트 트레이닝 운동입니다.",
       steps: [
@@ -663,9 +666,36 @@ class WorkoutTracker {
     this.quickAddSubTitle = document.getElementById('quick-add-sub-title');
     this.quickAddSubList = document.getElementById('quick-add-sub-list');
     
+    // Coaching Card Elements
+    this.coachingStatusBadge = document.getElementById('coaching-status-badge');
+    this.coachingFeedbackText = document.getElementById('coaching-feedback-text');
+    this.metricTotalSets = document.getElementById('metric-total-sets');
+    this.metricTotalVolume = document.getElementById('metric-total-volume');
+    
+    // Custom exercise elements
+    this.customExerciseNameInput = document.getElementById('custom-exercise-name');
+    this.customExerciseAddBtn = document.getElementById('custom-exercise-add-btn');
+    
     this.selectedQuickAddPart = null; // Track current selected category
     
     this.initQuickAdd();
+    this.initCustomExerciseEvents();
+  }
+
+  initCustomExerciseEvents() {
+    this.customExerciseAddBtn.addEventListener('click', () => {
+      const name = this.customExerciseNameInput.value.trim();
+      if (!name) {
+        alert('운동 이름을 입력해 주세요.');
+        return;
+      }
+      
+      const customId = `custom_${Date.now()}`;
+      const category = this.selectedQuickAddPart || 'custom';
+      
+      this.addWorkout(customId, name, category);
+      this.customExerciseNameInput.value = '';
+    });
   }
 
   initQuickAdd() {
@@ -693,11 +723,9 @@ class WorkoutTracker {
   }
 
   selectQuickAddCategory(categoryId, clickedBtn) {
-    // 1. Toggle active classes on category buttons
     const buttons = this.quickAddContainer.querySelectorAll('.quick-add-item');
     buttons.forEach(btn => btn.classList.remove('active'));
 
-    // If clicking the same category, toggle close the sub panel
     if (this.selectedQuickAddPart === categoryId) {
       this.selectedQuickAddPart = null;
       this.quickAddSubContainer.style.display = 'none';
@@ -707,11 +735,9 @@ class WorkoutTracker {
     this.selectedQuickAddPart = categoryId;
     clickedBtn.classList.add('active');
 
-    // 2. Open sub panel and update title
     this.quickAddSubContainer.style.display = 'block';
     this.quickAddSubTitle.textContent = `${this.getCategoryKorean(categoryId)} 운동 선택`;
 
-    // 3. Populate sub exercise list
     this.quickAddSubList.innerHTML = '';
     const list = exercisesData[categoryId] || [];
 
@@ -730,7 +756,7 @@ class WorkoutTracker {
   }
 
   getCategoryKorean(cat) {
-    const map = { chest: '가슴', back: '등', shoulders: '어깨', legs: '하체', arms: '팔', abs: '복근' };
+    const map = { chest: '가슴', back: '등', shoulders: '어깨', legs: '하체', arms: '팔', abs: '복근', custom: '기타' };
     return map[cat] || cat;
   }
 
@@ -738,6 +764,7 @@ class WorkoutTracker {
     const date = this.app.selectedDate;
     const workouts = this.app.getWorkoutsForDate(date);
     
+    // 1. Render logged list
     if (workouts.length === 0) {
       this.loggedContainer.innerHTML = `
         <div class="empty-state">
@@ -745,11 +772,14 @@ class WorkoutTracker {
           <p>오늘 기록된 운동이 없습니다.<br>아래 목록에서 운동을 선택해 기록을 남겨보세요!</p>
         </div>
       `;
+      this.updateCoachingFeedback(0, 0); // Empty coaching state
       if (window.lucide) window.lucide.createIcons();
       return;
     }
 
     this.loggedContainer.innerHTML = '';
+    let totalSets = 0;
+    let totalVolume = 0;
 
     workouts.forEach((workout, workoutIndex) => {
       const itemEl = document.createElement('div');
@@ -776,6 +806,9 @@ class WorkoutTracker {
       const setsContainer = document.createElement('div');
       
       workout.sets.forEach((set, setIndex) => {
+        totalSets++;
+        totalVolume += (set.weight * set.reps);
+
         const setRow = document.createElement('div');
         setRow.className = 'set-row';
         setRow.innerHTML = `
@@ -834,7 +867,63 @@ class WorkoutTracker {
       this.loggedContainer.appendChild(itemEl);
     });
 
+    // Update trainer coaching feedback based on logged workout volume
+    this.updateCoachingFeedback(totalSets, totalVolume);
+
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  // Real-time PT Coaching Logic
+  updateCoachingFeedback(totalSets, totalVolume) {
+    this.metricTotalSets.textContent = `${totalSets} 세트`;
+    this.metricTotalVolume.textContent = `${totalVolume.toLocaleString()} kg`;
+
+    const userProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile')) || {};
+    const goal = userProfile.profileGoal || 'diet';
+    const level = userProfile.profileLevel || 'beginner';
+    
+    let badgeHTML = '';
+    let badgeClass = 'feedback-status';
+    let feedbackText = '';
+
+    if (totalSets === 0) {
+      badgeHTML = `<i data-lucide="user-check" style="width: 14px; height: 14px;"></i><span>대기 중</span>`;
+      feedbackText = `오늘 운동을 시작해 보세요! 입력하신 운동과 세트 수를 바탕으로 AI 트레이너가 실시간 운동 강도 조언과 운동 꿀팁을 제공합니다. 우측 하단 'AI트레이너' 탭에서 나만의 맞춤 PT 루틴을 추천받아 등록할 수도 있습니다!`;
+      this.coachingStatusBadge.style.background = 'rgba(255, 255, 255, 0.05)';
+      this.coachingStatusBadge.style.color = 'var(--text-muted)';
+    } 
+    else if (totalSets >= 1 && totalSets <= 5) {
+      badgeHTML = `<i data-lucide="flame" style="width: 14px; height: 14px;"></i><span>워밍업 단계</span>`;
+      feedbackText = `가벼운 워밍업 단계입니다. 관절 부상을 피하기 위해 본 세트에 진입하기 전 어깨나 무릎 관절을 충분히 회전시켜 스트레칭해 주세요. 현재 목표(${this.getGoalKorean(goal)})를 성공시키기 위해 이제 점진적으로 중량을 올리며 메인 세트로 나아갑시다.`;
+      this.coachingStatusBadge.style.background = 'rgba(59, 130, 246, 0.15)';
+      this.coachingStatusBadge.style.color = 'var(--color-secondary)';
+    } 
+    else if (totalSets >= 6 && totalSets <= 12) {
+      badgeHTML = `<i data-lucide="zap" style="width: 14px; height: 14px;"></i><span>기초 강도 진입</span>`;
+      feedbackText = `적정한 훈련 강도에 들어섰습니다. ${level === 'beginner' ? '초보 헬린이 레벨에서 무리하지 않고 기량을 다지기에 딱 좋은 세트 수입니다.' : '중상급자 레벨의 본격적인 메인 훈련 볼륨입니다.'} 현재 소화한 ${totalVolume.toLocaleString()}kg의 부하는 자극을 심어주기에 충분합니다. 부위당 1세트 정도를 더 한계점(Failure point)까지 쥐어짜 보세요.`;
+      this.coachingStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+      this.coachingStatusBadge.style.color = 'var(--color-accent)';
+    } 
+    else if (totalSets >= 13 && totalSets <= 22) {
+      badgeHTML = `<i data-lucide="award" style="width: 14px; height: 14px;"></i><span>최적의 훈련 볼륨 (강력 추천)</span>`;
+      feedbackText = `전담 트레이너 강력 추천 볼륨입니다! 오늘의 운동 목적에 아주 정확하게 부합하는 이상적인 훈련량이 축적되었습니다. 오늘 총 ${totalVolume.toLocaleString()}kg의 무거운 하중을 견뎌내며 근육에 미세 상처를 효과적으로 입혔습니다. 30분 이내에 양질의 단백질 섭취를 완료하고 충분한 휴식을 통해 근비대를 유도하세요!`;
+      this.coachingStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+      this.coachingStatusBadge.style.color = 'var(--color-primary)';
+    } 
+    else {
+      badgeHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i><span>오버트레이닝 우려 (주의)</span>`;
+      feedbackText = `오늘 과도한 운동 세트 수(${totalSets}세트)를 수행하고 있습니다! 일정 피로도를 초과하여 운동을 계속 지속하면, 근육 합성 호르몬보다 근육 분해 호르몬(코르티솔) 분비가 많아져 오히려 역효과가 나고 어깨/무릎 부상 위험이 급증합니다. 오늘의 훈련은 여기서 멈추고 안전하게 폼롤러 스트레칭으로 넘어가세요.`;
+      this.coachingStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+      this.coachingStatusBadge.style.color = '#ef4444';
+    }
+
+    this.coachingStatusBadge.innerHTML = badgeHTML;
+    this.coachingFeedbackText.innerHTML = feedbackText;
+  }
+
+  getGoalKorean(goal) {
+    const map = { diet: '지방 감량', bulk: '근육량 증가', strength: '근력 스트렝스 향상' };
+    return map[goal] || goal;
   }
 
   addWorkout(exerciseId, name, category) {
@@ -1006,9 +1095,18 @@ class BodyGuide {
 
     this.partNameLabel.textContent = ex.name;
 
+    let imageHTML = '';
+    if (ex.image) {
+      imageHTML = `
+        <div class="exercise-guide-image-container">
+          <img src="${ex.image}" alt="${ex.name}" class="exercise-guide-img">
+        </div>
+      `;
+    }
+
     this.contentArea.innerHTML = `
       <div class="instruction-container">
-        
+        ${imageHTML}
         <div class="card" style="margin-bottom: 0; background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05);">
           <div class="exercise-item-target" style="font-size: 0.9rem; margin-bottom: 6px;">
             <i data-lucide="crosshair" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>
@@ -1057,488 +1155,248 @@ class BodyGuide {
 }
 
 // ==========================================
-// 4. DIET ANALYZER & FEEDBACK MODULE
+// 4. AI TRAINER MODULE (BMR, Splits & PT Recommendation)
 // ==========================================
-class DietAnalyzer {
+class TrainerAssistant {
   constructor(app) {
     this.app = app;
-    
-    // Inputs & Forms
-    this.foodNameInput = document.getElementById('food-name-input');
-    this.foodCalInput = document.getElementById('food-cal-input');
-    this.foodProteinInput = document.getElementById('food-protein-input');
-    this.addFoodBtn = document.getElementById('add-food-btn');
-    this.recordsContainer = document.getElementById('diet-records-container');
-    
-    // Photo Upload Elements
-    this.cameraTriggerBtn = document.getElementById('camera-trigger-btn');
-    this.foodImageInput = document.getElementById('food-image-input');
-    this.imagePreviewBox = document.getElementById('image-preview-box');
-    this.imagePreviewImg = document.getElementById('image-preview-img');
-    this.imagePreviewRemove = document.getElementById('image-preview-remove');
-    this.aiAnalyzingOverlay = document.getElementById('ai-analyzing-overlay');
-    this.uploadedImageBase64 = null; // Store base64 data temporarily
-    
-    // BMR Profile Elements
+
+    // Profile Settings DOM elements
     this.profileGender = document.getElementById('profile-gender');
     this.profileAge = document.getElementById('profile-age');
     this.profileHeight = document.getElementById('profile-height');
     this.profileWeight = document.getElementById('profile-weight');
+    this.profileGoal = document.getElementById('profile-goal');
+    this.profileLevel = document.getElementById('profile-level');
     this.calculateBmrBtn = document.getElementById('calculate-bmr-btn');
     this.bmrResultBox = document.getElementById('bmr-result-box');
-    
-    // Chart / Summary Elements
-    this.gaugeCircle = document.getElementById('diet-gauge-circle');
-    this.currentCalVal = document.getElementById('current-cal-val');
-    this.proteinProgressText = document.getElementById('protein-progress-text');
-    this.proteinBarFill = document.getElementById('protein-bar-fill');
-    this.calPercentText = document.getElementById('cal-percent-text');
-    this.calBarFill = document.getElementById('cal-bar-fill');
-    
-    // Feedback Card Elements
-    this.feedbackCard = document.getElementById('diet-feedback-card');
-    this.feedbackStatusBadge = document.getElementById('feedback-status-badge');
-    this.feedbackExplanation = document.getElementById('feedback-explanation');
-    this.metricCalDiff = document.getElementById('metric-cal-diff');
-    this.metricProteinDiff = document.getElementById('metric-protein-diff');
-    this.metricAdviceType = document.getElementById('metric-advice-type');
-    
-    // Goals config (Defaults)
-    this.targetCal = 1800; 
-    this.targetProtein = 100; 
-    
+
+    // Routine Recommendation DOM elements
+    this.routineSplitSelect = document.getElementById('routine-split-select');
+    this.recommendRoutineBtn = document.getElementById('recommend-routine-btn');
+    this.suggestedRoutineBox = document.getElementById('suggested-routine-box');
+    this.suggestedRoutineTitle = document.getElementById('suggested-routine-title');
+    this.suggestedRoutineLevelTag = document.getElementById('suggested-routine-level-tag');
+    this.suggestedRoutineList = document.getElementById('suggested-routine-list');
+    this.applyRoutineBtn = document.getElementById('apply-routine-btn');
+
+    this.currentSuggestedRoutine = null; // Store recommended routine array temporarily
+
     this.initEvents();
     this.loadUserProfile();
   }
 
   initEvents() {
-    // BMR calculation trigger
     this.calculateBmrBtn.addEventListener('click', () => {
-      this.calculateBmrAndSetTarget();
+      this.saveProfileAndCalculateBMR();
     });
 
-    // Camera/Upload triggers
-    this.cameraTriggerBtn.addEventListener('click', () => {
-      this.foodImageInput.click();
+    this.recommendRoutineBtn.addEventListener('click', () => {
+      this.generatePTRoutine();
     });
 
-    // File input changes (handles FileReader base64 processing & AI simulation)
-    this.foodImageInput.addEventListener('change', (e) => {
-      this.handleImageFile(e);
-    });
-
-    // Remove photo preview
-    this.imagePreviewRemove.addEventListener('click', () => {
-      this.clearPhotoPreview();
-    });
-
-    // Add food button event
-    this.addFoodBtn.addEventListener('click', () => {
-      this.addFoodFromForm();
-    });
-
-    const inputs = [this.foodNameInput, this.foodCalInput, this.foodProteinInput];
-    inputs.forEach(input => {
-      input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          this.addFoodFromForm();
-        }
-      });
-    });
-
-    // Preset clicks
-    const presets = document.querySelectorAll('.preset-item');
-    presets.forEach(preset => {
-      preset.addEventListener('click', () => {
-        const name = preset.getAttribute('data-name');
-        const cal = parseFloat(preset.getAttribute('data-cal')) || 0;
-        const protein = parseFloat(preset.getAttribute('data-protein')) || 0;
-        
-        this.addFoodDirect(name, cal, protein);
-      });
+    this.applyRoutineBtn.addEventListener('click', () => {
+      this.applyRoutineToLog();
     });
   }
 
-  // Load user profile & saved targetCal from localStorage
   loadUserProfile() {
-    const savedProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile'));
-    const savedTargetCal = localStorage.getItem('vitalfit_target_cal');
-    
-    if (savedProfile) {
-      this.profileGender.value = savedProfile.gender || 'male';
-      this.profileAge.value = savedProfile.age || 28;
-      this.profileHeight.value = savedProfile.height || 175;
-      this.profileWeight.value = savedProfile.weight || 70;
+    const saved = JSON.parse(localStorage.getItem('vitalfit_user_profile'));
+    if (saved) {
+      this.profileGender.value = saved.profileGender || 'male';
+      this.profileAge.value = saved.profileAge || 28;
+      this.profileHeight.value = saved.profileHeight || 175;
+      this.profileWeight.value = saved.profileWeight || 70;
+      this.profileGoal.value = saved.profileGoal || 'diet';
+      this.profileLevel.value = saved.profileLevel || 'beginner';
       
-      // Calculate BMR on load silently
-      this.calculateBmrAndSetTarget(true);
-    } else if (savedTargetCal) {
-      this.targetCal = parseInt(savedTargetCal) || 1800;
+      this.saveProfileAndCalculateBMR(true); // Silently compute BMR on start
     }
   }
 
-  // Calculate BMR (Mifflin-St Jeor formula) and update targets
-  calculateBmrAndSetTarget(silent = false) {
-    const gender = this.profileGender.value;
-    const age = parseInt(this.profileAge.value) || 0;
-    const height = parseFloat(this.profileHeight.value) || 0;
-    const weight = parseFloat(this.profileWeight.value) || 0;
+  saveProfileAndCalculateBMR(silent = false) {
+    const profile = {
+      profileGender: this.profileGender.value,
+      profileAge: parseInt(this.profileAge.value) || 28,
+      profileHeight: parseFloat(this.profileHeight.value) || 175,
+      profileWeight: parseFloat(this.profileWeight.value) || 70,
+      profileGoal: this.profileGoal.value,
+      profileLevel: this.profileLevel.value
+    };
 
-    if (age <= 0 || height <= 0 || weight <= 0) {
+    if (profile.profileAge <= 0 || profile.profileHeight <= 0 || profile.profileWeight <= 0) {
       if (!silent) alert('올바른 신체 정보(나이, 키, 몸무게)를 입력해 주세요.');
       return;
     }
 
-    // Mifflin-St Jeor Equation
+    localStorage.setItem('vitalfit_user_profile', JSON.stringify(profile));
+
+    // BMR Calculation (Mifflin-St Jeor)
     let bmr = 0;
-    if (gender === 'male') {
-      bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    if (profile.profileGender === 'male') {
+      bmr = 10 * profile.profileWeight + 6.25 * profile.profileHeight - 5 * profile.profileAge + 5;
     } else {
-      bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      bmr = 10 * profile.profileWeight + 6.25 * profile.profileHeight - 5 * profile.profileAge - 161;
+    }
+    bmr = Math.round(bmr);
+
+    // TDEE (Total Daily Energy Expenditure) calculation - activity factor 1.375 (light active)
+    const tdee = Math.round(bmr * 1.375);
+    
+    // Set recommendations
+    let calorieGoal = 0;
+    let bmrText = '';
+    if (profile.profileGoal === 'diet') {
+      calorieGoal = tdee - 500;
+      bmrText = '체지방 연소를 위해 약 <strong>500kcal의 칼로리 결손</strong>이 권장됩니다.';
+    } else if (profile.profileGoal === 'bulk') {
+      calorieGoal = tdee + 300;
+      bmrText = '근육량 증가(벌크업)를 위해 약 <strong>300kcal의 칼로리 잉여</strong>가 권장됩니다.';
+    } else {
+      calorieGoal = tdee;
+      bmrText = '근력(스트렝스) 증가를 위해 <strong>유지 칼로리</strong> 섭취를 유지하며 단백질 위주로 보충하세요.';
     }
 
-    bmr = Math.round(bmr);
-    
-    // Recommend daily calories for weight loss (BMR * Activity_Multiplier[1.2 for sedentary] - Deficit[300kcal])
-    // Ensure we do not suggest calories below basic BMR to prevent malnutrition
-    let recommendedCal = Math.round(bmr * 1.2 - 300);
-    recommendedCal = Math.max(bmr, recommendedCal);
-
-    this.targetCal = recommendedCal;
-    this.targetProtein = Math.round(weight * 1.5); // 1.5g per kg weight for fitness target
-
-    // Save profile to localStorage
-    const userProfile = { gender, age, height, weight };
-    localStorage.setItem('vitalfit_user_profile', JSON.stringify(userProfile));
-    localStorage.setItem('vitalfit_target_cal', this.targetCal.toString());
-
-    // Update Result Box UI
     this.bmrResultBox.style.display = 'block';
     this.bmrResultBox.innerHTML = `
-      <div style="font-weight: 700; color: var(--color-secondary); margin-bottom: 4px;">🎯 BMR 계산 결과</div>
-      • 계산된 기초대사량: <strong style="color:var(--text-main);">${bmr} kcal</strong><br>
-      • 단백질 추천 목표: <strong style="color:var(--color-primary);">${this.targetProtein}g</strong> (체중의 1.5배)<br>
-      • 다이어트 권장 하루 칼로리: <strong style="color:var(--color-accent);">${recommendedCal} kcal</strong>
-      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">* 기초대사량에 활동 대사량을 반영하여 산출한 권장 섭취량입니다.</div>
+      <div style="font-weight:700; color:var(--color-secondary); margin-bottom: 6px;">🤖 전담 트레이너 맞춤 처방</div>
+      • 나의 기초대사량(BMR): <strong>${bmr} kcal</strong><br>
+      • 나의 일일 대사량(TDEE): <strong>${tdee} kcal</strong><br>
+      • 하루 영양 권장 섭취량: <strong style="color:var(--color-primary);">${calorieGoal} kcal</strong>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">${bmrText}</div>
     `;
 
     if (!silent) {
-      alert(`신체 프로필 연동이 완료되었습니다!\n오늘의 목표 칼로리가 ${recommendedCal} kcal로 업데이트되었습니다.`);
-      this.render();
+      alert('신체 프로필 및 AI 트레이너 데이터 저장이 완료되었습니다!');
+      // Re-trigger tracker to recalculate coaching advice under new goals
+      this.app.tracker.render();
     }
   }
 
-  // Handle Photo input conversion and trigger AI Simulation
-  handleImageFile(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+  // AI PT Routine Recommendation Engine
+  generatePTRoutine() {
+    const split = this.routineSplitSelect.value;
+    const level = this.profileLevel.value;
+    const goal = this.profileGoal.value;
 
-    // 1. Read image as base64 string
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64Data = event.target.result;
-      this.uploadedImageBase64 = base64Data;
-      
-      // Update preview UI
-      this.imagePreviewBox.style.display = 'block';
-      this.imagePreviewImg.src = base64Data;
-      
-      // 2. Trigger AI Simulation
-      this.simulateAIScan(file.name);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Simulated AI vision scanning scanner
-  simulateAIScan(fileName) {
-    this.aiAnalyzingOverlay.style.display = 'block';
+    this.suggestedRoutineBox.style.display = 'block';
+    this.suggestedRoutineList.innerHTML = '';
     
-    // Disable inputs during scan
-    this.foodNameInput.disabled = true;
-    this.foodCalInput.disabled = true;
-    this.foodProteinInput.disabled = true;
-    this.addFoodBtn.disabled = true;
-
-    // 1.5 seconds timer simulation
-    setTimeout(() => {
-      this.aiAnalyzingOverlay.style.display = 'none';
-      
-      // Re-enable inputs
-      this.foodNameInput.disabled = false;
-      this.foodCalInput.disabled = false;
-      this.foodProteinInput.disabled = false;
-      this.addFoodBtn.disabled = false;
-
-      // Simulated diet detection datasets
-      const mockDiets = [
-        { name: '닭가슴살 샐러드 & 단호박', cal: 260, protein: 25 },
-        { name: '삶은 달걀 2개와 사과', cal: 220, protein: 13 },
-        { name: '소고기 우둔살 볶음밥', cal: 420, protein: 28 },
-        { name: '연어 야채 오븐 구이', cal: 340, protein: 24 },
-        { name: '두부 버섯 샐러드 식단', cal: 180, protein: 12 },
-        { name: '그릭 요거트와 블루베리', cal: 150, protein: 9 }
-      ];
-
-      // Select random item
-      const detected = mockDiets[Math.floor(Math.random() * mockDiets.length)];
-      
-      // Auto-fill values
-      this.foodNameInput.value = detected.name;
-      this.foodCalInput.value = detected.cal;
-      this.foodProteinInput.value = detected.protein;
-
-      alert(`🤖 [AI 식단 사진 분석 완료!]\n이미지에서 "${detected.name}"을(를) 감지했습니다.\n(칼로리: ${detected.cal}kcal, 단백질: ${detected.protein}g)\n정보가 일치하면 '추가' 버튼을 눌러주세요.`);
-    }, 1500);
-  }
-
-  clearPhotoPreview() {
-    this.foodImageInput.value = '';
-    this.uploadedImageBase64 = null;
-    this.imagePreviewBox.style.display = 'none';
-    this.imagePreviewImg.src = '';
-  }
-
-  addFoodFromForm() {
-    const name = this.foodNameInput.value.trim();
-    const cal = parseFloat(this.foodCalInput.value) || 0;
-    const protein = parseFloat(this.foodProteinInput.value) || 0;
-
-    if (!name) {
-      alert('음식 이름을 입력해 주세요.');
-      this.foodNameInput.focus();
-      return;
-    }
-
-    if (cal <= 0) {
-      alert('올바른 칼로리 값을 입력해 주세요.');
-      this.foodCalInput.focus();
-      return;
-    }
-
-    // Pass image info together
-    this.addFoodDirect(name, cal, protein, this.uploadedImageBase64);
+    // Choose custom sets & reps and weight factors based on user level and goal
+    let setMultiplier = 3;
+    let repCount = 10;
+    let intensityText = '초급자';
     
-    this.foodNameInput.value = '';
-    this.foodCalInput.value = '';
-    this.foodProteinInput.value = '';
-    
-    // Clear photo state
-    this.clearPhotoPreview();
-  }
-
-  addFoodDirect(name, cal, protein, imageBase64 = null) {
-    const date = this.app.selectedDate;
-    const dietLog = this.app.getDietForDate(date);
-    
-    const newLogItem = {
-      id: Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5),
-      name: name,
-      cal: cal,
-      protein: protein,
-      image: imageBase64 // Base64 encoded image or null
-    };
-
-    dietLog.push(newLogItem);
-    this.app.saveDietForDate(date, dietLog);
-    this.render();
-  }
-
-  deleteFood(foodId) {
-    const date = this.app.selectedDate;
-    const dietLog = this.app.getDietForDate(date);
-    const updated = dietLog.filter(item => item.id !== foodId);
-    
-    this.app.saveDietForDate(date, updated);
-    this.render();
-  }
-
-  render() {
-    const date = this.app.selectedDate;
-    const dietLog = this.app.getDietForDate(date);
-    
-    if (dietLog.length === 0) {
-      this.recordsContainer.innerHTML = `
-        <div class="empty-state" style="padding: 20px 0;">
-          <p style="font-size: 0.85rem;">기록된 식단이 없습니다. 다이어트를 위해 아침, 점심, 저녁 식사를 기록해 보세요!</p>
-        </div>
-      `;
+    if (level === 'beginner') {
+      setMultiplier = 3;
+      repCount = 12;
+      intensityText = '초급자 (가벼운 무게 / 고반복)';
+    } else if (level === 'intermediate') {
+      setMultiplier = 4;
+      repCount = 10;
+      intensityText = '중급자 (적정 중량 / 고자극)';
     } else {
-      this.recordsContainer.innerHTML = '';
-      dietLog.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'diet-record-item';
-        
-        // Render with thumbnail if picture exists
-        const imgHTML = item.image 
-          ? `<img src="${item.image}" class="diet-record-thumb" id="thumb-${item.id}">` 
-          : `<div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); display:flex; align-items:center; justify-content:center; color:var(--text-muted);"><i data-lucide="utensils-crossfiles" style="width:16px; height:16px;"></i></div>`;
-
-        row.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 12px;">
-            ${imgHTML}
-            <div class="diet-record-info">
-              <span class="diet-record-name">${item.name}</span>
-              <span class="diet-record-macros">단백질: ${item.protein}g</span>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span class="diet-record-cal">${item.cal} kcal</span>
-            <button class="remove-workout-btn delete-food-btn" data-id="${item.id}">
-              <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-            </button>
-          </div>
-        `;
-
-        // Click delete
-        row.querySelector('.delete-food-btn').addEventListener('click', () => {
-          this.deleteFood(item.id);
-        });
-
-        // Click thumbnail to expand view
-        if (item.image) {
-          row.querySelector(`#thumb-${item.id}`).addEventListener('click', () => {
-            this.showImageModal(item.name, item.image);
-          });
-        }
-
-        this.recordsContainer.appendChild(row);
-      });
+      setMultiplier = 5;
+      repCount = 8;
+      intensityText = '상급자 (고중량 / 점진적 과부하)';
     }
 
-    let totalCal = 0;
-    let totalProtein = 0;
-    dietLog.forEach(item => {
-      totalCal += item.cal;
-      totalProtein += item.protein;
-    });
-
-    this.currentCalVal.textContent = Math.round(totalCal);
-    document.querySelector('.chart-label').textContent = `/ ${this.targetCal} kcal`;
+    this.suggestedRoutineLevelTag.textContent = intensityText;
     
-    const calPercent = Math.min(100, (totalCal / this.targetCal) * 100);
-    const strokeDashoffset = 364.4 - (calPercent / 100) * 364.4;
-    this.gaugeCircle.style.strokeDashoffset = strokeDashoffset;
+    // Generate actual workout logs
+    const routineExercises = [];
     
-    if (totalCal > this.targetCal) {
-      this.gaugeCircle.style.stroke = '#ef4444'; 
-    } else {
-      this.gaugeCircle.style.stroke = '#10b981'; 
-    }
-
-    this.proteinProgressText.textContent = `${Math.round(totalProtein)}g / ${this.targetProtein}g`;
-    const proteinPercent = Math.min(100, (totalProtein / this.targetProtein) * 100);
-    this.proteinBarFill.style.width = `${proteinPercent}%`;
-    
-    this.calPercentText.textContent = `${Math.round(calPercent)}%`;
-    this.calBarFill.style.width = `${calPercent}%`;
-
-    this.generateFeedback(dietLog, totalCal, totalProtein);
-
-    if (window.lucide) window.lucide.createIcons();
-  }
-
-  // Pop up modal to show food photo in full size
-  showImageModal(title, base64Src) {
-    const modal = document.createElement('div');
-    modal.style.position = 'absolute';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.right = '0';
-    modal.style.bottom = '0';
-    modal.style.background = 'rgba(15, 23, 42, 0.95)';
-    modal.style.zIndex = '30';
-    modal.style.display = 'flex';
-    modal.style.flexDirection = 'column';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.style.padding = '24px';
-    modal.style.animation = 'fadeIn 0.2s ease-out';
-    
-    modal.innerHTML = `
-      <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">${title}</span>
-        <button id="close-img-modal" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
-      </div>
-      <div style="flex: 1; width: 100%; max-height: 70%; border-radius: var(--radius-md); overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color);">
-        <img src="${base64Src}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 16px;">탭해서 나가기</p>
-    `;
-
-    const closeFn = () => modal.remove();
-    modal.querySelector('#close-img-modal').addEventListener('click', closeFn);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.tagName === 'P') closeFn();
-    });
-    
-    document.getElementById('app-container').appendChild(modal);
-  }
-
-  generateFeedback(dietLog, totalCal, totalProtein) {
-    if (dietLog.length === 0) {
-      this.feedbackCard.style.display = 'none';
-      return;
-    }
-
-    this.feedbackCard.style.display = 'block';
-
-    const calDiff = totalCal - this.targetCal;
-    const proteinDiff = Math.max(0, this.targetProtein - totalProtein);
-    
-    let statusHTML = '';
-    let feedbackText = '';
-    let adviceType = '';
-
-    if (totalCal < 900) {
-      statusHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i><span>초절식 상태 (위험)</span>`;
-      feedbackText = `오늘 섭취한 칼로리가 너무 부족합니다(${totalCal} kcal). 다이어트를 위해 덜 먹는 것도 중요하지만, 기초대사량보다 훨씬 적게 먹는 극단적 절식은 오히려 근육 손실과 신진대사 감소를 유발합니다. 건강한 탄수화물(현미밥, 고구마)과 단백질을 좀 더 보충해 주셔야 합니다.`;
-      adviceType = '영양 보충';
+    if (split === 'push') {
+      this.suggestedRoutineTitle.textContent = '가슴 & 삼두 (밀기 6종목 루틴)';
+      
+      routineExercises.push({ id: 'bench_press', name: '벤치 프레스 (Bench Press)', category: 'chest', weight: level === 'beginner' ? 30 : level === 'intermediate' ? 60 : 90 });
+      routineExercises.push({ id: 'incline_db_press', name: '인클라인 덤벨 프레스 (Incline Dumbbell Press)', category: 'chest', weight: level === 'beginner' ? 10 : level === 'intermediate' ? 20 : 30 });
+      routineExercises.push({ id: 'pec_deck_fly', name: '펙 덱 플라이 (Pec Deck Fly)', category: 'chest', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 40 : 60 });
+      routineExercises.push({ id: 'push_up', name: '푸쉬업 (Push Up)', category: 'chest', weight: 0 });
+      routineExercises.push({ id: 'triceps_pushdown', name: '트라이셉스 푸쉬다운 (Triceps Pushdown)', category: 'arms', weight: level === 'beginner' ? 15 : level === 'intermediate' ? 25 : 35 });
+      routineExercises.push({ id: 'db_kickback', name: '덤벨 킥백 (Dumbbell Kickback)', category: 'arms', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
     } 
-    else if (totalCal >= 900 && totalCal < (this.targetCal - 300)) {
-      statusHTML = `<i data-lucide="trending-down" style="width: 14px; height: 14px;"></i><span>이상적 지방연소 페이스</span>`;
-      feedbackText = `완벽한 다이어트 페이스를 유지하고 계십니다! 현재 칼로리 결손량이 매우 건강한 수준이어서 체지방 연소가 가장 활발히 일어나는 최상의 지점입니다. 근육 유지를 위해 단백질 섭취만 잘 챙겨 주시면서 이 상태를 지속하세요.`;
-      adviceType = '페이스 유지';
-    } 
-    else if (totalCal >= (this.targetCal - 300) && totalCal <= (this.targetCal + 50)) {
-      statusHTML = `<i data-lucide="smile" style="width: 14px; height: 14px;"></i><span>안정적 다이어트 유지</span>`;
-      feedbackText = `목표치인 ${this.targetCal} kcal 근방에서 안정적으로 조절 중입니다. 다이어트 속도는 약간 완만할 수 있으나, 운동 강도를 높게 뽑아내며 근손실 없이 건강하고 탄탄하게 체지방을 줄이기에 이상적인 식사 밸런스입니다.`;
-      adviceType = '양호';
+    else if (split === 'pull') {
+      this.suggestedRoutineTitle.textContent = '등 & 이두 (당기기 6종목 루틴)';
+      
+      routineExercises.push({ id: 'deadlift', name: '데드리프트 (Deadlift)', category: 'back', weight: level === 'beginner' ? 40 : level === 'intermediate' ? 80 : 120 });
+      routineExercises.push({ id: 'lat_pulldown', name: '랫 풀 다운 (Lat Pulldown)', category: 'back', weight: level === 'beginner' ? 25 : level === 'intermediate' ? 45 : 65 });
+      routineExercises.push({ id: 'bent_over_row', name: '바벨 로우 (Bent Over Row)', category: 'back', weight: level === 'beginner' ? 30 : level === 'intermediate' ? 50 : 70 });
+      routineExercises.push({ id: 'pull_up', name: '풀업 (Pull Up)', category: 'back', weight: 0 });
+      routineExercises.push({ id: 'db_biceps_curl', name: '덤벨 바이셉스 컬 (Dumbbell Biceps Curl)', category: 'arms', weight: level === 'beginner' ? 8 : level === 'intermediate' ? 12 : 18 });
+      routineExercises.push({ id: 'hammer_curl', name: '해머 컬 (Hammer Curl)', category: 'arms', weight: level === 'beginner' ? 8 : level === 'intermediate' ? 12 : 18 });
     } 
     else {
-      statusHTML = `<i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i><span>칼로리 오버 (과잉)</span>`;
-      feedbackText = `오늘 다이어트 목표 칼로리를 초과했습니다! 초과된 에너지(${Math.round(calDiff)} kcal)는 지방으로 축적되기 쉽습니다. 오늘 운동 강도를 강하게 올리거나, 가벼운 야외 유산소 러닝을 20분 이상 추가하여 남는 열량을 강제로 태우시는 것을 권장합니다. 내일 식단에서는 탄수화물 양을 조금 덜어내 보세요.`;
-      adviceType = '유산소 추가';
+      this.suggestedRoutineTitle.textContent = '하체 & 어깨 (하체/어깨 6종목 루틴)';
+      
+      routineExercises.push({ id: 'squat', name: '스쿼트 (Squat)', category: 'legs', weight: level === 'beginner' ? 40 : level === 'intermediate' ? 85 : 120 });
+      routineExercises.push({ id: 'leg_press', name: '레그 프레스 (Leg Press)', category: 'legs', weight: level === 'beginner' ? 60 : level === 'intermediate' ? 120 : 200 });
+      routineExercises.push({ id: 'leg_extension', name: '레그 익스텐션 (Leg Extension)', category: 'legs', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 40 : 60 });
+      routineExercises.push({ id: 'overhead_press', name: '오버헤드 프레스 (Overhead Press)', category: 'shoulders', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 35 : 50 });
+      routineExercises.push({ id: 'side_lateral_raise', name: '사이드 레터럴 레이즈 (Side Lateral Raise)', category: 'shoulders', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
+      routineExercises.push({ id: 'bent_over_lateral_raise', name: '벤트 오버 레터럴 레이즈 (Bent Over Lateral Raise)', category: 'shoulders', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
     }
 
-    if (totalProtein < (this.targetProtein * 0.6)) {
-      feedbackText += ` <br><br>⚠️ <strong>단백질 경고:</strong> 단백질 섭취량(${Math.round(totalProtein)}g)이 권장량에 비해 너무 적습니다. 다이어트 중에 단백질이 모자라면 체지방이 아닌 소중한 근육이 분해되어 빠져나가게 됩니다. 닭가슴살 1팩이나 달걀 2개, 혹은 프로틴 파우더 등을 드셔서 단백질을 최소 30g 이상 긴급 수급하세요!`;
-    }
+    // Map sets
+    this.currentSuggestedRoutine = routineExercises.map(ex => {
+      const sets = [];
+      for (let i = 0; i < setMultiplier; i++) {
+        sets.push({ weight: ex.weight, reps: repCount });
+      }
+      return {
+        id: ex.id,
+        name: ex.name,
+        category: ex.category,
+        sets: sets
+      };
+    });
 
-    this.feedbackStatusBadge.innerHTML = statusHTML;
-    
-    this.feedbackStatusBadge.className = 'feedback-status';
-    if (totalCal < 900) {
-      this.feedbackStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
-      this.feedbackStatusBadge.style.color = 'var(--color-accent)';
-    } else if (totalCal > this.targetCal) {
-      this.feedbackStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
-      this.feedbackStatusBadge.style.color = '#ef4444';
-    } else {
-      this.feedbackStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
-      this.feedbackStatusBadge.style.color = 'var(--color-primary)';
-    }
+    // Render Preview List
+    this.currentSuggestedRoutine.forEach(ex => {
+      const el = document.createElement('div');
+      el.style.display = 'flex';
+      el.style.justify = 'space-between';
+      el.style.alignItems = 'center';
+      el.style.padding = '8px 12px';
+      el.style.background = 'rgba(255,255,255,0.02)';
+      el.style.border = '1px solid var(--border-color)';
+      el.style.borderRadius = 'var(--radius-sm)';
+      
+      el.innerHTML = `
+        <span style="font-weight:600; font-size:0.85rem;">${ex.name.split(' (')[0]}</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">${ex.sets.length}세트 x ${ex.sets[0].weight}kg (${ex.sets[0].reps}회)</span>
+      `;
+      this.suggestedRoutineList.appendChild(el);
+    });
+  }
 
-    this.feedbackExplanation.innerHTML = feedbackText;
+  // Apply the generated routine directly to workout tracker log
+  applyRoutineToLog() {
+    if (!this.currentSuggestedRoutine || this.currentSuggestedRoutine.length === 0) return;
+
+    const date = this.app.selectedDate;
+    const todayWorkouts = this.app.getWorkoutsForDate(date);
     
-    const calDiffText = calDiff > 0 ? `+${Math.round(calDiff)} kcal` : `${Math.round(calDiff)} kcal`;
-    this.metricCalDiff.textContent = calDiffText;
-    this.metricCalDiff.className = `metric-val ${calDiff > 0 ? 'amber' : 'green'}`;
+    // Add only new exercises to avoid overriding manually logged ones
+    let addedCount = 0;
+    this.currentSuggestedRoutine.forEach(ex => {
+      const exists = todayWorkouts.some(w => w.id === ex.id);
+      if (!exists) {
+        todayWorkouts.push(ex);
+        addedCount++;
+      }
+    });
+
+    this.app.saveWorkoutsForDate(date, todayWorkouts);
     
-    this.metricProteinDiff.textContent = proteinDiff > 0 ? `${Math.round(proteinDiff)}g` : '충족 완료!';
-    this.metricProteinDiff.className = `metric-val ${proteinDiff > 0 ? 'blue' : 'green'}`;
+    alert(`🤖 트레이너 맞춤 추천 루틴이 완료되었습니다!\n총 ${addedCount}개의 운동을 일지에 추가했습니다.`);
     
-    this.metricAdviceType.textContent = adviceType;
-    this.metricAdviceType.className = `metric-val ${adviceType === '유산소 추가' ? 'amber' : adviceType === '영양 보충' ? 'blue' : 'green'}`;
+    // Reset view box
+    this.suggestedRoutineBox.style.display = 'none';
+    this.currentSuggestedRoutine = null;
+
+    // Direct tab switch to tracker to let user see it!
+    this.app.switchTab('tracker');
   }
 }
 
@@ -1550,8 +1408,7 @@ class VitalFitApp {
     this.selectedDate = this.getTodayString();
     
     this.state = {
-      workouts: JSON.parse(localStorage.getItem('vitalfit_workouts')) || {},
-      diet: JSON.parse(localStorage.getItem('vitalfit_diet')) || {}
+      workouts: JSON.parse(localStorage.getItem('vitalfit_workouts')) || {}
     };
 
     // DOM Elements
@@ -1565,7 +1422,7 @@ class VitalFitApp {
     // Initialize child modules
     this.tracker = new WorkoutTracker(this);
     this.guide = new BodyGuide(this);
-    this.diet = new DietAnalyzer(this);
+    this.trainer = new TrainerAssistant(this);
 
     this.initGlobalEvents();
     this.updateDateUI();
@@ -1619,8 +1476,6 @@ class VitalFitApp {
 
     if (tabId === 'tracker') {
       this.tracker.render();
-    } else if (tabId === 'diet') {
-      this.diet.render();
     }
   }
 
@@ -1637,7 +1492,6 @@ class VitalFitApp {
     this.updateDateUI();
     
     this.tracker.render();
-    this.diet.render();
   }
 
   updateDateUI() {
@@ -1667,18 +1521,6 @@ class VitalFitApp {
       workouts[workoutIndex].sets[setIndex][field] = value;
       this.saveWorkoutsForDate(date, workouts);
     }
-  }
-
-  getDietForDate(date) {
-    if (!this.state.diet[date]) {
-      this.state.diet[date] = [];
-    }
-    return this.state.diet[date];
-  }
-
-  saveDietForDate(date, dietLog) {
-    this.state.diet[date] = dietLog;
-    localStorage.setItem('vitalfit_diet', JSON.stringify(this.state.diet));
   }
 }
 
