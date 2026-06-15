@@ -44,11 +44,35 @@
 
       <!-- TAB 1: WORKOUT TRACKER (운동 일지 & 트레이너 코칭) -->
       <section id="tab-tracker" class="tab-content active">
+        <!-- Workout Active Stopwatch Bar -->
+        <div class="card" style="padding: 14px 20px; margin-bottom: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.8) 100%); border-color: rgba(16, 185, 129, 0.25);">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="play" id="stopwatch-icon-status" class="pulse-green" style="width: 18px; height: 18px; color: var(--color-primary);"></i>
+              <span id="stopwatch-display-time" style="font-family: var(--font-title); font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px;">00:00:00</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn" id="stopwatch-start-btn" style="padding: 6px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); width: auto; height: 32px;">
+                운동 시작
+              </button>
+              <button class="btn btn-danger" id="stopwatch-finish-btn" style="display: none; padding: 6px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); width: auto; height: 32px;">
+                운동 완료
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Logged Workouts Card -->
         <div class="card">
-          <h2 class="card-title">
-            <i data-lucide="activity"></i>
-            오늘의 운동 일지
+          <h2 class="card-title" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="activity"></i>
+              오늘의 운동 일지
+            </span>
+            <button id="save-routine-template-btn" style="background: none; border: none; color: var(--color-primary); cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.05); transition: var(--transition);">
+              <i data-lucide="save" style="width: 13px; height: 13px;"></i>
+              루틴 저장
+            </button>
           </h2>
           
           <div id="logged-workouts-list">
@@ -84,6 +108,18 @@
                 <div class="metric-lbl">총 훈련 볼륨</div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- My Saved Routine Templates Card -->
+        <div class="card" id="my-templates-card" style="display: none; border-color: rgba(59, 130, 246, 0.2); background: rgba(30, 41, 59, 0.4);">
+          <h2 class="card-title" style="margin-bottom: 8px;">
+            <i data-lucide="folder-heart" style="color: var(--color-secondary);"></i>
+            내 루틴 불러오기
+          </h2>
+          <p class="body-part-desc" style="margin-bottom: 12px;">이전에 저장한 루틴 구성을 원클릭으로 즉시 복원합니다.</p>
+          <div id="my-templates-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <!-- Dynamically populated template tags -->
           </div>
         </div>
 

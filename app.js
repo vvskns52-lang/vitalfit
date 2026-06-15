@@ -718,6 +718,13 @@ class WorkoutTracker {
     
     this.initQuickAdd();
     this.initCustomExerciseEvents();
+    
+    // Routine template initialization
+    this.templatesCard = document.getElementById('my-templates-card');
+    this.templatesList = document.getElementById('my-templates-list');
+    this.saveTemplateBtn = document.getElementById('save-routine-template-btn');
+    this.saveTemplateBtn.addEventListener('click', () => this.saveCurrentAsTemplate());
+    this.renderTemplates();
   }
 
   initCustomExerciseEvents() {
@@ -848,11 +855,19 @@ class WorkoutTracker {
         totalVolume += (set.weight * set.reps);
 
         const isCompleted = set.completed || false;
+        
+        // Find previous record guide
+        const prevText = this.findPreviousRecord(workout.id, setIndex);
+        const guideHTML = prevText ? `<span class="prev-record-guide">${prevText}</span>` : '';
+
         const setRow = document.createElement('div');
         setRow.className = `set-row${isCompleted ? ' completed' : ''}`;
         setRow.innerHTML = `
           <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''} data-workout="${workoutIndex}" data-set="${setIndex}">
-          <div class="set-index">${setIndex + 1}세트</div>
+          <div class="set-index" style="display:flex; flex-direction:column; gap:2px; line-height:1.2;">
+            <span style="font-weight:700;">${setIndex + 1}세트</span>
+            ${guideHTML}
+          </div>
           
           <div class="set-input-group">
             <input type="number" class="set-weight" value="${set.weight}" min="0" step="2.5" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
@@ -1045,6 +1060,135 @@ class WorkoutTracker {
       sets.splice(setIndex, 1);
       this.app.saveWorkoutsForDate(date, workouts);
       this.render();
+    }
+  }
+
+  // Find previous workout record for progressive overload guide
+  findPreviousRecord(exerciseId, setIndex) {
+    const allWorkouts = this.app.state.workouts; 
+    const dates = Object.keys(allWorkouts).sort().reverse(); 
+    
+    const today = this.app.selectedDate;
+    for (const d of dates) {
+      if (d === today) continue;
+      
+      const dayLogs = allWorkouts[d] || [];
+      const matchingEx = dayLogs.find(w => w.id === exerciseId);
+      if (matchingEx && matchingEx.sets && matchingEx.sets[setIndex]) {
+        const targetSet = matchingEx.sets[setIndex];
+        if (targetSet.weight > 0 && targetSet.reps > 0) {
+          return `이전: ${targetSet.weight}kg x ${targetSet.reps}회`;
+        }
+      }
+    }
+    return '';
+  }
+
+  // Save current workout logs as a custom template
+  saveCurrentAsTemplate() {
+    const date = this.app.selectedDate;
+    const workouts = this.app.getWorkoutsForDate(date);
+    
+    if (workouts.length === 0) {
+      alert('저장할 운동이 없습니다. 일지에 운동을 등록한 후 저장해 주세요.');
+      return;
+    }
+    
+    const name = prompt('저장할 루틴 템플릿의 이름을 입력해 주세요 (예: 가슴 삼두 루틴 A)');
+    if (!name || !name.trim()) return;
+    
+    const templates = JSON.parse(localStorage.getItem('vitalfit_routine_templates')) || {};
+    
+    const cleanWorkouts = workouts.map(w => ({
+      id: w.id,
+      name: w.name,
+      category: w.category,
+      sets: w.sets.map(s => ({ weight: s.weight, reps: s.reps }))
+    }));
+    
+    templates[name.trim()] = cleanWorkouts;
+    localStorage.setItem('vitalfit_routine_templates', JSON.stringify(templates));
+    
+    alert(`💾 '${name.trim()}' 루틴 템플릿이 저장되었습니다!`);
+    this.renderTemplates();
+  }
+
+  // Render Saved Routine Templates List
+  renderTemplates() {
+    const templates = JSON.parse(localStorage.getItem('vitalfit_routine_templates')) || {};
+    const keys = Object.keys(templates);
+    
+    if (keys.length === 0) {
+      this.templatesCard.style.display = 'none';
+      return;
+    }
+    
+    this.templatesCard.style.display = 'block';
+    this.templatesList.innerHTML = '';
+    
+    keys.forEach(name => {
+      const chip = document.createElement('div');
+      chip.className = 'template-chip';
+      chip.innerHTML = `
+        <span style="font-weight: 700; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px;">
+          <i data-lucide="dumbbell" style="width: 12px; height: 12px;"></i>
+          ${name}
+        </span>
+        <button class="template-chip-delete-btn" data-name="${name}">
+          <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+        </button>
+      `;
+      
+      chip.addEventListener('click', (e) => {
+        if (e.target.closest('.template-chip-delete-btn')) return;
+        this.applyTemplate(name, templates[name]);
+      });
+      
+      chip.querySelector('.template-chip-delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.deleteTemplate(name);
+      });
+      
+      this.templatesList.appendChild(chip);
+    });
+    
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  // Apply chosen template to today's log
+  applyTemplate(name, workouts) {
+    if (confirm(`'${name}' 루틴의 운동들을 오늘 일지에 불러올까요?\n(기존 기록에 누적되어 추가됩니다.)`)) {
+      const date = this.app.selectedDate;
+      const todayWorkouts = this.app.getWorkoutsForDate(date);
+      
+      let added = 0;
+      workouts.forEach(w => {
+        const exists = todayWorkouts.some(tw => tw.id === w.id);
+        if (!exists) {
+          const sets = w.sets.map(s => ({ weight: s.weight, reps: s.reps, completed: false }));
+          todayWorkouts.push({
+            id: w.id,
+            name: w.name,
+            category: w.category,
+            sets: sets
+          });
+          added++;
+        }
+      });
+      
+      this.app.saveWorkoutsForDate(date, todayWorkouts);
+      this.render();
+      alert(`🤖 '${name}' 루틴의 ${added}개 운동 구성을 오늘 일지에 복원했습니다!`);
+    }
+  }
+
+  // Delete saved template
+  deleteTemplate(name) {
+    if (confirm(`'${name}' 루틴 템플릿을 삭제하시겠습니까?`)) {
+      const templates = JSON.parse(localStorage.getItem('vitalfit_routine_templates')) || {};
+      delete templates[name];
+      localStorage.setItem('vitalfit_routine_templates', JSON.stringify(templates));
+      this.renderTemplates();
     }
   }
 }
@@ -1539,6 +1683,7 @@ class VitalFitApp {
     this.analytics = new AnalyticsDashboard(this);
     this.timer = new SmartRestTimer(this);
     this.prDetector = new PRDetector(this);
+    this.stopwatch = new WorkoutStopwatch(this);
 
     this.initGlobalEvents();
     this.updateDateUI();
@@ -2098,6 +2243,112 @@ class PRDetector {
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
       }, 250);
     }
+  }
+}
+
+// ==========================================
+// 9. PREMIUM: WORKOUT ACTIVE STOPWATCH
+// ==========================================
+class WorkoutStopwatch {
+  constructor(app) {
+    this.app = app;
+    this.displayTime = document.getElementById('stopwatch-display-time');
+    this.startBtn = document.getElementById('stopwatch-start-btn');
+    this.finishBtn = document.getElementById('stopwatch-finish-btn');
+    this.iconStatus = document.getElementById('stopwatch-icon-status');
+
+    this.timerInterval = null;
+    this.startTime = null; // Timestamp
+    
+    this.init();
+  }
+
+  init() {
+    this.startBtn.addEventListener('click', () => this.start());
+    this.finishBtn.addEventListener('click', () => this.finish());
+
+    // Recover timer if it was active
+    const savedStart = localStorage.getItem('vitalfit_active_stopwatch_start');
+    if (savedStart) {
+      this.startTime = parseInt(savedStart);
+      this.resume();
+    } else {
+      this.updateDisplay(0);
+    }
+  }
+
+  start() {
+    this.startTime = Date.now();
+    localStorage.setItem('vitalfit_active_stopwatch_start', this.startTime.toString());
+    
+    this.resume();
+  }
+
+  resume() {
+    this.startBtn.style.display = 'none';
+    this.finishBtn.style.display = 'inline-block';
+    
+    // UI update
+    this.iconStatus.className = 'pulse-green';
+    this.iconStatus.setAttribute('data-lucide', 'circle-stop');
+    this.iconStatus.style.color = '#ef4444'; // Red for recording
+    if (window.lucide) window.lucide.createIcons();
+
+    clearInterval(this.timerInterval);
+    this.timerInterval = setInterval(() => {
+      const elapsedMs = Date.now() - this.startTime;
+      this.updateDisplay(elapsedMs);
+    }, 1000);
+    
+    // Initial display update
+    this.updateDisplay(Date.now() - this.startTime);
+  }
+
+  finish() {
+    if (!this.startTime) return;
+    
+    const elapsedMs = Date.now() - this.startTime;
+    clearInterval(this.timerInterval);
+    
+    localStorage.removeItem('vitalfit_active_stopwatch_start');
+    
+    this.startBtn.style.display = 'inline-block';
+    this.finishBtn.style.display = 'none';
+    
+    this.iconStatus.className = '';
+    this.iconStatus.setAttribute('data-lucide', 'play');
+    this.iconStatus.style.color = 'var(--color-primary)';
+    if (window.lucide) window.lucide.createIcons();
+    
+    const elapsedSecs = Math.floor(elapsedMs / 1000);
+    const mins = Math.floor(elapsedSecs / 60);
+    const secs = elapsedSecs % 60;
+    const timeStr = `${mins}분 ${secs}초`;
+
+    // Save duration info into current day's log
+    const date = this.app.selectedDate;
+    const durations = JSON.parse(localStorage.getItem('vitalfit_workouts_durations')) || {};
+    durations[date] = timeStr;
+    localStorage.setItem('vitalfit_workouts_durations', JSON.stringify(durations));
+    
+    this.startTime = null;
+    this.updateDisplay(0);
+
+    // Trigger celebration Confetti!
+    if (this.app.prDetector) {
+      this.app.prDetector.triggerConfetti();
+    }
+    
+    alert(`🎉 수고하셨습니다!\n오늘의 운동 소요시간은 ${timeStr} 입니다. 기록이 안전하게 저장되었습니다.`);
+  }
+
+  updateDisplay(ms) {
+    const totalSecs = Math.floor(ms / 1000);
+    const hours = String(Math.floor(totalSecs / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSecs % 60).padStart(2, '0');
+    
+    this.displayTime.textContent = `${hours}:${mins}:${secs}`;
   }
 }
 
