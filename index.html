@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="style.css">
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js and Confetti CDNs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -24,14 +27,19 @@
     <main>
       
       <!-- Date Selector Control Row (Toggled when date indicator clicked) -->
-      <div class="datepicker-container" id="date-picker-row">
-        <button class="date-btn" id="prev-date-btn">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <span class="current-date-display" id="date-display-label">2026년 06월 15일</span>
-        <button class="date-btn" id="next-date-btn">
-          <i data-lucide="chevron-right"></i>
-        </button>
+      <div class="datepicker-container" id="date-picker-row" style="display: none; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <button class="date-btn" id="prev-month-btn">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <span class="current-date-display" id="calendar-month-label">2026년 06월</span>
+          <button class="date-btn" id="next-month-btn">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid-container">
+          <!-- Dynamically generated monthly grid days with dots -->
+        </div>
       </div>
 
       <!-- TAB 1: WORKOUT TRACKER (운동 일지 & 트레이너 코칭) -->
@@ -295,6 +303,57 @@
         </div>
       </section>
 
+      <!-- TAB 4: ANALYTICS (훈련 통계 및 PR 전당) -->
+      <section id="tab-analytics" class="tab-content">
+        <!-- Weekly Volume Chart Card -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="trending-up"></i>
+            주간 훈련 볼륨 추이 (최근 4주)
+          </h2>
+          <div class="chart-wrapper" style="position: relative; height: 200px; width: 100%;">
+            <canvas id="volumeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Body Part Ratio Chart Card -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="pie-chart"></i>
+            부위별 훈련 세트 비율
+          </h2>
+          <div class="chart-wrapper" style="position: relative; height: 200px; width: 100%; display: flex; justify-content: center;">
+            <canvas id="partRatioChart" style="max-width: 200px; max-height: 200px;"></canvas>
+          </div>
+        </div>
+
+        <!-- PR (Personal Record) Hall of Fame -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="award"></i>
+            개인 최고 기록 (PR) 전당
+          </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 12px;">각 운동별 역대 가장 무겁게 완료한 1RM 기록입니다.</p>
+          <div style="overflow-x: auto;">
+            <table class="pr-table" style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-muted);">
+                  <th style="padding: 8px 4px;">운동명</th>
+                  <th style="padding: 8px 4px; text-align: right;">최대 수행</th>
+                  <th style="padding: 8px 4px; text-align: right; color: var(--color-primary);">예상 1RM</th>
+                </tr>
+              </thead>
+              <tbody id="pr-records-tbody">
+                <!-- Dynamically populated PR records rows -->
+                <tr>
+                  <td colspan="3" style="text-align: center; padding: 20px; color: var(--text-muted);">아직 기록된 PR이 없습니다. 세트를 완수해 보세요!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Detail Overlay (Workout details slide in from right) -->
@@ -327,7 +386,59 @@
         <i data-lucide="user-check"></i>
         <span>AI트레이너</span>
       </button>
+      <button class="nav-item" data-tab="analytics">
+        <i data-lucide="trending-up"></i>
+        <span>통계</span>
+      </button>
     </nav>
+
+    <!-- Smart Rest Timer Overlay Widget (Floating) -->
+    <div id="rest-timer-widget" class="floating-timer-widget" style="display: none;">
+      <div class="timer-circular-container">
+        <svg class="timer-svg" viewBox="0 0 80 80">
+          <circle class="timer-circle-bg" cx="40" cy="40" r="36"></circle>
+          <circle class="timer-circle-progress" cx="40" cy="40" r="36" id="timer-progress-bar"></circle>
+        </svg>
+        <div class="timer-text-container">
+          <span id="timer-time-display">90</span>
+          <span class="timer-unit">초</span>
+        </div>
+      </div>
+      <div class="timer-controls">
+        <div style="font-weight: 700; font-size: 0.8rem; color: var(--color-secondary); margin-bottom: 4px; display:flex; justify-content:space-between; align-items:center;">
+          <span>⏱️ 휴식 중</span>
+          <button id="timer-close-btn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px;"><i data-lucide="x" style="width: 14px; height: 14px;"></i></button>
+        </div>
+        <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+          <button class="timer-btn-sm" id="timer-adjust-minus">-10s</button>
+          <button class="timer-btn-sm" id="timer-adjust-plus">+10s</button>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <button class="timer-btn-sm active" id="timer-preset-60">60s</button>
+          <button class="timer-btn-sm" id="timer-preset-90">90s</button>
+          <button class="timer-btn-sm" id="timer-preset-120">120s</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Record (PR) Celebration Popup Banner -->
+    <div id="pr-celebration-popup" class="pr-popup-overlay" style="display: none;">
+      <div class="pr-popup-card">
+        <div class="pr-crown-icon">
+          <i data-lucide="crown" style="width: 48px; height: 48px; color: #f59e0b;"></i>
+        </div>
+        <h3 style="margin: 8px 0 4px; font-family: var(--font-title); font-size: 1.4rem; color: #fbbf24; font-weight: 800;">NEW PR 달성!</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">축하합니다! 새로운 한계를 돌파하셨습니다.</p>
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px;">
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);" id="pr-exercise-name">벤치 프레스</div>
+          <div style="font-size: 1.2rem; font-weight: 800; color: var(--color-primary); margin-top: 4px;" id="pr-record-value">80 kg x 10회</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="pr-calculated-1rm">예상 1RM: 106.7 kg</div>
+        </div>
+        <button class="btn" id="pr-confirm-btn" style="width: 100%; padding: 10px;">
+          <i data-lucide="thumbs-up"></i> 계속 훈련하기
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- JavaScript Files -->

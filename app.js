@@ -847,18 +847,20 @@ class WorkoutTracker {
         totalSets++;
         totalVolume += (set.weight * set.reps);
 
+        const isCompleted = set.completed || false;
         const setRow = document.createElement('div');
-        setRow.className = 'set-row';
+        setRow.className = `set-row${isCompleted ? ' completed' : ''}`;
         setRow.innerHTML = `
+          <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''} data-workout="${workoutIndex}" data-set="${setIndex}">
           <div class="set-index">${setIndex + 1}세트</div>
           
           <div class="set-input-group">
-            <input type="number" class="set-weight" value="${set.weight}" min="0" step="2.5" data-workout="${workoutIndex}" data-set="${setIndex}">
+            <input type="number" class="set-weight" value="${set.weight}" min="0" step="2.5" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
             <span>kg</span>
           </div>
           
           <div class="set-input-group">
-            <input type="number" class="set-reps" value="${set.reps}" min="0" data-workout="${workoutIndex}" data-set="${setIndex}">
+            <input type="number" class="set-reps" value="${set.reps}" min="0" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
             <span>회</span>
           </div>
           
@@ -867,9 +869,35 @@ class WorkoutTracker {
           </button>
         `;
 
+        const chk = setRow.querySelector('.set-complete-chk');
         const weightInput = setRow.querySelector('.set-weight');
         const repsInput = setRow.querySelector('.set-reps');
         const deleteSetBtn = setRow.querySelector('.delete-set-btn');
+
+        chk.addEventListener('change', (e) => {
+          const completed = e.target.checked;
+          this.app.updateWorkoutSet(workoutIndex, setIndex, 'completed', completed);
+          
+          if (completed) {
+            setRow.classList.add('completed');
+            weightInput.disabled = true;
+            repsInput.disabled = true;
+            
+            if (this.app.timer) {
+              this.app.timer.start();
+            }
+            
+            if (this.app.prDetector) {
+              this.app.prDetector.checkNewPR(workout, set);
+            }
+          } else {
+            setRow.classList.remove('completed');
+            weightInput.disabled = false;
+            repsInput.disabled = false;
+          }
+          
+          this.render(); 
+        });
 
         weightInput.addEventListener('input', (e) => {
           const val = parseFloat(e.target.value) || 0;
@@ -1491,23 +1519,26 @@ class TrainerAssistant {
 class VitalFitApp {
   constructor() {
     this.selectedDate = this.getTodayString();
+    this.currentCalendarDate = new Date(); // 달력에서 표시할 연/월 기준
     
     this.state = {
       workouts: JSON.parse(localStorage.getItem('vitalfit_workouts')) || {}
     };
 
     // DOM Elements
-    this.dateDisplayLabel = document.getElementById('date-display-label');
     this.currentDateText = document.getElementById('current-date-text');
     this.dateSelectorTrigger = document.getElementById('date-selector-trigger');
     this.datePickerRow = document.getElementById('date-picker-row');
-    this.prevDateBtn = document.getElementById('prev-date-btn');
-    this.nextDateBtn = document.getElementById('next-date-btn');
+    this.calendarMonthLabel = document.getElementById('calendar-month-label');
+    this.calendarGridContainer = document.getElementById('calendar-grid-container');
     
     // Initialize child modules
     this.tracker = new WorkoutTracker(this);
     this.guide = new BodyGuide(this);
     this.trainer = new TrainerAssistant(this);
+    this.analytics = new AnalyticsDashboard(this);
+    this.timer = new SmartRestTimer(this);
+    this.prDetector = new PRDetector(this);
 
     this.initGlobalEvents();
     this.updateDateUI();
@@ -1535,11 +1566,16 @@ class VitalFitApp {
 
     this.dateSelectorTrigger.addEventListener('click', () => {
       const isVisible = this.datePickerRow.style.display === 'flex';
-      this.datePickerRow.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) {
+        this.datePickerRow.style.display = 'flex';
+        this.renderCalendar();
+      } else {
+        this.datePickerRow.style.display = 'none';
+      }
     });
 
-    this.prevDateBtn.addEventListener('click', () => this.adjustDate(-1));
-    this.nextDateBtn.addEventListener('click', () => this.adjustDate(1));
+    document.getElementById('prev-month-btn').addEventListener('click', () => this.adjustMonth(-1));
+    document.getElementById('next-month-btn').addEventListener('click', () => this.adjustMonth(1));
     
     if (window.lucide) {
       window.lucide.createIcons();
@@ -1561,29 +1597,91 @@ class VitalFitApp {
 
     if (tabId === 'tracker') {
       this.tracker.render();
+    } else if (tabId === 'analytics') {
+      this.analytics.updateDashboard();
     }
   }
 
-  adjustDate(delta) {
-    const current = new Date(this.selectedDate);
-    current.setDate(current.getDate() + delta);
+  adjustMonth(delta) {
+    this.currentCalendarDate.setMonth(this.currentCalendarDate.getMonth() + delta);
+    this.renderCalendar();
+  }
+
+  renderCalendar() {
+    const year = this.currentCalendarDate.getFullYear();
+    const month = this.currentCalendarDate.getMonth(); // 0-11
     
-    const year = current.getFullYear();
-    const month = String(current.getMonth() + 1).padStart(2, '0');
-    const day = String(current.getDate()).padStart(2, '0');
+    this.calendarMonthLabel.textContent = `${year}년 ${String(month + 1).padStart(2, '0')}월`;
     
-    this.selectedDate = `${year}-${month}-${day}`;
+    this.calendarGridContainer.innerHTML = '';
     
-    this.updateDateUI();
-    
-    this.tracker.render();
+    // Render week headers (일 ~ 토)
+    const weeks = ['일', '월', '화', '수', '목', '금', '토'];
+    weeks.forEach(w => {
+      const header = document.createElement('div');
+      header.className = 'calendar-day-header';
+      header.textContent = w;
+      this.calendarGridContainer.appendChild(header);
+    });
+
+    // Month details
+    const firstDay = new Date(year, month, 1).getDay(); // 요일 (0-6)
+    const totalDays = new Date(year, month + 1, 0).getDate(); // 총 일수
+
+    // Render empty space for offset
+    for (let i = 0; i < firstDay; i++) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'calendar-day-cell empty';
+      this.calendarGridContainer.appendChild(emptyCell);
+    }
+
+    // Render days
+    const todayStr = this.getTodayString();
+    for (let d = 1; d <= totalDays; d++) {
+      const dayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      
+      const cell = document.createElement('div');
+      cell.className = 'calendar-day-cell';
+      if (dayStr === this.selectedDate) {
+        cell.classList.add('selected-day');
+      }
+      if (dayStr === todayStr) {
+        cell.classList.add('today-day');
+      }
+
+      cell.innerHTML = `
+        <span class="calendar-day-num">${d}</span>
+        <div class="calendar-dots-container" id="dots-${dayStr}"></div>
+      `;
+
+      // Click to select date
+      cell.addEventListener('click', () => {
+        this.selectedDate = dayStr;
+        this.updateDateUI();
+        this.datePickerRow.style.display = 'none';
+        this.tracker.render();
+      });
+
+      this.calendarGridContainer.appendChild(cell);
+
+      // Render dots for workouts on this day
+      const dotsContainer = cell.querySelector(`#dots-${dayStr}`);
+      const dayWorkouts = this.getWorkoutsForDate(dayStr);
+      const completedWorkouts = dayWorkouts.filter(w => w.sets && w.sets.some(s => s.completed));
+      if (completedWorkouts.length > 0) {
+        // Collect unique categories
+        const categories = [...new Set(completedWorkouts.map(w => w.category))];
+        categories.forEach(cat => {
+          const dot = document.createElement('div');
+          dot.className = `calendar-dot dot-${cat}`;
+          dotsContainer.appendChild(dot);
+        });
+      }
+    }
   }
 
   updateDateUI() {
     this.currentDateText.textContent = this.selectedDate;
-    
-    const [year, month, day] = this.selectedDate.split('-');
-    this.dateDisplayLabel.textContent = `${year}년 ${month}월 ${day}일`;
   }
 
   /* Data management helpers */
@@ -1605,6 +1703,400 @@ class VitalFitApp {
     if (workouts[workoutIndex] && workouts[workoutIndex].sets[setIndex]) {
       workouts[workoutIndex].sets[setIndex][field] = value;
       this.saveWorkoutsForDate(date, workouts);
+    }
+  }
+}
+
+// ==========================================
+// 6. PREMIUM: VISUAL ANALYTICS DASHBOARD
+// ==========================================
+class AnalyticsDashboard {
+  constructor(app) {
+    this.app = app;
+    this.volumeChart = null;
+    this.partRatioChart = null;
+    this.prTbody = document.getElementById('pr-records-tbody');
+  }
+
+  updateDashboard() {
+    this.renderVolumeChart();
+    this.renderRatioChart();
+    this.renderPRTable();
+  }
+
+  // Render weekly volume trend line chart
+  renderVolumeChart() {
+    if (typeof Chart === 'undefined') {
+      console.warn('Chart.js is not loaded. Skipping line chart rendering.');
+      return;
+    }
+    const ctx = document.getElementById('volumeChart').getContext('2d');
+    if (this.volumeChart) {
+      this.volumeChart.destroy();
+    }
+
+    // Get last 4 weeks labels & calculated workout volume
+    const dataLabels = [];
+    const volumeData = [];
+
+    const today = new Date();
+    for (let i = 3; i >= 0; i--) {
+      // Calculate start and end date of the week
+      const startOffset = i * 7 + today.getDay(); 
+      const start = new Date(today);
+      start.setDate(today.getDate() - startOffset);
+      
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+
+      const label = `${start.getMonth() + 1}/${start.getDate()}~${end.getMonth() + 1}/${end.getDate()}`;
+      dataLabels.push(label);
+
+      // Accumulate volume in this week range
+      let weeklyTotal = 0;
+      for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
+        const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+        const workouts = this.app.getWorkoutsForDate(dateStr);
+        workouts.forEach(w => {
+          w.sets.forEach(s => {
+            if (s.completed) {
+              weeklyTotal += (s.weight * s.reps);
+            }
+          });
+        });
+      }
+      volumeData.push(weeklyTotal);
+    }
+
+    this.volumeChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dataLabels,
+        datasets: [{
+          label: '주간 훈련 볼륨 (kg)',
+          data: volumeData,
+          borderColor: '#10b981', // Neon Green
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderWidth: 3,
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: '#3b82f6',
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+  }
+
+  // Render body part ratio doughnut chart
+  renderRatioChart() {
+    if (typeof Chart === 'undefined') {
+      console.warn('Chart.js is not loaded. Skipping doughnut chart rendering.');
+      return;
+    }
+    const ctx = document.getElementById('partRatioChart').getContext('2d');
+    if (this.partRatioChart) {
+      this.partRatioChart.destroy();
+    }
+
+    const categories = ['chest', 'back', 'shoulders', 'legs', 'arms', 'abs', 'custom'];
+    const labelMap = { chest: '가슴', back: '등', shoulders: '어깨', legs: '하체', arms: '팔', abs: '복근', custom: '기타' };
+    const counts = { chest: 0, back: 0, shoulders: 0, legs: 0, arms: 0, abs: 0, custom: 0 };
+
+    // Accumulate all historical workouts
+    const allWorkouts = this.app.state.workouts;
+    Object.keys(allWorkouts).forEach(date => {
+      allWorkouts[date].forEach(w => {
+        w.sets.forEach(s => {
+          if (s.completed) {
+            const cat = w.category || 'custom';
+            if (counts[cat] !== undefined) {
+              counts[cat]++;
+            } else {
+              counts['custom']++;
+            }
+          }
+        });
+      });
+    });
+
+    const datasetLabels = categories.map(cat => labelMap[cat]);
+    const datasetValues = categories.map(cat => counts[cat]);
+    const backgroundColors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#6b7280'];
+
+    // If no data, render empty state indicator
+    const hasData = datasetValues.some(v => v > 0);
+    const chartDataValues = hasData ? datasetValues : [1];
+    const chartDataColors = hasData ? backgroundColors : ['rgba(255,255,255,0.05)'];
+    const chartLabels = hasData ? datasetLabels : ['훈련 기록 없음'];
+
+    this.partRatioChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          data: chartDataValues,
+          backgroundColor: chartDataColors,
+          borderWidth: 1,
+          borderColor: 'rgba(0,0,0,0.4)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#94a3b8', boxWidth: 12, font: { size: 10 } }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+  }
+
+  // Populate Personal Record (PR) table
+  renderPRTable() {
+    const prs = JSON.parse(localStorage.getItem('vitalfit_pr_records')) || {};
+    const keys = Object.keys(prs);
+    
+    if (keys.length === 0) {
+      this.prTbody.innerHTML = `
+        <tr>
+          <td colspan="3" style="text-align: center; padding: 24px; color: var(--text-muted);">아직 수립된 PR이 없습니다. 운동 기록을 시작해 보세요!</td>
+        </tr>
+      `;
+      return;
+    }
+
+    this.prTbody.innerHTML = '';
+    
+    // Sort PRs by exercise name
+    keys.sort().forEach(exId => {
+      const record = prs[exId];
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="padding: 10px 4px; font-weight: 600; color: var(--text-main);">${record.name.split(' (')[0]}</td>
+        <td style="padding: 10px 4px; text-align: right; font-weight: 700; color: #cbd5e1;">${record.weight} kg x ${record.reps}회</td>
+        <td style="padding: 10px 4px; text-align: right; font-weight: 800; color: var(--color-primary);">${record.oneRepMax.toFixed(1)} kg</td>
+      `;
+      this.prTbody.appendChild(row);
+    });
+  }
+}
+
+// ==========================================
+// 7. PREMIUM: SMART REST TIMER WIDGET
+// ==========================================
+class SmartRestTimer {
+  constructor(app) {
+    this.app = app;
+    this.widget = document.getElementById('rest-timer-widget');
+    this.timeDisplay = document.getElementById('timer-time-display');
+    this.progressBar = document.getElementById('timer-progress-bar');
+    this.closeBtn = document.getElementById('timer-close-btn');
+    
+    this.btnMinus = document.getElementById('timer-adjust-minus');
+    this.btnPlus = document.getElementById('timer-adjust-plus');
+    this.btnPreset60 = document.getElementById('timer-preset-60');
+    this.btnPreset90 = document.getElementById('timer-preset-90');
+    this.btnPreset120 = document.getElementById('timer-preset-120');
+
+    this.timerInterval = null;
+    this.totalDuration = 90; // Default 90 seconds
+    this.remainingTime = 90;
+
+    this.audioCtx = null; // Lazy loaded Web Audio API
+
+    this.initEvents();
+  }
+
+  initEvents() {
+    this.closeBtn.addEventListener('click', () => this.hide());
+    
+    this.btnMinus.addEventListener('click', () => this.adjustTime(-10));
+    this.btnPlus.addEventListener('click', () => this.adjustTime(10));
+    
+    this.btnPreset60.addEventListener('click', () => this.resetPreset(60, this.btnPreset60));
+    this.btnPreset90.addEventListener('click', () => this.resetPreset(90, this.btnPreset90));
+    this.btnPreset120.addEventListener('click', () => this.resetPreset(120, this.btnPreset120));
+  }
+
+  start() {
+    this.widget.style.display = 'flex';
+    this.remainingTime = this.totalDuration;
+    
+    clearInterval(this.timerInterval);
+    this.updateUI();
+
+    this.timerInterval = setInterval(() => {
+      this.remainingTime--;
+      this.updateUI();
+
+      if (this.remainingTime <= 0) {
+        this.triggerAlarm();
+        this.hide();
+      }
+    }, 1000);
+  }
+
+  adjustTime(seconds) {
+    this.remainingTime = Math.max(0, this.remainingTime + seconds);
+    // Adjust duration if exceeded
+    if (this.remainingTime > this.totalDuration) {
+      this.totalDuration = this.remainingTime;
+    }
+    this.updateUI();
+  }
+
+  resetPreset(seconds, activeBtn) {
+    // Style presets active
+    [this.btnPreset60, this.btnPreset90, this.btnPreset120].forEach(btn => btn.classList.remove('active'));
+    activeBtn.classList.add('active');
+    
+    this.totalDuration = seconds;
+    this.start();
+  }
+
+  updateUI() {
+    this.timeDisplay.textContent = this.remainingTime;
+    
+    // Circule Dashoffset logic: 226 is dasharray size
+    const progressFactor = Math.min(1, Math.max(0, this.remainingTime / this.totalDuration));
+    const offset = 226 - (progressFactor * 226);
+    this.progressBar.style.strokeDashoffset = offset;
+  }
+
+  hide() {
+    clearInterval(this.timerInterval);
+    this.widget.style.display = 'none';
+  }
+
+  // Synthesize warning beep sound using Web Audio API
+  triggerAlarm() {
+    try {
+      // 1. Play synthesize Audio Beep
+      if (!this.audioCtx) {
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (this.audioCtx && this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      
+      const playBeep = (freq, duration, delay = 0) => {
+        setTimeout(() => {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.audioCtx.destination);
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+          
+          gain.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + duration);
+          
+          osc.start();
+          osc.stop(this.audioCtx.currentTime + duration);
+        }, delay * 1000);
+      };
+
+      // Play double high beep alert sound
+      playBeep(880, 0.25, 0);
+      playBeep(880, 0.25, 0.35);
+
+      // 2. Play vibration if supported
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
+    } catch (err) {
+      console.warn('Audio feedback failed:', err);
+    }
+  }
+}
+
+// ==========================================
+// 8. PREMIUM: PERSONAL RECORD (PR) DETECTOR
+// ==========================================
+class PRDetector {
+  constructor(app) {
+    this.app = app;
+    this.popup = document.getElementById('pr-celebration-popup');
+    this.prExerciseName = document.getElementById('pr-exercise-name');
+    this.prRecordValue = document.getElementById('pr-record-value');
+    this.prCalculated1rm = document.getElementById('pr-calculated-1rm');
+    this.confirmBtn = document.getElementById('pr-confirm-btn');
+
+    this.confirmBtn.addEventListener('click', () => {
+      this.popup.style.display = 'none';
+    });
+  }
+
+  checkNewPR(workout, set) {
+    if (set.weight <= 0 || set.reps <= 0) return;
+
+    // 1RM Formula (Mifflin/Epley): weight * (1 + reps/30)
+    const current1RM = set.weight * (1 + set.reps / 30);
+    const prRecords = JSON.parse(localStorage.getItem('vitalfit_pr_records')) || {};
+
+    const existingPR = prRecords[workout.id];
+
+    // Check if new PR achieved (must exceed previous 1RM by at least 0.1kg)
+    if (!existingPR || current1RM > existingPR.oneRepMax + 0.1) {
+      // 1. Save new PR
+      prRecords[workout.id] = {
+        name: workout.name,
+        weight: set.weight,
+        reps: set.reps,
+        oneRepMax: current1RM,
+        date: this.app.selectedDate
+      };
+      localStorage.setItem('vitalfit_pr_records', JSON.stringify(prRecords));
+
+      // 2. Trigger Confetti!
+      this.triggerConfetti();
+
+      // 3. Show Celebration Popup
+      this.showCelebration(workout.name, set.weight, set.reps, current1RM);
+    }
+  }
+
+  showCelebration(name, weight, reps, oneRepMax) {
+    this.prExerciseName.textContent = name.split(' (')[0];
+    this.prRecordValue.textContent = `${weight} kg x ${reps}회`;
+    this.prCalculated1rm.textContent = `예상 1RM: ${oneRepMax.toFixed(1)} kg`;
+    this.popup.style.display = 'flex';
+  }
+
+  triggerConfetti() {
+    if (typeof confetti === 'function') {
+      // Confetti fire!
+      const duration = 2.5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 3000 };
+
+      const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+        const particleCount = 50 * (timeLeft / duration);
+        // Fire confetti from two corners of the screen
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
     }
   }
 }
