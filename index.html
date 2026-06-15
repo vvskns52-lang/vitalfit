@@ -2,6 +2,26 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      const errorMsg = `에러 발생: ${message}\n출처: ${source}\n라인: ${lineno}:${colno}\n에러 객체: ${error}`;
+      alert(errorMsg);
+      const div = document.createElement('div');
+      div.style.position = 'fixed';
+      div.style.top = '0';
+      div.style.left = '0';
+      div.style.width = '100%';
+      div.style.background = 'red';
+      div.style.color = 'white';
+      div.style.padding = '15px';
+      div.style.zIndex = '99999';
+      div.style.fontSize = '14px';
+      div.style.wordBreak = 'break-all';
+      div.innerText = errorMsg;
+      document.body.appendChild(div);
+      return false;
+    };
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VITALFIT - AI 전담 트레이너 & 운동일지</title>
   <link rel="stylesheet" href="style.css">
