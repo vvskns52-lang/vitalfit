@@ -98,14 +98,18 @@
             <p class="feedback-text" id="coaching-feedback-text">
               오늘 운동을 시작해 보세요! 입력하신 세트 수와 총 운동량을 분석하여 전담 트레이너가 실시간 코칭과 주의사항을 알려드립니다.
             </p>
-            <div class="feedback-metrics" style="grid-template-columns: 1fr 1fr;">
+            <div class="feedback-metrics" style="grid-template-columns: repeat(3, 1fr); gap: 6px;">
               <div class="metric-item">
                 <div class="metric-val green" id="metric-total-sets">0 세트</div>
-                <div class="metric-lbl">총 완료 세트</div>
+                <div class="metric-lbl">완료 세트</div>
               </div>
               <div class="metric-item">
                 <div class="metric-val blue" id="metric-total-volume">0 kg</div>
-                <div class="metric-lbl">총 훈련 볼륨</div>
+                <div class="metric-lbl">훈련 볼륨</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val red" id="metric-total-calories" style="color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.3);">0 kcal</div>
+                <div class="metric-lbl">소모 칼로리</div>
               </div>
             </div>
           </div>
@@ -145,11 +149,20 @@
 
           <!-- Custom Exercise Direct Input -->
           <div id="custom-exercise-input-container" style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">원하는 운동이 목록에 없나요? 직접 입력해서 추가해 보세요.</span>
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
-              <input type="text" id="custom-exercise-name" class="form-input" placeholder="예: 바벨 숄더 슈러그" style="padding: 8px 12px; font-size: 0.85rem;">
-              <button class="btn" id="custom-exercise-add-btn" style="padding: 8px 14px; font-size: 0.85rem; height: 38px;">
-                <i data-lucide="plus" style="width: 14px; height: 14px; vertical-align: middle;"></i> 추가
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">원하는 운동이 목록에 없나요? 부위를 지정해 영구 등록해 보세요.</span>
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr auto; gap: 8px; align-items: center;">
+              <select id="custom-exercise-category" class="form-input" style="padding: 8px; font-size: 0.85rem; height: 38px;">
+                <option value="chest">가슴</option>
+                <option value="back">등</option>
+                <option value="shoulders">어깨</option>
+                <option value="legs">하체</option>
+                <option value="arms">팔</option>
+                <option value="abs">복근</option>
+                <option value="cardio">유산소</option>
+              </select>
+              <input type="text" id="custom-exercise-name" class="form-input" placeholder="예: 바벨 숄더 슈러그" style="padding: 8px 12px; font-size: 0.85rem; height: 38px;">
+              <button class="btn" id="custom-exercise-add-btn" style="padding: 8px 14px; font-size: 0.85rem; height: 38px; width: auto;">
+                <i data-lucide="plus" style="width: 14px; height: 14px; vertical-align: middle;"></i> 등록
               </button>
             </div>
           </div>
@@ -294,6 +307,60 @@
             <div id="bmr-result-box" style="margin-top: 10px; padding: 12px; background: rgba(59, 130, 246, 0.08); border: 1px dashed rgba(59, 130, 246, 0.2); border-radius: var(--radius-sm); font-size: 0.85rem; line-height: 1.5; display: none;">
               <!-- Dynamically populated calculation results -->
             </div>
+          </div>
+        </div>
+
+        <!-- Weekly Routine Planner Card -->
+        <div class="card" style="border-color: rgba(59, 130, 246, 0.25); background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.9) 100%);">
+          <h2 class="card-title">
+            <i data-lucide="calendar-days" style="color: var(--color-secondary);"></i>
+            주간 루틴 플래너 (루틴 짜기)
+          </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 12px;">요일별로 나만의 운동 루틴을 직접 설계하고 관리하세요.</p>
+          
+          <!-- 요일 탭 선택기 -->
+          <div class="weekday-selector" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 16px;">
+            <button class="day-tab-btn active" data-day="0" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: var(--color-secondary); color: white; border: none; cursor: pointer;">월</button>
+            <button class="day-tab-btn" data-day="1" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">화</button>
+            <button class="day-tab-btn" data-day="2" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">수</button>
+            <button class="day-tab-btn" data-day="3" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">목</button>
+            <button class="day-tab-btn" data-day="4" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">금</button>
+            <button class="day-tab-btn" data-day="5" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">토</button>
+            <button class="day-tab-btn" data-day="6" style="padding: 6px 0; font-size: 0.75rem; font-weight: 700; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;">일</button>
+          </div>
+
+          <!-- 선택된 요일의 운동 구성 리스트 -->
+          <div id="weekly-routine-exercises-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; min-height: 50px;">
+            <!-- 동적으로 요일별 운동이 렌더링됨 -->
+          </div>
+
+          <!-- 운동 선택 추가 폼 -->
+          <div style="display: grid; grid-template-columns: 1.2fr 1.8fr auto; gap: 8px; margin-bottom: 12px; align-items: center;">
+            <select id="weekly-routine-part-select" class="form-input" style="padding: 8px; font-size: 0.8rem; height: 38px;">
+              <option value="chest">가슴</option>
+              <option value="back">등</option>
+              <option value="shoulders">어깨</option>
+              <option value="legs">하체</option>
+              <option value="arms">팔</option>
+              <option value="abs">복근</option>
+              <option value="cardio">유산소</option>
+            </select>
+            <select id="weekly-routine-exercise-select" class="form-input" style="padding: 8px; font-size: 0.8rem; height: 38px;">
+              <!-- 선택된 파트별 운동 목록이 동적으로 채워짐 -->
+            </select>
+            <button class="btn" id="weekly-routine-add-ex-btn" style="padding: 8px 12px; font-size: 0.85rem; height: 38px; width: auto; font-weight: 700;">
+              추가
+            </button>
+          </div>
+
+          <!-- 행동 버튼 그룹 -->
+          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 8px;">
+            <button class="btn btn-secondary" id="weekly-routine-load-today-btn" style="padding: 10px; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i data-lucide="download" style="width: 14px; height: 14px;"></i> 오늘 일지로 불러오기
+            </button>
+            <button class="btn" id="weekly-routine-save-btn" style="padding: 10px; font-size: 0.78rem; font-weight: 700; background: linear-gradient(135deg, var(--color-secondary) 0%, #2563eb 100%); color: white; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i data-lucide="save" style="width: 14px; height: 14px;"></i> 루틴 저장
+            </button>
           </div>
         </div>
 

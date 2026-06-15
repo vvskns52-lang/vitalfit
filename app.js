@@ -691,6 +691,198 @@ const exercisesData = {
 };
 
 // ==========================================
+// 1-1. DYNAMIC EXERCISE DATA INJECTION & MET DEFINITION
+// ==========================================
+exercisesData.cardio = [
+  {
+    id: "treadmill",
+    name: "러닝머신 (Treadmill)",
+    image: "images/treadmill.png",
+    target: "심폐 지구력, 전신 체지방 연소",
+    description: "실내에서 걷거나 달릴 수 있는 유산소 운동의 대표 주자로, 속도와 경사도를 조절하여 강도를 통제할 수 있습니다.",
+    steps: [
+      "벨트 위에 바로 선 후 안전핀을 옷에 고정합니다.",
+      "시작 버튼을 누르고 가벼운 걷기 속도(3~4km/h)로 몸을 예열합니다.",
+      "목표 강도에 따라 속도를 올려 가볍게 달리거나(6~8km/h) 고강도 인터벌을 수행합니다.",
+      "운동 완료 후에는 속도를 서서히 줄여 쿨다운을 진행합니다."
+    ],
+    tips: [
+      "달릴 때는 뒤꿈치부터 발바닥 전체가 땅에 닿도록 사뿐히 딛습니다.",
+      "손잡이를 꽉 잡고 몸을 뒤로 기대어 달리면 허리와 손목에 무리가 갈 수 있습니다."
+    ]
+  },
+  {
+    id: "stationary_bike",
+    name: "실내 자전거 (Stationary Bike)",
+    image: "images/stationary_bike.png",
+    target: "하체 근지구력, 심폐 지구력",
+    description: "무릎 관절에 가해지는 체중 부하를 최소화하면서 안전하게 하체 근력과 유산소 대사를 활성화할 수 있는 운동입니다.",
+    steps: [
+      "안장에 앉았을 때 아래쪽 페달이 위치한 다리가 약 10~15도 굽혀지는 높이로 안장을 조절합니다.",
+      "페달 스트랩을 발에 맞게 조절하여 고정합니다.",
+      "가벼운 저항으로 시작해 페달 속도(RPM)를 60~80으로 유지하며 회전시킵니다.",
+      "목표 시간에 도달할 때까지 저항을 조절하며 일정한 속도로 수행합니다."
+    ],
+    tips: [
+      "페달을 밟을 때 무릎이 안쪽이나 바깥쪽으로 벌어지지 않도록 일직선을 유지합니다.",
+      "허리를 너무 구부정하게 숙이지 않도록 복부에 힘을 줍니다."
+    ]
+  },
+  {
+    id: "stair_climber",
+    name: "천국의 계단 (Stair Climber)",
+    image: "images/stair_climber.png",
+    target: "대둔근, 햄스트링, 심폐 체력 극대화",
+    description: "일반 걷기에 비해 압도적인 칼로리 소모를 자랑하며, 엉덩이와 허벅지 뒤쪽 근육을 동시에 강화하는 고강도 유산소 운동입니다.",
+    steps: [
+      "계단 머신 위에 올라서서 시작 버튼을 누릅니다.",
+      "일정한 속도로 회전하는 계단을 한 칸씩 번갈아가며 밟아 올라갑니다.",
+      "발바닥 전체로 계단을 밀어내듯 딛고 상체를 아주 살짝 앞으로 숙여 엉덩이 자극을 극대화합니다.",
+      "목표 강도와 시간에 맞춰 속도를 유기적으로 조절합니다."
+    ],
+    tips: [
+      "뒤꿈치가 허공에 뜨지 않도록 발판 전체를 밟아야 무릎 부상을 막을 수 있습니다.",
+      "손잡이에 체중을 과도하게 실어 상체를 기대면 운동 효과가 절반으로 줄어듭니다."
+    ]
+  },
+  {
+    id: "elliptical",
+    name: "일립티컬 (Elliptical)",
+    image: "images/elliptical.png",
+    target: "전신 유산소, 코디네이션",
+    description: "디딤판이 타원형 궤적으로 움직여 무릎과 발목 관절의 충격을 흡수하면서 팔과 다리를 동시에 사용하는 전신 운동입니다.",
+    steps: [
+      "양발을 발판에 올리고 손잡이를 가볍게 잡습니다.",
+      "다리를 굴리며 자연스럽게 타원형 궤적을 그리며 걷기 시작합니다.",
+      "손잡이를 앞뒤로 밀고 당기며 등과 어깨, 팔 근육도 함께 작동시킵니다.",
+      "앞방향 뿐만 아니라 뒷방향으로도 굴려 다양한 하체 자극을 확보할 수 있습니다."
+    ],
+    tips: [
+      "상체가 좌우로 흔들리지 않게 중심 코어를 견고하게 잡아줍니다.",
+      "발뒤꿈치가 발판에서 완전히 떨어지지 않도록 유의합니다."
+    ]
+  },
+  {
+    id: "outdoor_running",
+    name: "야외 달리기 (Outdoor Running)",
+    image: "images/outdoor_running.png",
+    target: "심폐 건강, 전신 근지구력, 스트레스 해소",
+    description: "기구 없이 자연에서 바람을 맞으며 달리는 운동으로, 바닥면의 불규칙한 저항을 이겨내며 발목 및 코어 밸런스를 발달시킵니다.",
+    steps: [
+      "달리기 전 발목과 가볍게 제자리 뛰기로 관절을 풉니다.",
+      "가벼운 조깅 속도로 출발하여 점진적으로 호흡이 차는 속도로 올립니다.",
+      "코로 깊게 들이쉬고 입으로 짧게 뱉는 일정한 호흡 템포를 유지합니다.",
+      "목표 거리나 시간을 달성한 뒤에는 서서히 걷는 속도로 줄여 정리 운동을 합니다."
+    ],
+    tips: [
+      "착지 시 무릎에 가해지는 충격을 분산하기 위해 상체를 꼿꼿이 펴고 가볍게 앞으로 숙여 달립니다.",
+      "아스팔트보다는 우레탄 트랙이나 흙길을 달리는 것이 관절 건강에 이롭습니다."
+    ]
+  }
+];
+
+// 기본 종목 수 추가하기 (어깨: 업라이트 로우, 하체: 바벨 런지)
+exercisesData.shoulders.push({
+  id: "upright_row",
+  name: "바벨 업라이트 로우 (Barbell Upright Row)",
+  image: "images/upright_row.png",
+  target: "측면 삼각근, 상부 승모근",
+  description: "바벨을 몸에 밀착하여 턱 방향으로 끌어올리는 운동으로, 어깨 넓이 확보와 상체 프레임 확장에 좋습니다.",
+  steps: [
+    "바벨을 어깨너비보다 좁게 잡고 똑바로 섭니다.",
+    "바벨을 몸 앞선을 따라 명치 또는 턱 높이까지 수직으로 끌어올립니다. 이때 팔꿈치가 손목보다 항상 위에 있어야 합니다.",
+    "어깨 자극을 느끼며 바벨을 통제하면서 천천히 내립니다."
+  ],
+  tips: [
+    "손목이 너무 꺾이지 않도록 가동범위를 무리하게 높이지 마세요.",
+    "승모근이 지나치게 수축되지 않도록 어깨를 아래로 누른 채 팔꿈치를 밖으로 벌리며 올려줍니다."
+  ]
+});
+
+exercisesData.legs.push({
+  id: "barbell_lunge",
+  name: "바벨 런지 (Barbell Lunge)",
+  image: "images/barbell_lunge.png",
+  target: "대퇴사두근, 대둔근, 햄스트링, 밸런스",
+  description: "바벨을 어깨에 짊어지고 수행하는 런지 운동으로, 덤벨보다 높은 중량 과부하를 가하여 하체 근력과 힙업 자극을 강화합니다.",
+  steps: [
+    "렉에서 바벨을 승모근 위에 짊어지고 한 걸음 뒤로 물러납니다.",
+    "한 발을 크게 앞으로 딛고, 몸을 곧게 세운 상태에서 아래로 주저앉아 앞다리가 90도가 되도록 만듭니다.",
+    "앞발바닥으로 바닥을 밀어내며 제자리로 원위치합니다. 양발을 교대로 수행합니다."
+  ],
+  tips: [
+    "바벨의 좌우 균형이 무너지지 않도록 중심 코어를 강하게 조이고 전신 밸런스를 유지해야 합니다.",
+    "무릎에 무리가 갈 수 있으니 너무 과도하게 무릎이 앞으로 나가지 않게 통제하세요."
+  ]
+});
+
+// MET 계수 정의 맵
+const MET_VALUES = {
+  // Chest
+  bench_press: 6.0,
+  incline_db_press: 5.0,
+  chest_fly: 4.0,
+  dips: 5.0,
+  pec_deck_fly: 4.0,
+  push_up: 4.0,
+  cable_crossover: 4.0,
+  
+  // Back
+  deadlift: 7.0,
+  lat_pulldown: 5.0,
+  bent_over_row: 6.0,
+  pull_up: 5.0,
+  seated_cable_row: 4.5,
+  one_arm_db_row: 5.0,
+  tbar_row: 6.0,
+  
+  // Shoulders
+  overhead_press: 6.0,
+  side_lateral_raise: 3.5,
+  db_shoulder_press: 5.0,
+  bent_over_lateral_raise: 3.5,
+  face_pull: 4.0,
+  arnold_press: 5.0,
+  front_raise: 3.5,
+  upright_row: 4.5,
+  
+  // Legs
+  squat: 7.0,
+  romanian_deadlift: 6.0,
+  leg_press: 6.0,
+  leg_curl: 4.0,
+  leg_extension: 4.0,
+  lunge: 5.5,
+  barbell_lunge: 6.0,
+  calf_raise: 3.0,
+  
+  // Arms
+  db_biceps_curl: 3.5,
+  triceps_pushdown: 3.5,
+  hammer_curl: 3.5,
+  barbell_curl: 4.0,
+  lying_triceps_extension: 4.0,
+  db_kickback: 3.0,
+  preacher_curl: 3.5,
+  
+  // Abs
+  crunch: 3.0,
+  leg_raise: 3.0,
+  plank: 3.0,
+  russian_twist: 3.5,
+  hanging_leg_raise: 4.0,
+  ab_rollout: 4.5,
+  
+  // Cardio
+  treadmill: 8.0,
+  stationary_bike: 6.0,
+  stair_climber: 9.0,
+  elliptical: 5.5,
+  outdoor_running: 9.0
+};
+
+
+// ==========================================
 // 2. WORKOUT TRACKER MODULE
 // ==========================================
 class WorkoutTracker {
@@ -709,6 +901,7 @@ class WorkoutTracker {
     this.coachingFeedbackText = document.getElementById('coaching-feedback-text');
     this.metricTotalSets = document.getElementById('metric-total-sets');
     this.metricTotalVolume = document.getElementById('metric-total-volume');
+    this.metricTotalCalories = document.getElementById('metric-total-calories');
     
     // Custom exercise elements
     this.customExerciseNameInput = document.getElementById('custom-exercise-name');
@@ -716,6 +909,7 @@ class WorkoutTracker {
     
     this.selectedQuickAddPart = null; // Track current selected category
     
+    this.loadCustomExercises(); // 영구 커스텀 운동 로드 및 병합
     this.initQuickAdd();
     this.initCustomExerciseEvents();
     
@@ -727,19 +921,72 @@ class WorkoutTracker {
     this.renderTemplates();
   }
 
+  loadCustomExercises() {
+    const customs = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+    customs.forEach(ex => {
+      if (exercisesData[ex.category]) {
+        const exists = exercisesData[ex.category].some(item => item.id === ex.id);
+        if (!exists) {
+          exercisesData[ex.category].push(ex);
+        }
+      }
+      // MET 계수 복구
+      if (!MET_VALUES[ex.id]) {
+        MET_VALUES[ex.id] = ex.category === 'cardio' ? 6.0 : 4.0;
+      }
+    });
+  }
+
   initCustomExerciseEvents() {
+    this.customExerciseCategorySelect = document.getElementById('custom-exercise-category');
     this.customExerciseAddBtn.addEventListener('click', () => {
       const name = this.customExerciseNameInput.value.trim();
+      const category = this.customExerciseCategorySelect.value;
       if (!name) {
         alert('운동 이름을 입력해 주세요.');
         return;
       }
       
       const customId = `custom_${Date.now()}`;
-      const category = this.selectedQuickAddPart || 'custom';
       
-      this.addWorkout(customId, name, category);
+      const newCustomExercise = {
+        id: customId,
+        name: `${name} (커스텀)`,
+        image: "images/default_workout.png",
+        target: `${this.getCategoryKorean(category)} 커스텀 운동`,
+        description: "사용자가 직접 추가한 커스텀 운동 종목입니다.",
+        steps: ["운동을 시작하고 올바른 자세로 수행합니다."],
+        tips: ["코어를 단단히 잡고 부상에 유의하여 수행하세요."]
+      };
+
+      // 로컬스토리지 저장
+      const customs = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+      customs.push(Object.assign({ category }, newCustomExercise));
+      localStorage.setItem('vitalfit_custom_exercises', JSON.stringify(customs));
+
+      // 메모리 병합
+      if (exercisesData[category]) {
+        exercisesData[category].push(newCustomExercise);
+      }
+
+      // MET 지정
+      MET_VALUES[customId] = category === 'cardio' ? 6.0 : 4.0;
+
+      // 오늘 일지에 즉시 추가
+      this.addWorkout(customId, newCustomExercise.name, category);
       this.customExerciseNameInput.value = '';
+      
+      // UI 갱신 (빠른 추가 갱신)
+      if (this.selectedQuickAddPart === category) {
+        const activeBtn = this.quickAddContainer.querySelector(`.quick-add-item[data-category="${category}"]`);
+        if (activeBtn) this.selectQuickAddCategory(category, activeBtn);
+      } else {
+        // 선택된 카테고리가 아니어도 빠른 추가 그리드를 활성화해둠
+        const targetBtn = this.quickAddContainer.querySelector(`.quick-add-item[data-category="${category}"]`);
+        if (targetBtn) this.selectQuickAddCategory(category, targetBtn);
+      }
+      
+      alert(`💪 '${name}' 운동이 ${this.getCategoryKorean(category)} 카테고리에 영구 등록되고, 오늘 일지에 추가되었습니다!`);
     });
   }
 
@@ -752,7 +999,8 @@ class WorkoutTracker {
       { id: 'shoulders', name: '어깨' },
       { id: 'legs', name: '하체' },
       { id: 'arms', name: '팔' },
-      { id: 'abs', name: '복근' }
+      { id: 'abs', name: '복근' },
+      { id: 'cardio', name: '유산소' }
     ];
 
     categories.forEach(item => {
@@ -771,7 +1019,7 @@ class WorkoutTracker {
     const buttons = this.quickAddContainer.querySelectorAll('.quick-add-item');
     buttons.forEach(btn => btn.classList.remove('active'));
 
-    if (this.selectedQuickAddPart === categoryId) {
+    if (this.selectedQuickAddPart === categoryId && clickedBtn.classList.contains('active')) {
       this.selectedQuickAddPart = null;
       this.quickAddSubContainer.style.display = 'none';
       return;
@@ -801,7 +1049,7 @@ class WorkoutTracker {
   }
 
   getCategoryKorean(cat) {
-    const map = { chest: '가슴', back: '등', shoulders: '어깨', legs: '하체', arms: '팔', abs: '복근', custom: '기타' };
+    const map = { chest: '가슴', back: '등', shoulders: '어깨', legs: '하체', arms: '팔', abs: '복근', cardio: '유산소', custom: '기타' };
     return map[cat] || cat;
   }
 
@@ -809,6 +1057,9 @@ class WorkoutTracker {
     const date = this.app.selectedDate;
     const workouts = this.app.getWorkoutsForDate(date);
     
+    const userProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile')) || {};
+    const weight = parseFloat(userProfile.profileWeight) || 70;
+
     // 1. Render logged list
     if (workouts.length === 0) {
       this.loggedContainer.innerHTML = `
@@ -817,7 +1068,7 @@ class WorkoutTracker {
           <p>오늘 기록된 운동이 없습니다.<br>아래 목록에서 운동을 선택해 기록을 남겨보세요!</p>
         </div>
       `;
-      this.updateCoachingFeedback(0, 0); // Empty coaching state
+      this.updateCoachingFeedback(0, 0, 0); // Empty coaching state
       if (window.lucide) window.lucide.createIcons();
       return;
     }
@@ -825,17 +1076,37 @@ class WorkoutTracker {
     this.loggedContainer.innerHTML = '';
     let totalSets = 0;
     let totalVolume = 0;
+    let totalCalories = 0;
 
     workouts.forEach((workout, workoutIndex) => {
+      const isCardio = workout.category === 'cardio';
+      const met = MET_VALUES[workout.id] || (isCardio ? 6.0 : 4.0);
+
+      // 개별 운동의 완료된 세트 칼로리 계산
+      let workoutCalories = 0;
+      workout.sets.forEach(set => {
+        if (set.completed) {
+          if (isCardio) {
+            workoutCalories += met * 3.5 * weight / 200 * (parseFloat(set.weight) || 0);
+          } else {
+            workoutCalories += met * 3.5 * weight / 200 * 1.5; // 웨이트는 세션당 1.5분으로 산정
+          }
+        }
+      });
+      totalCalories += workoutCalories;
+
       const itemEl = document.createElement('div');
       itemEl.className = 'logged-workout-item';
       
+      const calorieText = workoutCalories > 0 ? `<span class="workout-calorie-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; display: inline-flex; align-items: center; gap: 2px;">🔥 ${Math.round(workoutCalories)} kcal</span>` : '';
+
       const headerEl = document.createElement('div');
       headerEl.className = 'logged-workout-header';
       headerEl.innerHTML = `
-        <div class="logged-workout-title">
+        <div class="logged-workout-title" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
           ${workout.name}
           <span class="logged-workout-tag">${this.getCategoryKorean(workout.category)}</span>
+          ${calorieText}
         </div>
         <button class="remove-workout-btn" data-index="${workoutIndex}">
           <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
@@ -852,7 +1123,9 @@ class WorkoutTracker {
       
       workout.sets.forEach((set, setIndex) => {
         totalSets++;
-        totalVolume += (set.weight * set.reps);
+        if (!isCardio) {
+          totalVolume += (set.weight * set.reps);
+        }
 
         const isCompleted = set.completed || false;
         
@@ -862,6 +1135,8 @@ class WorkoutTracker {
 
         const setRow = document.createElement('div');
         setRow.className = `set-row${isCompleted ? ' completed' : ''}`;
+        
+        // 유산소 운동은 분, km 단위 사용
         setRow.innerHTML = `
           <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''} data-workout="${workoutIndex}" data-set="${setIndex}">
           <div class="set-index" style="display:flex; flex-direction:column; gap:2px; line-height:1.2;">
@@ -870,13 +1145,13 @@ class WorkoutTracker {
           </div>
           
           <div class="set-input-group">
-            <input type="number" class="set-weight" value="${set.weight}" min="0" step="2.5" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
-            <span>kg</span>
+            <input type="number" class="set-weight" value="${set.weight}" min="0" step="${isCardio ? '1' : '2.5'}" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
+            <span>${isCardio ? '분' : 'kg'}</span>
           </div>
           
           <div class="set-input-group">
-            <input type="number" class="set-reps" value="${set.reps}" min="0" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
-            <span>회</span>
+            <input type="number" class="set-reps" value="${set.reps}" min="0" step="${isCardio ? '0.1' : '1'}" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
+            <span>${isCardio ? 'km' : '회'}</span>
           </div>
           
           <button class="delete-set-btn" data-workout="${workoutIndex}" data-set="${setIndex}">
@@ -902,7 +1177,7 @@ class WorkoutTracker {
               this.app.timer.start();
             }
             
-            if (this.app.prDetector) {
+            if (this.app.prDetector && !isCardio) {
               this.app.prDetector.checkNewPR(workout, set);
             }
           } else {
@@ -920,7 +1195,7 @@ class WorkoutTracker {
         });
 
         repsInput.addEventListener('input', (e) => {
-          const val = parseInt(e.target.value) || 0;
+          const val = parseFloat(e.target.value) || 0;
           this.app.updateWorkoutSet(workoutIndex, setIndex, 'reps', val);
         });
 
@@ -948,23 +1223,23 @@ class WorkoutTracker {
       this.loggedContainer.appendChild(itemEl);
     });
 
-    // Update trainer coaching feedback based on logged workout volume
-    this.updateCoachingFeedback(totalSets, totalVolume);
+    // Update trainer coaching feedback based on logged workout volume and calories
+    this.updateCoachingFeedback(totalSets, totalVolume, totalCalories);
 
     if (window.lucide) window.lucide.createIcons();
   }
 
   // Real-time PT Coaching Logic
-  updateCoachingFeedback(totalSets, totalVolume) {
+  updateCoachingFeedback(totalSets, totalVolume, totalCalories) {
     this.metricTotalSets.textContent = `${totalSets} 세트`;
     this.metricTotalVolume.textContent = `${totalVolume.toLocaleString()} kg`;
+    this.metricTotalCalories.textContent = `${Math.round(totalCalories)} kcal`;
 
     const userProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile')) || {};
     const goal = userProfile.profileGoal || 'diet';
     const level = userProfile.profileLevel || 'beginner';
     
     let badgeHTML = '';
-    let badgeClass = 'feedback-status';
     let feedbackText = '';
 
     if (totalSets === 0) {
@@ -975,25 +1250,25 @@ class WorkoutTracker {
     } 
     else if (totalSets >= 1 && totalSets <= 5) {
       badgeHTML = `<i data-lucide="flame" style="width: 14px; height: 14px;"></i><span>워밍업 단계</span>`;
-      feedbackText = `가벼운 워밍업 단계입니다. 관절 부상을 피하기 위해 본 세트에 진입하기 전 어깨나 무릎 관절을 충분히 회전시켜 스트레칭해 주세요. 현재 목표(${this.getGoalKorean(goal)})를 성공시키기 위해 이제 점진적으로 중량을 올리며 메인 세트로 나아갑시다.`;
+      feedbackText = `가벼운 워밍업 단계입니다. 관절 부상을 피하기 위해 본 세트에 진입하기 전 어깨나 무릎 관절을 충분히 회전시켜 스트레칭해 주세요. 현재 목표(${this.getGoalKorean(goal)})를 성공시키기 위해 이제 점진적으로 중량을 올리며 메인 세트로 나아갑시다. 현재 ${Math.round(totalCalories)}kcal를 소모하셨습니다.`;
       this.coachingStatusBadge.style.background = 'rgba(59, 130, 246, 0.15)';
       this.coachingStatusBadge.style.color = 'var(--color-secondary)';
     } 
     else if (totalSets >= 6 && totalSets <= 12) {
       badgeHTML = `<i data-lucide="zap" style="width: 14px; height: 14px;"></i><span>기초 강도 진입</span>`;
-      feedbackText = `적정한 훈련 강도에 들어섰습니다. ${level === 'beginner' ? '초보 헬린이 레벨에서 무리하지 않고 기량을 다지기에 딱 좋은 세트 수입니다.' : '중상급자 레벨의 본격적인 메인 훈련 볼륨입니다.'} 현재 소화한 ${totalVolume.toLocaleString()}kg의 부하는 자극을 심어주기에 충분합니다. 부위당 1세트 정도를 더 한계점(Failure point)까지 쥐어짜 보세요.`;
+      feedbackText = `적정한 훈련 강도에 들어섰습니다. ${level === 'beginner' ? '초보 헬린이 레벨에서 무리하지 않고 기량을 다지기에 딱 좋은 세트 수입니다.' : '중상급자 레벨의 본격적인 메인 훈련 볼륨입니다.'} 현재 소화한 ${totalVolume.toLocaleString()}kg의 부하와 소모된 ${Math.round(totalCalories)}kcal는 자극을 심어주기에 충분합니다. 부위당 1세트 정도를 더 한계점(Failure point)까지 쥐어짜 보세요.`;
       this.coachingStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
       this.coachingStatusBadge.style.color = 'var(--color-accent)';
     } 
     else if (totalSets >= 13 && totalSets <= 22) {
       badgeHTML = `<i data-lucide="award" style="width: 14px; height: 14px;"></i><span>최적의 훈련 볼륨 (강력 추천)</span>`;
-      feedbackText = `전담 트레이너 강력 추천 볼륨입니다! 오늘의 운동 목적에 아주 정확하게 부합하는 이상적인 훈련량이 축적되었습니다. 오늘 총 ${totalVolume.toLocaleString()}kg의 무거운 하중을 견뎌내며 근육에 미세 상처를 효과적으로 입혔습니다. 30분 이내에 양질의 단백질 섭취를 완료하고 충분한 휴식을 통해 근비대를 유도하세요!`;
+      feedbackText = `전담 트레이너 강력 추천 볼륨입니다! 오늘의 운동 목적에 아주 정확하게 부합하는 이상적인 훈련량이 축적되었습니다. 오늘 총 ${totalVolume.toLocaleString()}kg의 무거운 하중을 견뎌내고 총 ${Math.round(totalCalories)}kcal를 성공적으로 태웠습니다. 30분 이내에 양질의 단백질 섭취를 완료하고 충분한 휴식을 통해 신체 회복을 유도하세요!`;
       this.coachingStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
       this.coachingStatusBadge.style.color = 'var(--color-primary)';
     } 
     else {
       badgeHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i><span>오버트레이닝 우려 (주의)</span>`;
-      feedbackText = `오늘 과도한 운동 세트 수(${totalSets}세트)를 수행하고 있습니다! 일정 피로도를 초과하여 운동을 계속 지속하면, 근육 합성 호르몬보다 근육 분해 호르몬(코르티솔) 분비가 많아져 오히려 역효과가 나고 어깨/무릎 부상 위험이 급증합니다. 오늘의 훈련은 여기서 멈추고 안전하게 폼롤러 스트레칭으로 넘어가세요.`;
+      feedbackText = `오늘 과도한 운동 세트 수(${totalSets}세트)를 수행하고 있습니다! 소모 칼로리(${Math.round(totalCalories)}kcal)는 대단하지만, 피로도를 초과하여 운동을 계속 지속하면 부상 위험이 급증합니다. 오늘의 훈련은 여기서 멈추고 안전하게 폼롤러 스트레칭으로 넘어가세요.`;
       this.coachingStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
       this.coachingStatusBadge.style.color = '#ef4444';
     }
@@ -1017,11 +1292,12 @@ class WorkoutTracker {
       return;
     }
 
+    const isCardio = category === 'cardio';
     const newWorkout = {
       id: exerciseId,
       name: name,
       category: category,
-      sets: [{ weight: 40, reps: 10 }]
+      sets: [isCardio ? { weight: 15, reps: 1.5, completed: false } : { weight: 40, reps: 10, completed: false }]
     };
 
     workouts.push(newWorkout);
@@ -1043,7 +1319,7 @@ class WorkoutTracker {
     const sets = workouts[workoutIndex].sets;
     
     const lastSet = sets[sets.length - 1] || { weight: 40, reps: 10 };
-    sets.push({ weight: lastSet.weight, reps: lastSet.reps });
+    sets.push({ weight: lastSet.weight, reps: lastSet.reps, completed: false });
     
     this.app.saveWorkoutsForDate(date, workouts);
     this.render();
@@ -1400,10 +1676,33 @@ class TrainerAssistant {
     this.suggestedRoutineGuideBox = document.getElementById('suggested-routine-guide-box');
     this.applyRoutineBtn = document.getElementById('apply-routine-btn');
 
+    // Weekly Routine DOM elements
+    this.dayTabBtns = document.querySelectorAll('.day-tab-btn');
+    this.weeklyRoutineList = document.getElementById('weekly-routine-exercises-list');
+    this.weeklyPartSelect = document.getElementById('weekly-routine-part-select');
+    this.weeklyExerciseSelect = document.getElementById('weekly-routine-exercise-select');
+    this.weeklyAddExBtn = document.getElementById('weekly-routine-add-ex-btn');
+    this.weeklyLoadTodayBtn = document.getElementById('weekly-routine-load-today-btn');
+    this.weeklySaveBtn = document.getElementById('weekly-routine-save-btn');
+
     this.currentSuggestedRoutine = null; // Store recommended routine array temporarily
+
+    // 주간 루틴 데이터 초기화
+    this.weeklyRoutines = JSON.parse(localStorage.getItem('vitalfit_weekly_routines')) || {
+      '0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': []
+    };
+    
+    // 오늘 날짜의 요일(월=0 ~ 일=6) 구해서 기본 설정
+    const rawDay = new Date().getDay(); // 일(0) ~ 토(6)
+    const todayDay = rawDay === 0 ? 6 : rawDay - 1; // 월(0) ~ 일(6) 변환
+    this.currentSelectedDay = todayDay.toString();
 
     this.initEvents();
     this.loadUserProfile();
+    
+    // 요일별 운동 선택지 및 리스트 초기화 렌더링
+    this.updateWeeklyExerciseDropdown();
+    this.renderWeeklyRoutine();
   }
 
   initEvents() {
@@ -1417,6 +1716,74 @@ class TrainerAssistant {
 
     this.applyRoutineBtn.addEventListener('click', () => {
       this.applyRoutineToLog();
+    });
+
+    // 주간 루틴 요일 탭 선택 이벤트
+    this.dayTabBtns.forEach(btn => {
+      // 기본 요일 탭 active 설정
+      if (btn.getAttribute('data-day') === this.currentSelectedDay) {
+        btn.classList.add('active');
+        btn.style.background = 'var(--color-secondary)';
+        btn.style.color = 'white';
+      } else {
+        btn.classList.remove('active');
+        btn.style.background = 'rgba(255,255,255,0.05)';
+        btn.style.color = 'var(--text-muted)';
+      }
+
+      btn.addEventListener('click', () => {
+        this.dayTabBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'rgba(255,255,255,0.05)';
+          b.style.color = 'var(--text-muted)';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'var(--color-secondary)';
+        btn.style.color = 'white';
+        
+        this.currentSelectedDay = btn.getAttribute('data-day');
+        this.renderWeeklyRoutine();
+      });
+    });
+
+    // 부위 변경 시 운동 드롭다운 리스트 변경
+    this.weeklyPartSelect.addEventListener('change', () => {
+      this.updateWeeklyExerciseDropdown();
+    });
+
+    // 운동 추가 버튼 클릭
+    this.weeklyAddExBtn.addEventListener('click', () => {
+      const exId = this.weeklyExerciseSelect.value;
+      if (!exId) return;
+
+      const part = this.weeklyPartSelect.value;
+      const exObj = exercisesData[part].find(e => e.id === exId);
+      if (!exObj) return;
+
+      const exists = this.weeklyRoutines[this.currentSelectedDay].some(e => e.id === exId);
+      if (exists) {
+        alert('이미 이 요일 루틴에 등록된 운동입니다.');
+        return;
+      }
+
+      this.weeklyRoutines[this.currentSelectedDay].push({
+        id: exObj.id,
+        name: exObj.name,
+        category: part
+      });
+
+      this.renderWeeklyRoutine();
+    });
+
+    // 오늘 일지에 등록
+    this.weeklyLoadTodayBtn.addEventListener('click', () => {
+      this.applyWeeklyRoutineToToday();
+    });
+
+    // 주간 루틴 전체 저장
+    this.weeklySaveBtn.addEventListener('click', () => {
+      localStorage.setItem('vitalfit_weekly_routines', JSON.stringify(this.weeklyRoutines));
+      alert('💾 요일별 운동 루틴이 안전하게 저장되었습니다!');
     });
   }
 
@@ -1490,6 +1857,109 @@ class TrainerAssistant {
       alert('신체 프로필 및 AI 트레이너 데이터 저장이 완료되었습니다!');
       // Re-trigger tracker to recalculate coaching advice under new goals
       this.app.tracker.render();
+    }
+  }
+
+  updateWeeklyExerciseDropdown() {
+    const part = this.weeklyPartSelect.value;
+    const list = exercisesData[part] || [];
+    this.weeklyExerciseSelect.innerHTML = '';
+    
+    list.forEach(ex => {
+      const opt = document.createElement('option');
+      opt.value = ex.id;
+      opt.textContent = ex.name.split(' (')[0];
+      this.weeklyExerciseSelect.appendChild(opt);
+    });
+  }
+
+  renderWeeklyRoutine() {
+    this.weeklyRoutineList.innerHTML = '';
+    const currentList = this.weeklyRoutines[this.currentSelectedDay] || [];
+    
+    if (currentList.length === 0) {
+      this.weeklyRoutineList.innerHTML = `
+        <div style="text-align: center; padding: 20px; font-size: 0.8rem; color: var(--text-muted);">
+          등록된 운동이 없습니다. 아래에서 운동을 골라 추가해 보세요!
+        </div>
+      `;
+      return;
+    }
+
+    currentList.forEach((ex, index) => {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justify = 'space-between';
+      row.style.alignItems = 'center';
+      row.style.padding = '8px 12px';
+      row.style.background = 'rgba(255,255,255,0.02)';
+      row.style.border = '1px solid var(--border-color)';
+      row.style.borderRadius = 'var(--radius-sm)';
+      row.style.marginBottom = '6px';
+      
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:0.72rem; background:rgba(59,130,246,0.15); color:var(--color-secondary); padding: 2px 6px; border-radius: 4px;">
+            ${this.app.tracker.getCategoryKorean(ex.category)}
+          </span>
+          <span style="font-weight:600; font-size:0.85rem;">${ex.name.split(' (')[0]}</span>
+        </div>
+        <button class="delete-weekly-ex-btn" style="background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+        </button>
+      `;
+
+      row.querySelector('.delete-weekly-ex-btn').addEventListener('click', () => {
+        this.weeklyRoutines[this.currentSelectedDay].splice(index, 1);
+        this.renderWeeklyRoutine();
+      });
+
+      this.weeklyRoutineList.appendChild(row);
+    });
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  applyWeeklyRoutineToToday() {
+    const currentList = this.weeklyRoutines[this.currentSelectedDay] || [];
+    if (currentList.length === 0) {
+      alert('선택된 요일에 등록된 루틴 운동이 없습니다. 먼저 루틴을 설계해 주세요.');
+      return;
+    }
+
+    const dayKorean = ['월', '화', '수', '목', '금', '토', '일'][parseInt(this.currentSelectedDay)];
+    if (confirm(`'${dayKorean}요일' 루틴의 운동들을 오늘 일지에 불러올까요?\n(기존 일지에 누적 추가됩니다.)`)) {
+      const date = this.app.selectedDate;
+      const todayWorkouts = this.app.getWorkoutsForDate(date);
+      
+      let added = 0;
+      currentList.forEach(ex => {
+        const exists = todayWorkouts.some(w => w.id === ex.id);
+        if (!exists) {
+          const isCardio = ex.category === 'cardio';
+          const sets = [];
+          if (isCardio) {
+            sets.push({ weight: 15, reps: 1.5, completed: false });
+          } else {
+            for (let i = 0; i < 3; i++) {
+              sets.push({ weight: 40, reps: 10, completed: false });
+            }
+          }
+          
+          todayWorkouts.push({
+            id: ex.id,
+            name: ex.name,
+            category: ex.category,
+            sets: sets
+          });
+          added++;
+        }
+      });
+
+      this.app.saveWorkoutsForDate(date, todayWorkouts);
+      this.app.tracker.render();
+      alert(`🤖 '${dayKorean}요일' 루틴의 운동 ${added}개가 오늘 일지에 추가되었습니다!`);
+      this.app.switchTab('tracker');
     }
   }
 
