@@ -1867,6 +1867,8 @@ class AnalyticsDashboard {
     this.renderVolumeChart();
     this.renderRatioChart();
     this.renderPRTable();
+    this.renderStreakAndHeatmap();
+    this.renderSBDStrength();
   }
 
   // Render weekly volume trend line chart
@@ -2037,6 +2039,164 @@ class AnalyticsDashboard {
       `;
       this.prTbody.appendChild(row);
     });
+  }
+
+  // Render training streak and GitHub-style 12-week attendance contribution grid
+  renderStreakAndHeatmap() {
+    const streakDaysBadge = document.getElementById('streak-days-badge');
+    const streakCheerMessage = document.getElementById('streak-cheer-message');
+    const heatmapContainer = document.getElementById('attendance-heatmap-container');
+    
+    if (!streakDaysBadge || !heatmapContainer) return;
+    
+    // 1. Calculate continuous streak
+    const allWorkouts = this.app.state.workouts; 
+    const dates = Object.keys(allWorkouts).filter(d => {
+      return allWorkouts[d].some(w => w.sets && w.sets.some(s => s.completed));
+    }).sort();
+
+    let streak = 0;
+    const todayStr = this.app.getTodayString();
+    
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+    
+    const hasToday = dates.includes(todayStr);
+    const hasYesterday = dates.includes(yesterdayStr);
+    
+    if (hasToday || hasYesterday) {
+      let currentCheckDate = hasToday ? new Date() : yesterday;
+      
+      while (true) {
+        const checkStr = `${currentCheckDate.getFullYear()}-${String(currentCheckDate.getMonth() + 1).padStart(2, '0')}-${String(currentCheckDate.getDate()).padStart(2, '0')}`;
+        if (dates.includes(checkStr)) {
+          streak++;
+          currentCheckDate.setDate(currentCheckDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+    }
+
+    streakDaysBadge.textContent = `연속 ${streak}일차`;
+    
+    if (streak === 0) {
+      streakCheerMessage.textContent = '아직 운동 기록이 없습니다. 오늘부터 첫 운동 잔디를 심어보세요!';
+    } else if (streak < 3) {
+      streakCheerMessage.textContent = `🔥 대단한 시작입니다! ${streak}일 연속 운동 중입니다. 3일차 열정까지 달릴까요?`;
+    } else if (streak < 7) {
+      streakCheerMessage.textContent = `⚡ 벌써 ${streak}일째 쇠질 중! 근성 성장이 폭발하고 있습니다. 조금만 더 해내세요!`;
+    } else {
+      streakCheerMessage.textContent = `👑 전설적인 꾸준함! 무려 ${streak}일 연속 근비대 궤도에 올랐습니다. 최고의 트레이너가 격하게 칭찬합니다!`;
+    }
+
+    // 2. Render Heatmap (7 rows x 12 columns = 84 cells)
+    heatmapContainer.innerHTML = '';
+    
+    const today = new Date();
+    const dayOfWeek = today.getDay(); 
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + (6 - dayOfWeek)); 
+    
+    const heatmapDates = [];
+    for (let i = 83; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setDate(endDate.getDate() - i);
+      heatmapDates.push(d);
+    }
+    
+    heatmapDates.forEach(date => {
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const dayWorkouts = allWorkouts[dateStr] || [];
+      
+      let completedSets = 0;
+      dayWorkouts.forEach(w => {
+        if (w.sets) {
+          w.sets.forEach(s => {
+            if (s.completed) completedSets++;
+          });
+        }
+      });
+      
+      const cell = document.createElement('div');
+      cell.className = 'grass-cell';
+      
+      let levelClass = 'grass-level-0';
+      if (completedSets >= 1 && completedSets <= 3) {
+        levelClass = 'grass-level-1';
+      } else if (completedSets >= 4 && completedSets <= 8) {
+        levelClass = 'grass-level-2';
+      } else if (completedSets >= 9) {
+        levelClass = 'grass-level-3';
+      }
+      
+      cell.classList.add(levelClass);
+      cell.setAttribute('title', `${dateStr}: ${completedSets}세트 완료`);
+      
+      cell.addEventListener('click', () => {
+        this.app.selectedDate = dateStr;
+        this.app.updateDateUI();
+        this.app.tracker.render();
+        this.app.switchTab('tracker');
+      });
+      
+      heatmapContainer.appendChild(cell);
+    });
+  }
+
+  // Calculate SBD predicted 1RM totals and render strength level badges
+  renderSBDStrength() {
+    const squatVal = document.getElementById('sbd-squat-val');
+    const benchVal = document.getElementById('sbd-bench-val');
+    const deadVal = document.getElementById('sbd-dead-val');
+    const totalVal = document.getElementById('sbd-total-val');
+    const ratioVal = document.getElementById('sbd-ratio-val');
+    const levelBadge = document.getElementById('sbd-level-badge');
+    const gaugeBar = document.getElementById('sbd-gauge-bar');
+    
+    if (!squatVal || !benchVal || !deadVal || !totalVal || !ratioVal || !levelBadge || !gaugeBar) return;
+    
+    const prs = JSON.parse(localStorage.getItem('vitalfit_pr_records')) || {};
+    
+    const squat1RM = prs['squat'] ? prs['squat'].oneRepMax : 0;
+    const bench1RM = prs['bench_press'] ? prs['bench_press'].oneRepMax : 0;
+    const dead1RM = prs['deadlift'] ? prs['deadlift'].oneRepMax : 0;
+    
+    const totalSBD = squat1RM + bench1RM + dead1RM;
+    
+    squatVal.textContent = `${Math.round(squat1RM)} kg`;
+    benchVal.textContent = `${Math.round(bench1RM)} kg`;
+    deadVal.textContent = `${Math.round(dead1RM)} kg`;
+    totalVal.textContent = `${Math.round(totalSBD)} kg`;
+    
+    const userProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile')) || {};
+    const bodyWeight = parseFloat(userProfile.profileWeight) || 70;
+    const ratio = bodyWeight > 0 ? (totalSBD / bodyWeight).toFixed(1) : '0.0';
+    ratioVal.textContent = `체중 대비: ${ratio}배`;
+    
+    let badgeText = '입문자 (White Belt)';
+    let badgeClass = 'badge-white';
+    
+    if (totalSBD >= 150 && totalSBD < 250) {
+      badgeText = '헬린이 (Yellow Belt)';
+      badgeClass = 'badge-yellow';
+    } else if (totalSBD >= 250 && totalSBD < 380) {
+      badgeText = '블루칩 (Blue Belt)';
+      badgeClass = 'badge-blue';
+    } else if (totalSBD >= 380 && totalSBD < 480) {
+      badgeText = '스트롱맨 (Red Belt)';
+      badgeClass = 'badge-red';
+    } else if (totalSBD >= 480) {
+      badgeText = '인간 크레인 (Monster)';
+      badgeClass = 'badge-black';
+    }
+    
+    levelBadge.textContent = badgeText;
+    levelBadge.className = `strength-badge-style ${badgeClass}`;
+    
+    const pct = Math.min(100, (totalSBD / 600) * 100);
+    gaugeBar.style.width = `${pct}%`;
   }
 }
 

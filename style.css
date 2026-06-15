@@ -1236,3 +1236,81 @@ nav.bottom-nav {
   padding: 1px 6px;
   border-radius: 10px;
 }
+
+/* --- ATTENDANCE HEATMAP GRID --- */
+.attendance-heatmap-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  grid-auto-flow: column;
+  gap: 3px;
+}
+
+.grass-cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.grass-cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+}
+
+.grass-level-0 { background: rgba(255, 255, 255, 0.03); }
+.grass-level-1 { background: rgba(16, 185, 129, 0.2); }
+.grass-level-2 { background: rgba(16, 185, 129, 0.5); }
+.grass-level-3 {
+  background: #10b981;
+  box-shadow: 0 0 4px rgba(16, 185, 129, 0.6);
+}
+
+/* --- STRENGTH BADGE STYLES --- */
+.strength-badge-style {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-white {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-yellow {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: 0 0 5px rgba(234, 179, 8, 0.2);
+}
+
+.badge-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
+.badge-red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.badge-black {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #fbbf24;
+  border: 1.5px solid #fbbf24;
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
+  animation: pulseGold 2s infinite;
+}
