@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VITALFIT - 운동 & 식단 분석 피드백</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div id="app-container">
+    <!-- Header -->
+    <header>
+      <h1 id="app-logo">VITALFIT</h1>
+      <div class="date-indicator" id="date-selector-trigger">
+        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+        <span id="current-date-text">2026-06-15</span>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+      
+      <!-- Date Selector Control Row (Toggled when date indicator clicked) -->
+      <div class="datepicker-container" id="date-picker-row">
+        <button class="date-btn" id="prev-date-btn">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <span class="current-date-display" id="date-display-label">2026년 06월 15일</span>
+        <button class="date-btn" id="next-date-btn">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- TAB 1: WORKOUT TRACKER -->
+      <section id="tab-tracker" class="tab-content active">
+        <!-- Logged Workouts Card -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="activity"></i>
+            오늘의 운동 일지
+          </h2>
+          
+          <div id="logged-workouts-list">
+            <!-- Dynamically populated logged workouts -->
+            <div class="empty-state">
+              <i data-lucide="clipboard-list"></i>
+              <p>오늘 기록된 운동이 없습니다.<br>아래 목록에서 운동을 선택해 기록을 남겨보세요!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Add Workouts -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="plus-circle"></i>
+            빠른 운동 추가
+          </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 12px;">원하는 운동을 탭하여 일지에 즉시 추가합니다.</p>
+          
+          <div class="quick-add-grid" id="quick-add-container" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 12px;">
+            <!-- Dynamically populated body parts: 가슴, 등, 어깨, 하체, 팔, 복근 -->
+          </div>
+          
+          <!-- Container for displaying exercises of the selected body part -->
+          <div id="quick-add-sub-container" style="display: none; padding-top: 12px; border-top: 1px dashed var(--border-color); animation: fadeIn 0.3s ease-out;">
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;" id="quick-add-sub-title">가슴 운동 선택</span>
+            <div class="quick-add-grid" id="quick-add-sub-list" style="grid-template-columns: repeat(2, 1fr); gap: 8px;">
+              <!-- Dynamically populated exercises list -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: EXERCISE GUIDE (BODY MAP) -->
+      <section id="tab-guide" class="tab-content">
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="dumbbell"></i>
+            부위별 운동 백과
+          </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 16px;">관심 있는 신체 부위를 선택하여 부위별 대표 웨이트 트레이닝 법과 상세 팁을 확인하세요.</p>
+          
+          <div class="body-map-container" id="body-map-list">
+            <!-- Dynamically populated body parts -->
+            <div class="body-part-card" data-part="chest">
+              <div class="body-part-info">
+                <span class="body-part-name">가슴 (Chest)</span>
+                <span class="body-part-desc">대흉근 발달, 상체 밀어내기 운동</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="shield"></i>
+              </div>
+            </div>
+            
+            <div class="body-part-card" data-part="back">
+              <div class="body-part-info">
+                <span class="body-part-name">등 (Back)</span>
+                <span class="body-part-desc">광배근 및 기립근, 당기기 운동</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="align-justify"></i>
+              </div>
+            </div>
+
+            <div class="body-part-card" data-part="shoulders">
+              <div class="body-part-info">
+                <span class="body-part-name">어깨 (Shoulders)</span>
+                <span class="body-part-desc">삼각근 발달, 볼륨감 있는 어깨 라인</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="maximize-2"></i>
+              </div>
+            </div>
+
+            <div class="body-part-card" data-part="legs">
+              <div class="body-part-info">
+                <span class="body-part-name">하체 (Legs)</span>
+                <span class="body-part-desc">스쿼트와 런지, 후면 사슬과 기초 체력</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="layers"></i>
+              </div>
+            </div>
+
+            <div class="body-part-card" data-part="arms">
+              <div class="body-part-info">
+                <span class="body-part-name">팔 (Arms)</span>
+                <span class="body-part-desc">이두근 및 삼두근, 탄력 있는 소매핏</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="smartphone"></i>
+              </div>
+            </div>
+
+            <div class="body-part-card" data-part="abs">
+              <div class="body-part-info">
+                <span class="body-part-name">복근 (Abs)</span>
+                <span class="body-part-desc">코어 단련 및 선명한 식스팩</span>
+              </div>
+              <div class="body-part-icon">
+                <i data-lucide="grid"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DIET ANALYZER & FEEDBACK -->
+      <section id="tab-diet" class="tab-content">
+        <!-- User BMR Profile Settings Card -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="user"></i>
+            신체 프로필 & 기초대사량(BMR) 계산
+          </h2>
+          <div class="diet-form-grid" style="gap: 10px;">
+            <div style="display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 8px;">
+              <div class="form-group">
+                <label for="profile-gender">성별</label>
+                <select id="profile-gender" class="form-input" style="padding: 8px 10px; font-weight: 600;">
+                  <option value="male">남성 (Male)</option>
+                  <option value="female">여성 (Female)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="profile-age">나이 (세)</label>
+                <input type="number" id="profile-age" class="form-input" placeholder="세" value="28" style="padding: 8px 10px;">
+              </div>
+              <div class="form-group">
+                <label for="profile-height">키 (cm)</label>
+                <input type="number" id="profile-height" class="form-input" placeholder="cm" value="175" style="padding: 8px 10px;">
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: flex-end;">
+              <div class="form-group">
+                <label for="profile-weight">몸무게 (kg)</label>
+                <input type="number" id="profile-weight" class="form-input" placeholder="kg" value="70" style="padding: 8px 10px;">
+              </div>
+              <button class="btn" id="calculate-bmr-btn" style="padding: 10px; font-size: 0.9rem;">
+                <i data-lucide="calculator"></i> BMR 계산 및 설정
+              </button>
+            </div>
+            
+            <!-- Result Area -->
+            <div id="bmr-result-box" style="margin-top: 10px; padding: 12px; background: rgba(59, 130, 246, 0.08); border: 1px dashed rgba(59, 130, 246, 0.2); border-radius: var(--radius-sm); font-size: 0.85rem; line-height: 1.5; display: none;">
+              <!-- Dynamically populated calculation results -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Diet Entry Form -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="utensils"></i>
+            식단 입력
+          </h2>
+          
+          <div class="diet-form-grid">
+            <!-- Meal photo upload simulator -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center; margin-bottom: 8px; background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div class="form-group" style="margin-bottom: 0;">
+                <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">식사 사진 분석 (AI)</span>
+                <button class="btn btn-secondary" id="camera-trigger-btn" style="padding: 8px 12px; font-size: 0.8rem; width: auto;">
+                  <i data-lucide="camera" style="width: 14px; height: 14px;"></i> 사진 올리기
+                </button>
+                <input type="file" id="food-image-input" accept="image/*" style="display: none;">
+              </div>
+              <div style="display: flex; justify-content: flex-end;">
+                <!-- Thumbnail Preview -->
+                <div id="image-preview-box" style="width: 50px; height: 50px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); overflow: hidden; display: none; position: relative;">
+                  <img id="image-preview-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                  <button id="image-preview-remove" style="position: absolute; top:0; right:0; background: rgba(0,0,0,0.7); border:none; color:white; width:16px; height:16px; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius: 0 0 0 4px;">×</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Analyzing Indicator -->
+            <div id="ai-analyzing-overlay" style="display: none; margin-bottom: 12px; padding: 12px; text-align: center; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm);">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--color-primary); font-weight: 700; font-size: 0.85rem;">
+                <i data-lucide="loader-2" class="spin" style="animation: spin 1s linear infinite; width: 16px; height: 16px;"></i>
+                <span>AI가 식단 사진을 정밀 분석하는 중...</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="food-name-input">음식명</label>
+                <input type="text" id="food-name-input" class="form-input" placeholder="예: 닭가슴살 100g, 고구마 등">
+              </div>
+              <div class="form-group">
+                <label for="food-cal-input">칼로리 (kcal)</label>
+                <input type="number" id="food-cal-input" class="form-input" placeholder="kcal">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="food-protein-input">단백질 (g)</label>
+                <input type="number" id="food-protein-input" class="form-input" placeholder="g">
+              </div>
+              <button class="btn" id="add-food-btn" style="margin-top: 22px;">
+                <i data-lucide="plus"></i> 추가
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div style="margin-top: 16px;">
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">간편 자주 먹는 음식presets</span>
+            <div class="preset-grid">
+              <div class="preset-item" data-name="닭가슴살 1팩" data-cal="120" data-protein="23">
+                닭가슴살
+                <span class="preset-item-cal">120 kcal</span>
+              </div>
+              <div class="preset-item" data-name="햇반 1공기" data-cal="300" data-protein="5">
+                햇반 1공기
+                <span class="preset-item-cal">300 kcal</span>
+              </div>
+              <div class="preset-item" data-name="바나나 1개" data-cal="90" data-protein="1">
+                바나나 1개
+                <span class="preset-item-cal">90 kcal</span>
+              </div>
+              <div class="preset-item" data-name="달걀 2개" data-cal="150" data-protein="12">
+                달걀 2개
+                <span class="preset-item-cal">150 kcal</span>
+              </div>
+              <div class="preset-item" data-name="소고기 우둔살 100g" data-cal="140" data-protein="22">
+                소고기 100g
+                <span class="preset-item-cal">140 kcal</span>
+              </div>
+              <div class="preset-item" data-name="프로틴 쉐이크" data-cal="120" data-protein="24">
+                단백질 쉐이크
+                <span class="preset-item-cal">120 kcal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diet Records List -->
+          <div class="diet-records-list" id="diet-records-container">
+            <!-- Food items logged here -->
+          </div>
+        </div>
+
+        <!-- Diet Analysis Gauge & Macros Summary -->
+        <div class="card">
+          <h2 class="card-title">
+            <i data-lucide="pie-chart"></i>
+            오늘의 섭취 분석
+          </h2>
+          
+          <div class="diet-dashboard">
+            <!-- Circular Gauge for Calories -->
+            <div class="chart-container">
+              <svg class="chart-svg" width="140" height="140" viewBox="0 0 140 140">
+                <circle class="chart-bg" cx="70" cy="70" r="58"></circle>
+                <circle class="chart-progress" id="diet-gauge-circle" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="364.4"></circle>
+              </svg>
+              <div class="chart-info">
+                <div class="chart-value" id="current-cal-val">0</div>
+                <div class="chart-label">/ 2000 kcal</div>
+              </div>
+            </div>
+            
+            <!-- Target Protein & Calorie Status -->
+            <div class="summary-macros">
+              <div class="macro-row">
+                <div class="macro-info">
+                  <span class="macro-name">단백질 섭취량</span>
+                  <span class="macro-value" id="protein-progress-text">0g / 120g</span>
+                </div>
+                <div class="macro-bar-bg">
+                  <div class="macro-bar-fill protein" id="protein-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+              
+              <div class="macro-row">
+                <div class="macro-info">
+                  <span class="macro-name">칼로리 충족률</span>
+                  <span class="macro-value" id="cal-percent-text">0%</span>
+                </div>
+                <div class="macro-bar-bg">
+                  <div class="macro-bar-fill carbs" id="cal-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diet Feedback Card -->
+        <div class="card" id="diet-feedback-card" style="display: none;">
+          <h2 class="card-title">
+            <i data-lucide="sparkles"></i>
+            다이어트 피드백 & 팁
+          </h2>
+          <div class="feedback-box">
+            <div class="feedback-status" id="feedback-status-badge">
+              <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+              <span>데이터 부족</span>
+            </div>
+            <p class="feedback-text" id="feedback-explanation">
+              식단을 최소 한 개 이상 추가해 주세요. 다이어트 칼로리 섭취량과 단백질 비율을 기반으로 최적의 피드백을 제공합니다.
+            </p>
+            <div class="feedback-metrics">
+              <div class="metric-item">
+                <div class="metric-val green" id="metric-cal-diff">0 kcal</div>
+                <div class="metric-lbl">목표 대비 칼로리</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val blue" id="metric-protein-diff">0g</div>
+                <div class="metric-lbl">추가 필요 단백질</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val amber" id="metric-advice-type">유지</div>
+                <div class="metric-lbl">식단 추천 조치</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Detail Overlay (Workout details slide in from right) -->
+    <div class="guide-detail-overlay" id="guide-detail-overlay">
+      <div class="guide-detail-header">
+        <button class="back-btn" id="guide-detail-back">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div class="guide-detail-title">
+          <h2 id="guide-detail-part-name">가슴 운동</h2>
+        </div>
+      </div>
+      
+      <!-- This content will be populated either as a list of exercises OR a single exercise detail -->
+      <div id="guide-detail-content">
+        <!-- Dynamically loaded list of exercises or exercise instructions -->
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="tracker">
+        <i data-lucide="calendar-check"></i>
+        <span>운동일지</span>
+      </button>
+      <button class="nav-item" data-tab="guide">
+        <i data-lucide="dumbbell"></i>
+        <span>운동가이드</span>
+      </button>
+      <button class="nav-item" data-tab="diet">
+        <i data-lucide="pie-chart"></i>
+        <span>식단분석</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="app.js"></script>
+</body>
+</html>
