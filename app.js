@@ -820,9 +820,13 @@ class WorkoutTracker {
     
     // Custom exercise elements
     this.customExerciseNameInput = document.getElementById('custom-exercise-name');
+    this.customExerciseCategorySelect = document.getElementById('custom-exercise-category');
     this.customExerciseAddBtn = document.getElementById('custom-exercise-add-btn');
     
     this.selectedQuickAddPart = null; // Track current selected category
+    
+    // 로컬스토리지에서 커스텀 운동들을 불러와 exercisesData에 병합
+    this.loadCustomExercises();
     
     this.initQuickAdd();
     this.initCustomExerciseEvents();
@@ -835,19 +839,74 @@ class WorkoutTracker {
     this.renderTemplates();
   }
 
+  loadCustomExercises() {
+    const customExercises = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+    customExercises.forEach(ex => {
+      if (exercisesData[ex.category]) {
+        const exists = exercisesData[ex.category].some(item => item.id === ex.id);
+        if (!exists) {
+          exercisesData[ex.category].push({
+            id: ex.id,
+            name: ex.name,
+            target: "커스텀 운동",
+            description: "",
+            steps: [],
+            tips: []
+          });
+        }
+      }
+    });
+  }
+
   initCustomExerciseEvents() {
     this.customExerciseAddBtn.addEventListener('click', () => {
       const name = this.customExerciseNameInput.value.trim();
+      const category = this.customExerciseCategorySelect.value || 'custom';
+      
       if (!name) {
         alert('운동 이름을 입력해 주세요.');
         return;
       }
       
       const customId = `custom_${Date.now()}`;
-      const category = this.selectedQuickAddPart || 'custom';
       
+      // 1. exercisesData 에 동적 추가
+      const newEx = {
+        id: customId,
+        name: name,
+        target: "커스텀 운동",
+        description: "",
+        steps: [],
+        tips: []
+      };
+      
+      if (exercisesData[category]) {
+        exercisesData[category].push(newEx);
+      }
+      
+      // 2. localStorage에 커스텀 운동 정보 영구 저장
+      const customExercises = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+      customExercises.push({
+        id: customId,
+        name: name,
+        category: category
+      });
+      localStorage.setItem('vitalfit_custom_exercises', JSON.stringify(customExercises));
+      
+      // 3. 오늘의 운동 일지에도 등록
       this.addWorkout(customId, name, category);
+      
+      // 4. 입력 필드 클리어
       this.customExerciseNameInput.value = '';
+      
+      // 5. 현재 보고 있는 부위별 운동 리스트 및 UI 즉시 갱신
+      this.selectedQuickAddPart = null;
+      const btn = this.quickAddContainer.querySelector(`.quick-add-item[data-category="${category}"]`);
+      if (btn) {
+        this.selectQuickAddCategory(category, btn);
+      }
+      
+      alert(`💪 '${name}' 운동이 ${this.getCategoryKorean(category)} 부문에 영구 등록되었습니다!`);
     });
   }
 
@@ -1304,7 +1363,8 @@ class WorkoutTracker {
   }
 
   applyTemplate(name, workouts) {
-    if (confirm(`'${name}' 루틴의 운동들을 오늘 일지에 불러올까요?\n(기존 기록에 누적되어 추가됩니다.)`)) {
+    if (confirm(`'${name}' 루틴의 운동들을 오늘 일지에 불러올까요?
+(기존 기록에 누적되어 추가됩니다.)`)) {
       const date = this.app.selectedDate;
       const todayWorkouts = this.app.getWorkoutsForDate(date);
       
@@ -1337,7 +1397,8 @@ class WorkoutTracker {
       this.renderTemplates();
     }
   }
-}// ==========================================
+}
+// ==========================================
 // 3. EXERCISE GUIDE MODULE (BodyMap)
 // ==========================================
 class BodyGuide {
