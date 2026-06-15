@@ -1523,31 +1523,42 @@ class BodyGuide {
 class TrainerAssistant {
   constructor(app) {
     this.app = app;
-
-    // Profile Settings DOM elements
+    this.calculateBmrBtn = document.getElementById('calculate-bmr-btn');
     this.profileGender = document.getElementById('profile-gender');
     this.profileAge = document.getElementById('profile-age');
     this.profileHeight = document.getElementById('profile-height');
     this.profileWeight = document.getElementById('profile-weight');
     this.profileGoal = document.getElementById('profile-goal');
     this.profileLevel = document.getElementById('profile-level');
-    this.calculateBmrBtn = document.getElementById('calculate-bmr-btn');
     this.bmrResultBox = document.getElementById('bmr-result-box');
 
-    // Routine Recommendation DOM elements
-    this.routineSplitSelect = document.getElementById('routine-split-select');
     this.recommendRoutineBtn = document.getElementById('recommend-routine-btn');
     this.suggestedRoutineBox = document.getElementById('suggested-routine-box');
-    this.suggestedRoutineTitle = document.getElementById('suggested-routine-title');
-    this.suggestedRoutineLevelTag = document.getElementById('suggested-routine-level-tag');
     this.suggestedRoutineList = document.getElementById('suggested-routine-list');
+    this.suggestedRoutineLevelTag = document.getElementById('suggested-routine-level-tag');
     this.suggestedRoutineGuideBox = document.getElementById('suggested-routine-guide-box');
     this.applyRoutineBtn = document.getElementById('apply-routine-btn');
+    this.routineSplitSelect = document.getElementById('routine-split-select');
 
-    this.currentSuggestedRoutine = null; // Store recommended routine array temporarily
+    this.currentSuggestedRoutine = null;
+
+    // 주간 루틴 플래너 DOM 엘리먼트
+    this.dayTabBtns = document.querySelectorAll('.day-tab-btn');
+    this.weeklyExercisesList = document.getElementById('weekly-routine-exercises-list');
+    this.weeklyPartSelect = document.getElementById('weekly-routine-part-select');
+    this.weeklyExerciseSelect = document.getElementById('weekly-routine-exercise-select');
+    this.weeklyAddExBtn = document.getElementById('weekly-routine-add-ex-btn');
+    this.weeklyLoadTodayBtn = document.getElementById('weekly-routine-load-today-btn');
+    this.weeklySaveBtn = document.getElementById('weekly-routine-save-btn');
+
+    this.currentWeeklyDay = 0; // 월요일
+    this.weeklyRoutines = JSON.parse(localStorage.getItem('vitalfit_weekly_routines')) || {
+      0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+    };
 
     this.initEvents();
     this.loadUserProfile();
+    this.initWeeklyPlanner();
   }
 
   initEvents() {
@@ -1573,52 +1584,57 @@ class TrainerAssistant {
       this.profileWeight.value = saved.profileWeight || 70;
       this.profileGoal.value = saved.profileGoal || 'diet';
       this.profileLevel.value = saved.profileLevel || 'beginner';
-      
-      this.saveProfileAndCalculateBMR(true); // Silently compute BMR on start
+
+      this.saveProfileAndCalculateBMR(true); // 실시간 자동 계산
     }
   }
 
   saveProfileAndCalculateBMR(silent = false) {
-    const profile = {
-      profileGender: this.profileGender.value,
-      profileAge: parseInt(this.profileAge.value) || 28,
-      profileHeight: parseFloat(this.profileHeight.value) || 175,
-      profileWeight: parseFloat(this.profileWeight.value) || 70,
-      profileGoal: this.profileGoal.value,
-      profileLevel: this.profileLevel.value
+    const gender = this.profileGender.value;
+    const age = parseInt(this.profileAge.value) || 28;
+    const height = parseFloat(this.profileHeight.value) || 175;
+    const weight = parseFloat(this.profileWeight.value) || 70;
+    const goal = this.profileGoal.value;
+    const level = this.profileLevel.value;
+
+    const profileData = {
+      profileGender: gender,
+      profileAge: age,
+      profileHeight: height,
+      profileWeight: weight,
+      profileGoal: goal,
+      profileLevel: level
     };
 
-    if (profile.profileAge <= 0 || profile.profileHeight <= 0 || profile.profileWeight <= 0) {
-      if (!silent) alert('올바른 신체 정보(나이, 키, 몸무게)를 입력해 주세요.');
-      return;
-    }
+    localStorage.setItem('vitalfit_user_profile', JSON.stringify(profileData));
 
-    localStorage.setItem('vitalfit_user_profile', JSON.stringify(profile));
-
-    // BMR Calculation (Mifflin-St Jeor)
+    // BMR 계산 (Harris-Benedict Equation)
     let bmr = 0;
-    if (profile.profileGender === 'male') {
-      bmr = 10 * profile.profileWeight + 6.25 * profile.profileHeight - 5 * profile.profileAge + 5;
+    if (gender === 'male') {
+      bmr = 66.47 + (13.75 * weight) + (5 * height) - (6.76 * age);
     } else {
-      bmr = 10 * profile.profileWeight + 6.25 * profile.profileHeight - 5 * profile.profileAge - 161;
+      bmr = 655.1 + (9.56 * weight) + (1.85 * height) - (4.68 * age);
     }
     bmr = Math.round(bmr);
 
-    // TDEE (Total Daily Energy Expenditure) calculation - activity factor 1.375 (light active)
-    const tdee = Math.round(bmr * 1.375);
-    
-    // Set recommendations
-    let calorieGoal = 0;
-    let bmrText = '';
-    if (profile.profileGoal === 'diet') {
-      calorieGoal = tdee - 500;
-      bmrText = '체지방 연소를 위해 약 <strong>500kcal의 칼로리 결손</strong>이 권장됩니다.';
-    } else if (profile.profileGoal === 'bulk') {
-      calorieGoal = tdee + 300;
-      bmrText = '근육량 증가(벌크업)를 위해 약 <strong>300kcal의 칼로리 잉여</strong>가 권장됩니다.';
+    // TDEE 계산 (활동 대사량)
+    let tdeeMultiplier = 1.375; // intermediate active as default
+    if (level === 'beginner') tdeeMultiplier = 1.2;
+    else if (level === 'advanced') tdeeMultiplier = 1.55;
+    const tdee = Math.round(bmr * tdeeMultiplier);
+
+    // 목표 칼로리 설정
+    let calorieGoal = tdee;
+    let goalText = '';
+    if (goal === 'diet') {
+      calorieGoal = Math.round(tdee - 500);
+      goalText = '체지방 감량을 위해 일일 대사량 대비 500kcal를 제한하여 처방했습니다.';
+    } else if (goal === 'bulk') {
+      calorieGoal = Math.round(tdee + 300);
+      goalText = '근육량 증가를 위해 일일 대사량 대비 300kcal를 잉여하여 처방했습니다.';
     } else {
       calorieGoal = tdee;
-      bmrText = '근력(스트렝스) 증가를 위해 <strong>유지 칼로리</strong> 섭취를 유지하며 단백질 위주로 보충하세요.';
+      goalText = '체중 및 근력 유지를 목적으로 한 등칼로리 처방입니다.';
     }
 
     this.bmrResultBox.style.display = 'block';
@@ -1627,12 +1643,11 @@ class TrainerAssistant {
       • 나의 기초대사량(BMR): <strong>${bmr} kcal</strong><br>
       • 나의 일일 대사량(TDEE): <strong>${tdee} kcal</strong><br>
       • 하루 영양 권장 섭취량: <strong style="color:var(--color-primary);">${calorieGoal} kcal</strong>
-      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">${bmrText}</div>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">${goalText}</div>
     `;
 
     if (!silent) {
       alert('신체 프로필 및 AI 트레이너 데이터 저장이 완료되었습니다!');
-      // Re-trigger tracker to recalculate coaching advice under new goals
       this.app.tracker.render();
     }
   }
@@ -1834,13 +1849,14 @@ class TrainerAssistant {
     if (window.lucide) {
       window.lucide.createIcons();
     }
-  }  applyRoutineToLog() {
+  }
+
+  applyRoutineToLog() {
     if (!this.currentSuggestedRoutine || this.currentSuggestedRoutine.length === 0) return;
 
     const date = this.app.selectedDate;
     const todayWorkouts = this.app.getWorkoutsForDate(date);
-    
-    // Add only new exercises to avoid overriding manually logged ones
+
     let addedCount = 0;
     this.currentSuggestedRoutine.forEach(ex => {
       const exists = todayWorkouts.some(w => w.id === ex.id);
@@ -1851,21 +1867,177 @@ class TrainerAssistant {
     });
 
     this.app.saveWorkoutsForDate(date, todayWorkouts);
+    this.app.tracker.render();
+    alert(`🤖 AI 추천 루틴 중 ${addedCount}개 운동 구성을 오늘 일지에 등록했습니다!`);
     
-    alert(`🤖 트레이너 맞춤 추천 루틴이 완료되었습니다!\n총 ${addedCount}개의 운동을 일지에 추가했습니다.`);
-    
-    // Reset view box
-    this.suggestedRoutineBox.style.display = 'none';
-    this.currentSuggestedRoutine = null;
+    this.app.switchTab('tracker');
+  }
 
-    // Direct tab switch to tracker to let user see it!
+  // 주간 루틴 플래너 기능
+  initWeeklyPlanner() {
+    this.dayTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.dayTabBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'rgba(255,255,255,0.05)';
+          b.style.color = 'var(--text-muted)';
+          b.style.border = '1px solid var(--border-color)';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'var(--color-secondary)';
+        btn.style.color = 'white';
+        btn.style.border = 'none';
+
+        this.currentWeeklyDay = parseInt(btn.getAttribute('data-day'));
+        this.renderWeeklyRoutine();
+      });
+    });
+
+    this.weeklyPartSelect.addEventListener('change', () => {
+      this.updateWeeklyExerciseOptions();
+    });
+
+    this.weeklyAddExBtn.addEventListener('click', () => {
+      this.addWeeklyExercise();
+    });
+
+    this.weeklyLoadTodayBtn.addEventListener('click', () => {
+      this.loadWeeklyRoutineToToday();
+    });
+
+    this.weeklySaveBtn.addEventListener('click', () => {
+      this.saveWeeklyRoutines();
+      alert('주간 루틴 설정이 성공적으로 저장되었습니다!');
+    });
+
+    this.updateWeeklyExerciseOptions();
+    this.renderWeeklyRoutine();
+  }
+
+  updateWeeklyExerciseOptions() {
+    const part = this.weeklyPartSelect.value;
+    this.weeklyExerciseSelect.innerHTML = '';
+    const list = exercisesData[part] || [];
+    list.forEach(ex => {
+      const opt = document.createElement('option');
+      opt.value = ex.id;
+      opt.textContent = ex.name.split(' (')[0];
+      this.weeklyExerciseSelect.appendChild(opt);
+    });
+  }
+
+  addWeeklyExercise() {
+    const part = this.weeklyPartSelect.value;
+    const exId = this.weeklyExerciseSelect.value;
+    if (!exId) return;
+
+    const list = exercisesData[part] || [];
+    const exObj = list.find(ex => ex.id === exId);
+    if (!exObj) return;
+
+    const day = this.currentWeeklyDay;
+    const exists = this.weeklyRoutines[day].some(w => w.id === exId);
+    if (exists) {
+      alert('이미 해당 요일에 등록된 운동입니다.');
+      return;
+    }
+
+    this.weeklyRoutines[day].push({
+      id: exObj.id,
+      name: exObj.name,
+      category: part
+    });
+
+    this.saveWeeklyRoutines();
+    this.renderWeeklyRoutine();
+  }
+
+  renderWeeklyRoutine() {
+    this.weeklyExercisesList.innerHTML = '';
+    const day = this.currentWeeklyDay;
+    const list = this.weeklyRoutines[day] || [];
+
+    if (list.length === 0) {
+      this.weeklyExercisesList.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 12px; font-size: 0.8rem; background: rgba(255,255,255,0.01); border: 1px dashed var(--border-color); border-radius: var(--radius-sm);">
+          등록된 운동이 없습니다. 운동을 추가해 보세요!
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach((w, idx) => {
+      const item = document.createElement('div');
+      item.style.display = 'flex';
+      item.style.justify = 'space-between';
+      item.style.alignItems = 'center';
+      item.style.padding = '8px 12px';
+      item.style.background = 'rgba(255,255,255,0.02)';
+      item.style.border = '1px solid var(--border-color)';
+      item.style.borderRadius = 'var(--radius-sm)';
+      item.innerHTML = `
+        <span style="font-size: 0.85rem; font-weight: 600;">${w.name.split(' (')[0]} <span style="font-size: 0.7rem; color: var(--color-secondary); margin-left:4px;">(${this.app.tracker.getCategoryKorean(w.category)})</span></span>
+        <button class="btn-delete-weekly-ex" style="background:none; border:none; color:var(--text-muted); cursor:pointer; padding:2px; display:flex; align-items:center;">
+          <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+        </button>
+      `;
+      item.querySelector('.btn-delete-weekly-ex').addEventListener('click', () => {
+        this.removeWeeklyExercise(idx);
+      });
+      this.weeklyExercisesList.appendChild(item);
+    });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
+  removeWeeklyExercise(idx) {
+    const day = this.currentWeeklyDay;
+    this.weeklyRoutines[day].splice(idx, 1);
+    this.saveWeeklyRoutines();
+    this.renderWeeklyRoutine();
+  }
+
+  saveWeeklyRoutines() {
+    localStorage.setItem('vitalfit_weekly_routines', JSON.stringify(this.weeklyRoutines));
+  }
+
+  loadWeeklyRoutineToToday() {
+    const day = this.currentWeeklyDay;
+    const list = this.weeklyRoutines[day] || [];
+    if (list.length === 0) {
+      alert('현재 요일에 등록된 운동이 없습니다. 먼저 운동을 추가해 주세요.');
+      return;
+    }
+
+    const date = this.app.selectedDate;
+    const todayWorkouts = this.app.getWorkoutsForDate(date);
+
+    let added = 0;
+    list.forEach(w => {
+      const exists = todayWorkouts.some(tw => tw.id === w.id);
+      if (!exists) {
+        const isCardio = w.category === 'cardio';
+        todayWorkouts.push({
+          id: w.id,
+          name: w.name,
+          category: w.category,
+          sets: isCardio ? [{ weight: 30, reps: 3.0 }] : [{ weight: 40, reps: 10 }]
+        });
+        added++;
+      }
+    });
+
+    if (added > 0) {
+      this.app.saveWorkoutsForDate(date, todayWorkouts);
+      this.app.tracker.render();
+    }
+
+    alert(`📅 현재 요일 루틴에서 ${added}개의 운동을 오늘 일지에 불러왔습니다!`);
     this.app.switchTab('tracker');
   }
 }
-
-// ==========================================
-// 5. MAIN VITALFIT APPLICATION ROOT
-// ==========================================
 class VitalFitApp {
   constructor() {
     this.selectedDate = this.getTodayString();

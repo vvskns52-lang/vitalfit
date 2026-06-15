@@ -1331,3 +1331,59 @@ nav.bottom-nav {
   box-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
   animation: pulseGold 2s infinite;
 }
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+  main {
+    padding: 16px 14px 80px !important;
+  }
+  .card {
+    padding: 14px !important;
+    margin-bottom: 14px !important;
+  }
+  .quick-add-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 5px !important;
+  }
+  .quick-add-item {
+    padding: 8px 2px !important;
+    font-size: 0.75rem !important;
+  }
+  .set-row {
+    grid-template-columns: 32px 1.2fr 0.9fr 26px !important;
+    gap: 4px !important;
+  }
+  .set-input-group {
+    padding: 4px 4px !important;
+  }
+  .set-input-group input {
+    font-size: 0.78rem !important;
+  }
+  .weekday-selector {
+    gap: 2px !important;
+  }
+  .day-tab-btn {
+    font-size: 0.7rem !important;
+    padding: 5px 0 !important;
+  }
+  .pr-table {
+    font-size: 0.75rem !important;
+  }
+  .pr-table td, .pr-table th {
+    padding: 6px 1px !important;
+  }
+  .body-part-card {
+    padding: 12px 14px !important;
+  }
+  .body-part-name {
+    font-size: 0.95rem !important;
+  }
+  .body-part-desc {
+    font-size: 0.75rem !important;
+  }
+  .body-part-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1rem !important;
+  }
+}
