@@ -1,4 +1,4 @@
-﻿// ==========================================
+// ==========================================
 // 1. EXERCISE DATABASE (exercisesData)
 // ==========================================
 const exercisesData = {
@@ -951,6 +951,10 @@ class WorkoutTracker {
     this.quickAddSubContainer.style.display = 'block';
     this.quickAddSubTitle.textContent = `${this.getCategoryKorean(categoryId)} 운동 선택`;
 
+    this.refreshQuickAddSubList(categoryId);
+  }
+
+  refreshQuickAddSubList(categoryId) {
     this.quickAddSubList.innerHTML = '';
     const list = exercisesData[categoryId] || [];
 
@@ -959,13 +963,61 @@ class WorkoutTracker {
       chip.className = 'quick-add-item';
       chip.style.padding = '8px 10px';
       chip.style.fontSize = '0.8rem';
-      chip.innerHTML = `<div style="font-weight: 600;">${ex.name.split(' (')[0]}</div>`;
+      chip.style.display = 'flex';
+      chip.style.justifyContent = 'space-between';
+      chip.style.alignItems = 'center';
+      chip.style.gap = '8px';
+      chip.style.cursor = 'pointer';
+      
+      const textDiv = document.createElement('div');
+      textDiv.style.fontWeight = '600';
+      textDiv.textContent = ex.name.split(' (')[0];
+      chip.appendChild(textDiv);
+
+      if (ex.id.startsWith('custom_')) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.style.background = 'none';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.color = 'var(--text-muted)';
+        deleteBtn.style.cursor = 'pointer';
+        deleteBtn.style.padding = '2px';
+        deleteBtn.style.display = 'flex';
+        deleteBtn.style.alignItems = 'center';
+        deleteBtn.innerHTML = `<i data-lucide="x" style="width: 14px; height: 14px;"></i>`;
+        
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.deleteCustomExercise(ex.id, categoryId);
+        });
+        chip.appendChild(deleteBtn);
+      }
       
       chip.addEventListener('click', () => {
         this.addWorkout(ex.id, ex.name, categoryId);
       });
       this.quickAddSubList.appendChild(chip);
     });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
+  deleteCustomExercise(exId, categoryId) {
+    if (!confirm('이 커스텀 운동을 정말 삭제하시겠습니까?')) return;
+    
+    // 1. exercisesData에서 제거
+    if (exercisesData[categoryId]) {
+      exercisesData[categoryId] = exercisesData[categoryId].filter(ex => ex.id !== exId);
+    }
+    
+    // 2. localStorage에서 제거
+    let customExercises = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+    customExercises = customExercises.filter(ex => ex.id !== exId);
+    localStorage.setItem('vitalfit_custom_exercises', JSON.stringify(customExercises));
+    
+    // 3. UI 갱신
+    this.refreshQuickAddSubList(categoryId);
   }
 
   getCategoryKorean(cat) {
