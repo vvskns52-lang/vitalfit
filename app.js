@@ -816,8 +816,415 @@ exercisesData.legs.push({
   ]
 });
 
+// ==========================================
+// 1-2. 기본 운동 종목 대량 추가
+// ==========================================
+exercisesData.chest.push(
+  {
+    id: "db_press",
+    name: "덤벨 프레스 (Dumbbell Press)",
+    image: "images/db_press.png",
+    target: "가슴 전체, 삼두근, 전면 삼각근",
+    description: "덤벨을 사용하여 가슴의 가동 범위를 최대화하고 좌우 대칭 발달을 돕는 메인 가슴 프레스 운동입니다.",
+    steps: [
+      "벤치에 등을 대고 누워 덤벨을 가슴 옆에 둡니다.",
+      "발을 바닥에 단단히 고정한 채 덤벨을 수직 위로 곧게 밀어 올립니다.",
+      "덤벨을 내릴 때 가슴 근육이 완전히 스트레칭되는 느낌을 받으며 천천히 복귀합니다."
+    ],
+    tips: [
+      "손목이 꺾이지 않도록 전완을 수직으로 견고히 세워 덤벨을 제어합니다.",
+      "덤벨끼리 위에서 세게 쿵 부딪히면 텐션이 도망갑니다."
+    ]
+  },
+  {
+    id: "decline_bench_press",
+    name: "디클라인 벤치 프레스 (Decline Bench Press)",
+    image: "images/decline_press.png",
+    target: "가슴 하부, 삼두근, 전면 삼각근",
+    description: "아래로 경사진 벤치에서 바벨을 밀어내어 대흉근의 하부(밑가슴) 라인을 선명하게 다듬는 프레스입니다.",
+    steps: [
+      "디클라인 벤치에 누워 발을 고정대에 단단히 끼웁니다.",
+      "바를 어깨너비보다 약간 넓게 잡고 가슴 하부 쪽으로 천천히 내립니다.",
+      "밀어 올리며 가슴 밑부분 수축 자극을 강하게 쥐어짜 줍니다."
+    ],
+    tips: [
+      "머리가 아래로 향하므로 혈압이 높은 분은 주의하고 운동 후 천천히 일어납니다.",
+      "바벨이 가슴 위로 구르지 않도록 궤적을 엄격하게 수직으로 통제합니다."
+    ]
+  },
+  {
+    id: "landmine_press",
+    name: "랜드마인 체스트 프레스 (Landmine Press)",
+    image: "images/landmine_press.png",
+    target: "가슴 상부, 가슴 내측, 삼두근",
+    description: "바벨의 한쪽 끝을 땅에 고정하고 대각선 위로 밀어 올리며 윗가슴 안쪽 라인과 어깨 관절의 안정성을 높입니다.",
+    steps: [
+      "바벨 한쪽에만 원판을 끼우고 그 끝을 두 손으로 감싸 쥡니다.",
+      "가슴 중앙 높이에서 시작하여 대각선 앞으로 바벨을 강력하게 밀어 올립니다.",
+      "가슴 안쪽을 쥐어짜면서 원위치로 천천히 버티며 복귀합니다."
+    ],
+    tips: [
+      "허리가 과도하게 꺾이지 않게 복부 코어를 꽉 조여 몸통을 바로 세웁니다.",
+      "밀어 올리는 끝 지점에서 날개뼈를 자연스럽게 앞으로 내밀어 줍니다."
+    ]
+  }
+);
+
+exercisesData.back.push(
+  {
+    id: "db_pullover",
+    name: "덤벨 풀오버 (Dumbbell Pullover)",
+    image: "images/db_pullover.png",
+    target: "광배근, 대원근, 가슴 하부, 전거근",
+    description: "벤치에 누워 덤벨을 머리 뒤로 길게 떨어뜨리며 광배근을 강하게 신장하고 흉곽을 확장시키는 하이브리드 상체 운동입니다.",
+    steps: [
+      "벤치에 가로로 누워 등 상부만 벤치에 대거나 플랫 벤치에 바르게 눕습니다.",
+      "덤벨 한쪽을 두 손으로 감싸 쥐고 가슴 위로 뻗습니다.",
+      "팔꿈치 각도를 약 10도 굽힌 채 머리 뒤로 호를 그리며 덤벨을 멀리 내립니다.",
+      "광배근의 힘으로 다시 가슴 위 시작 위치로 당겨옵니다."
+    ],
+    tips: [
+      "어깨 관절에 충돌이 생기지 않도록 가동범위를 지나치게 늘리지 않습니다.",
+      "엉덩이를 낮출수록 상체 전면과 광배근에 늘어나는 느낌을 강하게 걸 수 있습니다."
+    ]
+  },
+  {
+    id: "high_row_machine",
+    name: "하이라트 풀 다운 머신 (High Row Machine)",
+    image: "images/high_row.png",
+    target: "광배근 하부, 대원근, 능형근",
+    description: "대각선 위에서 당기는 특유의 궤적을 가진 머신으로 광배근의 밑바닥 섬유와 등 뒤판 안쪽을 공략합니다.",
+    steps: [
+      "시트 높이를 맞추고 허벅지 패드를 밀착시킵니다.",
+      "손잡이를 쥐고 대각선 아래/뒤 방향으로 가슴을 활짝 열어 당겨 견갑골을 모아줍니다.",
+      "등의 장�        const setRow = document.createElement('div');
+        setRow.className = `set-row${isCompleted ? ' completed' : ''}`;
+        
+        // 유산소 운동은 분, km 단위 사용
+        if (isCardio) {
+          setRow.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''}>
+              <span class="set-index">${setIndex + 1}</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-weight-input" value="${set.weight}" placeholder="분">
+              <span>분</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-reps-input" value="${set.reps}" placeholder="km" step="0.1">
+              <span>km</span>
+            </div>
+            <button class="delete-set-btn">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+          `;
+        } else {
+          setRow.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''}>
+              <span class="set-index">${setIndex + 1}</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-weight-input" value="${set.weight}" placeholder="kg" step="2.5">
+              <span>kg</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-reps-input" value="${set.reps}" placeholder="회">
+              <span>회</span>
+            </div>
+            <button class="delete-set-btn">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+          `;
+        }
+
+        // Add progressive overload guide if available
+        if (prevText) {
+          const guideRow = document.createElement('div');
+          guideRow.style.gridColumn = 'span 4';
+          guideRow.style.textAlign = 'right';
+          guideRow.style.paddingRight = '40px';
+          guideRow.style.marginTop = '-4px';
+          guideRow.style.marginBottom = '6px';
+          guideRow.innerHTML = `<span class="prev-record-guide">${prevText}</span>`;
+          setRow.appendChild(guideRow);
+        }
+
+        // Bind Events
+        const chk = setRow.querySelector('.set-complete-chk');
+        const weightInput = setRow.querySelector('.set-weight-input');
+        const repsInput = setRow.querySelector('.set-reps-input');
+        const delBtn = setRow.querySelector('.delete-set-btn');
+
+        chk.addEventListener('change', () => {
+          set.completed = chk.checked;
+          this.app.saveWorkoutsForDate(date, workouts);
+          this.render();
+        });
+
+        weightInput.addEventListener('input', () => {
+          set.weight = parseFloat(weightInput.value) || 0;
+          this.app.saveWorkoutsForDate(date, workouts);
+        });
+
+        weightInput.addEventListener('blur', () => {
+          this.render();
+        });
+
+        repsInput.addEventListener('input', () => {
+          set.reps = parseFloat(repsInput.value) || 0;
+          this.app.saveWorkoutsForDate(date, workouts);
+        });
+
+        repsInput.addEventListener('blur', () => {
+          this.render();
+        });
+
+        delBtn.addEventListener('click', () => {
+          this.removeSet(workoutIndex, setIndex);
+        });
+
+        setsContainer.appendChild(setRow);
+      });
+
+      // Add Set Row
+      const addSetRow = document.createElement('div');
+      addSetRow.className = 'add-set-row';
+      addSetRow.innerHTML = `
+        <button class="add-set-btn">
+          <i data-lucide="plus" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> 세트 추가
+        </button>
+      `;
+      addSetRow.querySelector('.add-set-btn').addEventListener('click', () => {
+        this.addSet(workoutIndex);
+      });
+
+      itemEl.appendChild(setsContainer);
+      itemEl.appendChild(addSetRow);
+      this.loggedContainer.appendChild(itemEl);
+    });
+
+    // Update coaching feedback
+    this.updateCoachingFeedback(totalSets, totalVolume, totalCalories);
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
+  removeWorkout(workoutIndex) {
+    const date = this.app.selectedDate;
+    const workouts = this.app.getWorkoutsForDate(date);
+    workouts.splice(workoutIndex, 1);
+    this.app.saveWorkoutsForDate(date, workouts);
+    this.render();
+  }
+
+  updateCoachingFeedback(totalSets, totalVolume, totalCalories) {
+    if (!this.coachingStatusBadge || !this.coachingFeedbackText) return;
+    
+    if (totalSets === 0) {
+      this.coachingStatusBadge.textContent = '대기 중';
+      this.coachingStatusBadge.className = 'status-badge badge-gray';
+      this.coachingFeedbackText.innerHTML = '오늘의 운동 기록이 없습니다. 아래에서 운동을 추가하고 세트를 완료해 코칭을 받아보세요!';
+      return;
+    }
+
+    let status = '진행 중';
+    let badgeClass = 'badge-yellow';
+    let feedback = '';
+
+    if (totalSets >= 15) {
+      status = '훌륭함';
+      badgeClass = 'badge-green';
+      feedback = `오늘 총 <strong>${totalSets}세트</strong>, <strong>${totalVolume.toLocaleString()}kg</strong>의 볼륨을 소화하며 <strong>${Math.round(totalCalories)} kcal</strong>를 연소했습니다! 강도 높은 트레이닝을 아주 훌륭하게 완수하셨습니다. 충분한 단백질 섭취와 휴식을 취해주세요! 🚀`;
+    } else if (totalSets >= 8) {
+      status = '적정';
+      badgeClass = 'badge-blue';
+      feedback = `오늘 총 <strong>${totalSets}세트</strong>, <strong>${totalVolume.toLocaleString()}kg</strong> 볼륨과 <strong>${Math.round(totalCalories)} kcal</strong> 소모를 기록했습니다. 근성장을 유도하기에 딱 좋은 볼륨입니다! 남은 세트가 있다면 부상에 주의하며 마무리해 보세요. 👍`;
+    } else {
+      status = '시작 단계';
+      badgeClass = 'badge-yellow';
+      feedback = `현재 <strong>${totalSets}세트</strong> 완료, <strong>${totalVolume.toLocaleString()}kg</strong> 볼륨을 달성했습니다 (소모 칼로리: <strong>${Math.round(totalCalories)} kcal</strong>). 조금 더 힘내서 오늘 계획한 루틴을 끝까지 완수해봅시다! 🔥`;
+    }
+
+    this.coachingStatusBadge.textContent = status;
+    this.coachingStatusBadge.className = `status-badge ${badgeClass}`;
+    this.coachingFeedbackText.innerHTML = feedback;
+  }"허벅지 안쪽에 팔꿈치를 대서 어깨와 몸통의 모든 반동을 원천 봉쇄하여 이두근의 높이를 극단적으로 세워 올립니다.",
+    steps: [
+      "벤치 끝에 앉아 다리를 넓히고, 한쪽 팔꿈치를 같은 쪽 허벅지 안쪽에 얹어 지탱합니다.",
+      "덤벨을 쥔 손을 아래로 떨어뜨린 후 어깨 반동 없이 오직 이두 힘으로 얼굴 방향으로 말아 올립니다.",
+      "최고 지점에서 알통을 쥐어짜 준 뒤 저항을 통제하며 서서히 하강합니다."
+    ],
+    tips: [
+      "동작 시 상체를 들어 올리거나 흔드는 반동을 쓰지 않도록 팔꿈치 견착 상태를 밀착해 유지합니다.",
+      "손목을 위로 과하게 꺾지 마세요."
+    ]
+  },
+  {
+    id: "reverse_barbell_curl",
+    name: "리버스 이지바 컬 (Reverse Grip Curl)",
+    image: "images/reverse_curl.png",
+    target: "완요골근, 전완근, 상완근",
+    description: "바벨을 손등이 하늘을 보게 오버 그립으로 잡고 컬을 수행하여 아래팔 전완근과 이두 바깥층의 프레임을 단련합니다.",
+    steps: [
+      "손등이 정면을 바라보게 이지바를 위에서 아래로(오버 그립) 잡고 바로 섭니다.",
+      "팔꿈치를 옆구리에 고정하고 바를 쇄골 방향으로 둥글게 말아 올립니다.",
+      "아래팔 바깥쪽 전완근의 지속적인 텐션을 유도하며 천천히 제자리로 하강합니다."
+    ],
+    tips: [
+      "손목이 밑으로 툭 꺾여 쳐지지 않게 컬 동작 내내 손목 정렬을 일직선으로 굳건히 잡습니다.",
+      "상대적으로 약한 근육이므로 무리하게 중량을 올리지 마세요."
+    ]
+  },
+  {
+    id: "bench_dips",
+    name: "벤치 딥스 (Bench Dips)",
+    image: "images/bench_dips.png",
+    target: "상완삼두근 전체, 전면 삼각근",
+    description: "플랫 벤치 끝을 짚고 체중을 실어 하강했다 올라옴으로써 삼두근의 전체적인 선명도와 강직도를 기르는 맨몸 삼두 운동입니다.",
+    steps: [
+      "벤치 모서리 끝을 양손으로 짚고 엉덩이를 벤치 허공 앞으로 뺍니다.",
+      "다리를 앞으로 뻗어 중심을 잡고 팔꿈치를 수직 뒤로 90도 굽히며 몸을 내립니다.",
+      "삼두근의 미는 힘으로 팔꿈치를 펼쳐 제자리 높이로 몸 전체를 들어 올립니다."
+    ],
+    tips: [
+      "팔꿈치가 뒤로 벌어지지 않게 뒤쪽 수평을 유지해야 삼두에 하중이 유지됩니다.",
+      "어깨 관절이 약한 분은 어깨에 뻐근함이 가기 전 적당한 깊이까지만 하강합니다."
+    ]
+  }
+);
+
+exercisesData.abs.push(
+  {
+    id: "bicycle_crunch",
+    name: "바이시클 크런치 (Bicycle Crunch)",
+    image: "images/bicycle_crunch.png",
+    target: "복직근 전체, 외복사근 (옆구리)",
+    description: "누워서 자전거 페달을 굴리듯 다리를 저으며 팔꿈치를 반대쪽 무릎에 교대로 가져가 복부 전면과 외측을 함께 조각합니다.",
+    steps: [
+      "바닥에 누워 손을 머리 뒤에 대고 머리와 날개뼈를 바닥에서 띄웁니다.",
+      "한 다리를 곧게 뻗고 반대쪽 무릎을 가슴으로 당기면서 몸통을 비틀어 반대쪽 팔꿈치와 무릎을 맞닿게 합니다.",
+      "공중에서 멈춤 없이 양다리와 상체 꼬임을 리드미컬하게 교대로 전환합니다."
+    ],
+    tips: [
+      "목을 잡아당겨 올리지 않게 머리 뒤 손에 힘을 최소화하고 복근 회전력에 주의를 기울입니다.",
+      "동작 시 허리가 땅에서 붕 들뜨지 않게 허리 정렬(Imprint) 상태를 계속 누릅니다."
+    ]
+  },
+  {
+    id: "hanging_knee_raise",
+    name: "행잉 니 레이즈 (Hanging Knee Raise)",
+    image: "images/hanging_knee.png",
+    target: "복직근 하부, 장요근",
+    description: "철봉에 매달려서 다리를 펴는 대신 무릎을 구부려 가슴 쪽으로 말아 올리는 강도가 조절된 효과적인 하복부 고립 운동입니다.",
+    steps: [
+      "철봉에 매달려 어깨를 단단히 패킹 고정합니다.",
+      "반동을 배제하고 무릎을 굽힌 채 가슴뼈 방향으로 둥글게 말아 올립니다.",
+      "골반이 말리며 아랫배가 완전히 수축되면 천천히 버티며 복압을 유지하고 다리를 내립니다."
+    ],
+    tips: [
+      "다리 무게가 아닌 골반 자체를 앞으로 둥글게 밀어 감아 올려야 하복부에 타겟이 걸립니다.",
+      "몸이 앞뒤로 요동치며 흔들리면 매달린 채 멈춘 뒤 동작을 재개합니다."
+    ]
+  },
+  {
+    id: "mountain_climber",
+    name: "마운틴 클라이머 (Mountain Climber)",
+    image: "images/mountain.png",
+    target: "코어 복부 전체, 장요근, 유산소 체력",
+    description: "엎드려 뻗친 플랭크 자세에서 산을 오르듯 양 무릎을 가슴으로 번갈아 빠르게 당기는 고강도 유산소 코어 운동입니다.",
+    steps: [
+      "손을 어깨너비로 대고 엎드린 플랭크 기본 자세를 잡습니다.",
+      "몸의 정렬을 수평으로 유지한 채, 한쪽 무릎을 가슴 쪽으로 빠르게 차 올립니다.",
+      "발을 바꾸어 교대로 무릎을 가슴 쪽으로 빠르게 전력으로 러닝하듯 당깁니다."
+    ],
+    tips: [
+      "무릎을 당길 때 엉덩이가 하늘로 과도하게 솟구치지 않게 어깨 수평 라인을 고정합니다.",
+      "손목 관절 부담을 막기 위해 바닥을 손가락 전체로 꽉 쥐어 밀어냅니다."
+    ]
+  }
+);
+
+exercisesData.cardio.push(
+  {
+    id: "jump_rope",
+    name: "줄넘기 (Jump Rope)",
+    image: "images/jump_rope.png",
+    target: "전신 심폐 지구력, 종아리 발목 탄성",
+    description: "도구 하나로 엄청난 민첩성과 하체 탄성, 그리고 단시간 최고 출력을 끌어내는 클래식 유산소 운동입니다.",
+    steps: [
+      "줄 손잡이를 가볍게 쥐고 팔꿈치를 옆구리에 꼭 붙입니다.",
+      "손목 회전을 이용해 줄을 돌리며 가볍게 앞꿈치 탄성을 이용해 제자리 점프합니다.",
+      "지정된 템포와 리듬에 따라 일정한 속도로 점프를 반복합니다."
+    ],
+    tips: [
+      "뒤꿈치를 대고 크게 뛰면 무릎과 발목 관절에 매우 악영향을 주니 앞꿈치로만 사뿐히 뜁니다.",
+      "어깨와 힘을 빼고 손목 스냅으로만 줄을 돌리는 게 연속 수행의 지름길입니다."
+    ]
+  },
+  {
+    id: "burpee_test",
+    name: "버피 테스트 (Burpee Test)",
+    image: "images/burpee.png",
+    target: "전신 심폐 능력 극대화, 전신 지구력",
+    description: "서 있다가 엎드려 푸쉬업 후 다시 일어나 점프하는 동작을 하나로 묶어 전신 근육과 심폐를 완전 연소시키는 악마의 전신 유산소입니다.",
+    steps: [
+      "바르게 서서 무릎을 굽혀 바닥에 손을 짚습니다.",
+      "양다리를 뒤로 점프해 뻗어 플랭크 자세를 잡습니다. (필요 시 가슴을 바닥에 대는 푸쉬업 동작 추가)",
+      "다시 다리를 점프하여 손 근처로 가슴 방향 당겨옵니다.",
+      "일어남과 동시에 하늘 방향으로 가볍게 힘껏 만세하며 점프합니다."
+    ],
+    tips: [
+      "다리를 뒤로 뻗어 플랭크 시 허리가 밑으로 툭 꺾여 쳐지지 않게 복압을 견고히 잡습니다.",
+      "관절 부하가 높은 복합 동작이므로 정확한 페이스 리듬을 찾고 시작합니다."
+    ]
+  },
+  {
+    id: "rowing_machine",
+    name: "로잉 머신 (Rowing Machine)",
+    image: "images/rowing.png",
+    target: "전신 유산소, 하체/등 후면 사슬 전체",
+    description: "배를 젓는 크루 동작을 머신으로 이식하여 하체로 밀고 등으로 당겨 전신 근육의 85% 이상을 동시에 동원하는 전신 운동입니다.",
+    steps: [
+      "발판 스트랩을 꽉 묶어 고정하고 안장에 바로 앉아 핸들을 잡습니다.",
+      "다리를 굽혔다가 뒤꿈치로 발판을 세게 밀어내며 다리를 먼저 폅니다.",
+      "다리가 거의 펴지는 지점에 도달하면 상체를 미세하게 뒤로 기대며 등/팔로 손잡이를 배꼽 아래로 당겨 수축합니다.",
+      "등와 팔을 뻗은 후 무릎을 굽히며 부드럽게 앞으로 밀착 복귀합니다."
+    ],
+    tips: [
+      "반드시 다리 60%, 코어 20%, 당기는 팔 20% 비율로 하체의 밀어내는 추진력이 우선시되어 당겨야 효과적입니다.",
+      "허리가 구부정하게 둥글게 말려 힘이 풀리지 않게 합니다."
+    ]
+  }
+);
+
 // MET 계수 정의 맵
 const MET_VALUES = {
+  db_press: 5.5,
+  decline_bench_press: 5.5,
+  landmine_press: 4.5,
+  db_pullover: 4.5,
+  high_row_machine: 5.0,
+  back_extension: 3.5,
+  barbell_shrug: 3.5,
+  cable_lateral_raise: 3.5,
+  rear_delt_fly: 4.0,
+  hack_squat: 6.0,
+  db_stiff_leg_deadlift: 5.5,
+  barbell_hip_thrust: 5.0,
+  ezbar_overhead_extension: 4.0,
+  db_concentration_curl: 3.0,
+  reverse_barbell_curl: 3.0,
+  bench_dips: 4.0,
+  bicycle_crunch: 4.0,
+  hanging_knee_raise: 3.5,
+  mountain_climber: 6.0,
+  jump_rope: 10.0,
+  burpee_test: 8.5,
+  rowing_machine: 7.0,
   // Chest
   bench_press: 6.0,
   incline_db_press: 5.0,
@@ -1039,13 +1446,59 @@ class WorkoutTracker {
       chip.className = 'quick-add-item';
       chip.style.padding = '8px 10px';
       chip.style.fontSize = '0.8rem';
-      chip.innerHTML = `<div style="font-weight: 600;">${ex.name.split(' (')[0]}</div>`;
+      chip.style.display = 'flex';
+      chip.style.justify = 'space-between';
+      chip.style.alignItems = 'center';
+      chip.style.gap = '6px';
       
-      chip.addEventListener('click', () => {
+      const isCustom = ex.id && ex.id.startsWith('custom_');
+      
+      chip.innerHTML = `
+        <div style="font-weight: 600; text-align: left; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${ex.name.split(' (')[0]}</div>
+        ${isCustom ? `
+          <button class="delete-custom-ex-btn" data-id="${ex.id}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 6px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+            <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+          </button>
+        ` : ''}
+      `;
+      
+      chip.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-custom-ex-btn')) return;
         this.addWorkout(ex.id, ex.name, categoryId);
       });
+      
+      if (isCustom) {
+        chip.querySelector('.delete-custom-ex-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.deleteCustomExercise(ex.id, categoryId, clickedBtn);
+        });
+      }
+      
       this.quickAddSubList.appendChild(chip);
     });
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  deleteCustomExercise(exId, categoryId, clickedBtn) {
+    if (confirm('이 커스텀 운동을 영구 삭제하시겠습니까?\n(이미 작성된 운동 일지 기록은 유지됩니다)')) {
+      // 1. 로컬스토리지 삭제
+      let customs = JSON.parse(localStorage.getItem('vitalfit_custom_exercises')) || [];
+      customs = customs.filter(ex => ex.id !== exId);
+      localStorage.setItem('vitalfit_custom_exercises', JSON.stringify(customs));
+
+      // 2. 메모리 삭제
+      if (exercisesData[categoryId]) {
+        exercisesData[categoryId] = exercisesData[categoryId].filter(ex => ex.id !== exId);
+      }
+
+      // 3. MET 삭제
+      delete MET_VALUES[exId];
+
+      // 4. UI 갱신
+      this.selectQuickAddCategory(categoryId, clickedBtn);
+      alert('🗑️ 커스텀 운동이 라이브러리에서 성공적으로 삭제되었습니다.');
+    }
   }
 
   getCategoryKorean(cat) {
@@ -1133,176 +1586,120 @@ class WorkoutTracker {
         const prevText = this.findPreviousRecord(workout.id, setIndex);
         const guideHTML = prevText ? `<span class="prev-record-guide">${prevText}</span>` : '';
 
-        const setRow = document.createElement('div');
+                const setRow = document.createElement('div');
         setRow.className = `set-row${isCompleted ? ' completed' : ''}`;
         
-        // 유산소 운동은 분, km 단위 사용
-        setRow.innerHTML = `
-          <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''} data-workout="${workoutIndex}" data-set="${setIndex}">
-          <div class="set-index" style="display:flex; flex-direction:column; gap:2px; line-height:1.2;">
-            <span style="font-weight:700;">${setIndex + 1}세트</span>
-            ${guideHTML}
-          </div>
-          
-          <div class="set-input-group">
-            <input type="number" class="set-weight" value="${set.weight}" min="0" step="${isCardio ? '1' : '2.5'}" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
-            <span>${isCardio ? '분' : 'kg'}</span>
-          </div>
-          
-          <div class="set-input-group">
-            <input type="number" class="set-reps" value="${set.reps}" min="0" step="${isCardio ? '0.1' : '1'}" data-workout="${workoutIndex}" data-set="${setIndex}" ${isCompleted ? 'disabled' : ''}>
-            <span>${isCardio ? 'km' : '회'}</span>
-          </div>
-          
-          <button class="delete-set-btn" data-workout="${workoutIndex}" data-set="${setIndex}">
-            <i data-lucide="minus-circle" style="width: 16px; height: 16px;"></i>
-          </button>
-        `;
+        // ?좎궛???대룞? 遺? km ?⑥쐞 ?ъ슜
+        if (isCardio) {
+          setRow.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''}>
+              <span class="set-index">${setIndex + 1}</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-weight-input" value="${set.weight}" placeholder="遺?>
+              <span>遺?/span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-reps-input" value="${set.reps}" placeholder="km" step="0.1">
+              <span>km</span>
+            </div>
+            <button class="delete-set-btn">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+          `;
+        } else {
+          setRow.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" class="set-complete-chk" ${isCompleted ? 'checked' : ''}>
+              <span class="set-index">${setIndex + 1}</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-weight-input" value="${set.weight}" placeholder="kg" step="2.5">
+              <span>kg</span>
+            </div>
+            <div class="set-input-group">
+              <input type="number" class="set-reps-input" value="${set.reps}" placeholder="??>
+              <span>??/span>
+            </div>
+            <button class="delete-set-btn">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+          `;
+        }
 
+        // Add progressive overload guide if available
+        if (prevText) {
+          const guideRow = document.createElement('div');
+          guideRow.style.gridColumn = 'span 4';
+          guideRow.style.textAlign = 'right';
+          guideRow.style.paddingRight = '40px';
+          guideRow.style.marginTop = '-4px';
+          guideRow.style.marginBottom = '6px';
+          guideRow.innerHTML = `<span class="prev-record-guide">${prevText}</span>`;
+          setRow.appendChild(guideRow);
+        }
+
+        // Bind Events
         const chk = setRow.querySelector('.set-complete-chk');
-        const weightInput = setRow.querySelector('.set-weight');
-        const repsInput = setRow.querySelector('.set-reps');
-        const deleteSetBtn = setRow.querySelector('.delete-set-btn');
+        const weightInput = setRow.querySelector('.set-weight-input');
+        const repsInput = setRow.querySelector('.set-reps-input');
+        const delBtn = setRow.querySelector('.delete-set-btn');
 
-        chk.addEventListener('change', (e) => {
-          const completed = e.target.checked;
-          this.app.updateWorkoutSet(workoutIndex, setIndex, 'completed', completed);
-          
-          if (completed) {
-            setRow.classList.add('completed');
-            weightInput.disabled = true;
-            repsInput.disabled = true;
-            
-            if (this.app.timer) {
-              this.app.timer.start();
-            }
-            
-            if (this.app.prDetector && !isCardio) {
-              this.app.prDetector.checkNewPR(workout, set);
-            }
-          } else {
-            setRow.classList.remove('completed');
-            weightInput.disabled = false;
-            repsInput.disabled = false;
-          }
-          
-          this.render(); 
+        chk.addEventListener('change', () => {
+          set.completed = chk.checked;
+          this.app.saveWorkoutsForDate(date, workouts);
+          this.render();
         });
 
-        weightInput.addEventListener('input', (e) => {
-          const val = parseFloat(e.target.value) || 0;
-          this.app.updateWorkoutSet(workoutIndex, setIndex, 'weight', val);
+        weightInput.addEventListener('input', () => {
+          set.weight = parseFloat(weightInput.value) || 0;
+          this.app.saveWorkoutsForDate(date, workouts);
         });
 
-        repsInput.addEventListener('input', (e) => {
-          const val = parseFloat(e.target.value) || 0;
-          this.app.updateWorkoutSet(workoutIndex, setIndex, 'reps', val);
+        weightInput.addEventListener('blur', () => {
+          this.render();
         });
 
-        deleteSetBtn.addEventListener('click', () => {
+        repsInput.addEventListener('input', () => {
+          set.reps = parseFloat(repsInput.value) || 0;
+          this.app.saveWorkoutsForDate(date, workouts);
+        });
+
+        repsInput.addEventListener('blur', () => {
+          this.render();
+        });
+
+        delBtn.addEventListener('click', () => {
           this.removeSet(workoutIndex, setIndex);
         });
 
         setsContainer.appendChild(setRow);
       });
 
-      itemEl.appendChild(setsContainer);
-
+      // Add Set Row
       const addSetRow = document.createElement('div');
       addSetRow.className = 'add-set-row';
       addSetRow.innerHTML = `
         <button class="add-set-btn">
-          <i data-lucide="plus" style="width: 12px; height: 12px;"></i> 세트 추가
+          <i data-lucide="plus" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> ?명듃 異붽?
         </button>
       `;
       addSetRow.querySelector('.add-set-btn').addEventListener('click', () => {
         this.addSet(workoutIndex);
       });
 
+      itemEl.appendChild(setsContainer);
       itemEl.appendChild(addSetRow);
       this.loggedContainer.appendChild(itemEl);
     });
 
-    // Update trainer coaching feedback based on logged workout volume and calories
+    // Update coaching feedback
     this.updateCoachingFeedback(totalSets, totalVolume, totalCalories);
 
-    if (window.lucide) window.lucide.createIcons();
-  }
-
-  // Real-time PT Coaching Logic
-  updateCoachingFeedback(totalSets, totalVolume, totalCalories) {
-    this.metricTotalSets.textContent = `${totalSets} 세트`;
-    this.metricTotalVolume.textContent = `${totalVolume.toLocaleString()} kg`;
-    this.metricTotalCalories.textContent = `${Math.round(totalCalories)} kcal`;
-
-    const userProfile = JSON.parse(localStorage.getItem('vitalfit_user_profile')) || {};
-    const goal = userProfile.profileGoal || 'diet';
-    const level = userProfile.profileLevel || 'beginner';
-    
-    let badgeHTML = '';
-    let feedbackText = '';
-
-    if (totalSets === 0) {
-      badgeHTML = `<i data-lucide="user-check" style="width: 14px; height: 14px;"></i><span>대기 중</span>`;
-      feedbackText = `오늘 운동을 시작해 보세요! 입력하신 운동과 세트 수를 바탕으로 AI 트레이너가 실시간 운동 강도 조언과 운동 꿀팁을 제공합니다. 우측 하단 'AI트레이너' 탭에서 나만의 맞춤 PT 루틴을 추천받아 등록할 수도 있습니다!`;
-      this.coachingStatusBadge.style.background = 'rgba(255, 255, 255, 0.05)';
-      this.coachingStatusBadge.style.color = 'var(--text-muted)';
-    } 
-    else if (totalSets >= 1 && totalSets <= 5) {
-      badgeHTML = `<i data-lucide="flame" style="width: 14px; height: 14px;"></i><span>워밍업 단계</span>`;
-      feedbackText = `가벼운 워밍업 단계입니다. 관절 부상을 피하기 위해 본 세트에 진입하기 전 어깨나 무릎 관절을 충분히 회전시켜 스트레칭해 주세요. 현재 목표(${this.getGoalKorean(goal)})를 성공시키기 위해 이제 점진적으로 중량을 올리며 메인 세트로 나아갑시다. 현재 ${Math.round(totalCalories)}kcal를 소모하셨습니다.`;
-      this.coachingStatusBadge.style.background = 'rgba(59, 130, 246, 0.15)';
-      this.coachingStatusBadge.style.color = 'var(--color-secondary)';
-    } 
-    else if (totalSets >= 6 && totalSets <= 12) {
-      badgeHTML = `<i data-lucide="zap" style="width: 14px; height: 14px;"></i><span>기초 강도 진입</span>`;
-      feedbackText = `적정한 훈련 강도에 들어섰습니다. ${level === 'beginner' ? '초보 헬린이 레벨에서 무리하지 않고 기량을 다지기에 딱 좋은 세트 수입니다.' : '중상급자 레벨의 본격적인 메인 훈련 볼륨입니다.'} 현재 소화한 ${totalVolume.toLocaleString()}kg의 부하와 소모된 ${Math.round(totalCalories)}kcal는 자극을 심어주기에 충분합니다. 부위당 1세트 정도를 더 한계점(Failure point)까지 쥐어짜 보세요.`;
-      this.coachingStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
-      this.coachingStatusBadge.style.color = 'var(--color-accent)';
-    } 
-    else if (totalSets >= 13 && totalSets <= 22) {
-      badgeHTML = `<i data-lucide="award" style="width: 14px; height: 14px;"></i><span>최적의 훈련 볼륨 (강력 추천)</span>`;
-      feedbackText = `전담 트레이너 강력 추천 볼륨입니다! 오늘의 운동 목적에 아주 정확하게 부합하는 이상적인 훈련량이 축적되었습니다. 오늘 총 ${totalVolume.toLocaleString()}kg의 무거운 하중을 견뎌내고 총 ${Math.round(totalCalories)}kcal를 성공적으로 태웠습니다. 30분 이내에 양질의 단백질 섭취를 완료하고 충분한 휴식을 통해 신체 회복을 유도하세요!`;
-      this.coachingStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
-      this.coachingStatusBadge.style.color = 'var(--color-primary)';
-    } 
-    else {
-      badgeHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i><span>오버트레이닝 우려 (주의)</span>`;
-      feedbackText = `오늘 과도한 운동 세트 수(${totalSets}세트)를 수행하고 있습니다! 소모 칼로리(${Math.round(totalCalories)}kcal)는 대단하지만, 피로도를 초과하여 운동을 계속 지속하면 부상 위험이 급증합니다. 오늘의 훈련은 여기서 멈추고 안전하게 폼롤러 스트레칭으로 넘어가세요.`;
-      this.coachingStatusBadge.style.background = 'rgba(239, 68, 68, 0.15)';
-      this.coachingStatusBadge.style.color = '#ef4444';
+    if (window.lucide) {
+      window.lucide.createIcons();
     }
-
-    this.coachingStatusBadge.innerHTML = badgeHTML;
-    this.coachingFeedbackText.innerHTML = feedbackText;
-  }
-
-  getGoalKorean(goal) {
-    const map = { diet: '지방 감량', bulk: '근육량 증가', strength: '근력 스트렝스 향상' };
-    return map[goal] || goal;
-  }
-
-  addWorkout(exerciseId, name, category) {
-    const date = this.app.selectedDate;
-    const workouts = this.app.getWorkoutsForDate(date);
-    
-    const exists = workouts.some(w => w.id === exerciseId);
-    if (exists) {
-      alert('이미 오늘의 운동 목록에 추가된 운동입니다.');
-      return;
-    }
-
-    const isCardio = category === 'cardio';
-    const newWorkout = {
-      id: exerciseId,
-      name: name,
-      category: category,
-      sets: [isCardio ? { weight: 15, reps: 1.5, completed: false } : { weight: 40, reps: 10, completed: false }]
-    };
-
-    workouts.push(newWorkout);
-    this.app.saveWorkoutsForDate(date, workouts);
-    this.render();
   }
 
   removeWorkout(workoutIndex) {
@@ -1311,6 +1708,39 @@ class WorkoutTracker {
     workouts.splice(workoutIndex, 1);
     this.app.saveWorkoutsForDate(date, workouts);
     this.render();
+  }
+
+  updateCoachingFeedback(totalSets, totalVolume, totalCalories) {
+    if (!this.coachingStatusBadge || !this.coachingFeedbackText) return;
+    
+    if (totalSets === 0) {
+      this.coachingStatusBadge.textContent = '?湲?以?;
+      this.coachingStatusBadge.className = 'status-badge badge-gray';
+      this.coachingFeedbackText.innerHTML = '?ㅻ뒛???대룞 湲곕줉???놁뒿?덈떎. ?꾨옒?먯꽌 ?대룞??異붽??섍퀬 ?명듃瑜??꾨즺??肄붿묶??諛쏆븘蹂댁꽭??';
+      return;
+    }
+
+    let status = '吏꾪뻾 以?;
+    let badgeClass = 'badge-yellow';
+    let feedback = '';
+
+    if (totalSets >= 15) {
+      status = '?뚮???;
+      badgeClass = 'badge-green';
+      feedback = `?ㅻ뒛 珥?<strong>${totalSets}?명듃</strong>, <strong>${totalVolume.toLocaleString()}kg</strong>??蹂쇰ⅷ???뚰솕?섎ŉ <strong>${Math.round(totalCalories)} kcal</strong>瑜??곗냼?덉뒿?덈떎! 媛뺣룄 ?믪? ?몃젅?대떇???꾩＜ ?뚮??섍쾶 ?꾩닔?섏뀲?듬땲?? 異⑸텇???⑤갚吏???랬? ?댁떇??痍⑦빐二쇱꽭?? ??`;
+    } else if (totalSets >= 8) {
+      status = '?곸젙';
+      badgeClass = 'badge-blue';
+      feedback = `?ㅻ뒛 珥?<strong>${totalSets}?명듃</strong>, <strong>${totalVolume.toLocaleString()}kg</strong> 蹂쇰ⅷ怨?<strong>${Math.round(totalCalories)} kcal</strong> ?뚮え瑜?湲곕줉?덉뒿?덈떎. 洹쇱꽦?μ쓣 ?좊룄?섍린????醫뗭? 蹂쇰ⅷ?낅땲?? ?⑥? ?명듃媛 ?덈떎硫?遺?곸뿉 二쇱쓽?섎ŉ 留덈Т由ы빐 蹂댁꽭?? ?몟`;
+    } else {
+      status = '?쒖옉 ?④퀎';
+      badgeClass = 'badge-yellow';
+      feedback = `?꾩옱 <strong>${totalSets}?명듃</strong> ?꾨즺, <strong>${totalVolume.toLocaleString()}kg</strong> 蹂쇰ⅷ???ъ꽦?덉뒿?덈떎 (?뚮え 移쇰줈由? <strong>${Math.round(totalCalories)} kcal</strong>). 議곌툑 ???섎궡???ㅻ뒛 怨꾪쉷??猷⑦떞???앷퉴吏 ?꾩닔?대큶?쒕떎! ?뵦`;
+    }
+
+    this.coachingStatusBadge.textContent = status;
+    this.coachingStatusBadge.className = `status-badge ${badgeClass}`;
+    this.coachingFeedbackText.innerHTML = feedback;
   }
 
   addSet(workoutIndex) {
@@ -1975,68 +2405,133 @@ class TrainerAssistant {
     // Choose custom sets & reps and weight factors based on user level and goal
     let setMultiplier = 3;
     let repCount = 10;
-    let intensityText = '초급자';
+    let intensityText = '珥덇툒??;
     
     if (level === 'beginner') {
       setMultiplier = 3;
       repCount = 12;
-      intensityText = '초급자 (가벼운 무게 / 고반복)';
+      intensityText = '珥덇툒??(媛踰쇱슫 臾닿쾶 / 怨좊컲蹂?';
     } else if (level === 'intermediate') {
       setMultiplier = 4;
       repCount = 10;
-      intensityText = '중급자 (적정 중량 / 고자극)';
+      intensityText = '以묎툒??(?곸젙 以묐웾 / 怨좎옄洹?';
     } else {
       setMultiplier = 5;
       repCount = 8;
-      intensityText = '상급자 (고중량 / 점진적 과부하)';
+      intensityText = '?곴툒??(怨좎쨷??/ ?먯쭊??怨쇰???';
     }
 
     this.suggestedRoutineLevelTag.textContent = intensityText;
     
-    // Generate actual workout logs
-    const routineExercises = [];
-    
-    if (split === 'push') {
-      this.suggestedRoutineTitle.textContent = '가슴 & 삼두 (밀기 6종목 루틴)';
+    // 臾댁옉???뷀뵆 ??異붿텧 ?ы띁 ?⑥닔
+    const getRandomElements = (arr, num) => {
+      const shuffled = [...arr].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    };
+
+    // ?쒖씠?꾩? ?대룞 ?깃꺽(MET)??醫낇빀??異붿쿇 以묐웾 ?앹꽦 ?ы띁
+    const getRecommendWeight = (exId, category) => {
+      if (category === 'cardio') {
+        if (level === 'beginner') return 15;
+        if (level === 'intermediate') return 25;
+        return 35;
+      }
+      const met = MET_VALUES[exId] || 4.0;
+      let baseWeight = 20;
       
-      routineExercises.push({ id: 'bench_press', name: '벤치 프레스 (Bench Press)', category: 'chest', weight: level === 'beginner' ? 30 : level === 'intermediate' ? 60 : 90 });
-      routineExercises.push({ id: 'incline_db_press', name: '인클라인 덤벨 프레스 (Incline Dumbbell Press)', category: 'chest', weight: level === 'beginner' ? 10 : level === 'intermediate' ? 20 : 30 });
-      routineExercises.push({ id: 'pec_deck_fly', name: '펙 덱 플라이 (Pec Deck Fly)', category: 'chest', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 40 : 60 });
-      routineExercises.push({ id: 'push_up', name: '푸쉬업 (Push Up)', category: 'chest', weight: 0 });
-      routineExercises.push({ id: 'triceps_pushdown', name: '트라이셉스 푸쉬다운 (Triceps Pushdown)', category: 'arms', weight: level === 'beginner' ? 15 : level === 'intermediate' ? 25 : 35 });
-      routineExercises.push({ id: 'db_kickback', name: '덤벨 킥백 (Dumbbell Kickback)', category: 'arms', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
+      if (met >= 6.0) baseWeight = 40; // ?洹쇱쑁 蹂듯빀
+      else if (met <= 3.5) baseWeight = 10; // ?뚭렐??怨좊┰
+      
+      if (exId === 'push_up' || exId === 'pull_up' || exId === 'dips' || exId === 'plank') {
+        return 0;
+      }
+      
+      let factor = 1.0;
+      if (level === 'beginner') factor = 0.6;
+      else if (level === 'advanced') factor = 1.4;
+      
+      let finalWeight = Math.round((baseWeight * factor) / 2.5) * 2.5;
+      const offset = (Math.floor(Math.random() * 3) - 1) * 2.5; // -2.5, 0, +2.5 ?쒕뜡 ?ㅽ봽??      return Math.max(2.5, finalWeight + offset);
+    };
+
+    const routineExercises = [];
+
+    if (split === 'push') {
+      this.suggestedRoutineTitle.textContent = '媛??& ?쇰몢 (諛湲?6醫낅ぉ 異붿쿇 猷⑦떞)';
+      
+      // 媛???대룞 ?
+      const chestPool = exercisesData.chest || [];
+      // ?닿묠 ?꾨젅???
+      const shoulderPressPool = (exercisesData.shoulders || []).filter(ex => ex.id.includes('press') || ex.id === 'overhead_press');
+      // ?쇰몢 ?
+      const tricepsPool = (exercisesData.arms || []).filter(ex => ex.id.includes('triceps') || ex.id.includes('kickback') || ex.id.includes('dips') || ex.id.includes('ext'));
+
+      // 媛?댁뿉??3媛??좏깮
+      getRandomElements(chestPool, 3).forEach(ex => routineExercises.push(ex));
+      // ?닿묠 ?꾨젅?ㅼ뿉??1媛??좏깮
+      getRandomElements(shoulderPressPool.length > 0 ? shoulderPressPool : exercisesData.shoulders, 1).forEach(ex => routineExercises.push(ex));
+      // ?쇰몢?먯꽌 2媛??좏깮
+      getRandomElements(tricepsPool.length > 0 ? tricepsPool : exercisesData.arms, 2).forEach(ex => routineExercises.push(ex));
     } 
     else if (split === 'pull') {
-      this.suggestedRoutineTitle.textContent = '등 & 이두 (당기기 6종목 루틴)';
+      this.suggestedRoutineTitle.textContent = '??& ?대몢 (?밴린湲?6醫낅ぉ 異붿쿇 猷⑦떞)';
       
-      routineExercises.push({ id: 'deadlift', name: '데드리프트 (Deadlift)', category: 'back', weight: level === 'beginner' ? 40 : level === 'intermediate' ? 80 : 120 });
-      routineExercises.push({ id: 'lat_pulldown', name: '랫 풀 다운 (Lat Pulldown)', category: 'back', weight: level === 'beginner' ? 25 : level === 'intermediate' ? 45 : 65 });
-      routineExercises.push({ id: 'bent_over_row', name: '바벨 로우 (Bent Over Row)', category: 'back', weight: level === 'beginner' ? 30 : level === 'intermediate' ? 50 : 70 });
-      routineExercises.push({ id: 'pull_up', name: '풀업 (Pull Up)', category: 'back', weight: 0 });
-      routineExercises.push({ id: 'db_biceps_curl', name: '덤벨 바이셉스 컬 (Dumbbell Biceps Curl)', category: 'arms', weight: level === 'beginner' ? 8 : level === 'intermediate' ? 12 : 18 });
-      routineExercises.push({ id: 'hammer_curl', name: '해머 컬 (Hammer Curl)', category: 'arms', weight: level === 'beginner' ? 8 : level === 'intermediate' ? 12 : 18 });
+      // ???대룞 ?
+      const backPool = exercisesData.back || [];
+      // ?대몢 ?
+      const bicepsPool = (exercisesData.arms || []).filter(ex => ex.id.includes('biceps') || ex.id.includes('curl'));
+      // 蹂듦렐 ?
+      const absPool = exercisesData.abs || [];
+
+      // ?깆뿉??3媛??좏깮
+      getRandomElements(backPool, 3).forEach(ex => routineExercises.push(ex));
+      // ?대몢?먯꽌 2媛??좏깮
+      getRandomElements(bicepsPool.length > 0 ? bicepsPool : exercisesData.arms, 2).forEach(ex => routineExercises.push(ex));
+      // 蹂듦렐?먯꽌 1媛??좏깮
+      getRandomElements(absPool, 1).forEach(ex => routineExercises.push(ex));
     } 
     else {
-      this.suggestedRoutineTitle.textContent = '하체 & 어깨 (하체/어깨 6종목 루틴)';
+      this.suggestedRoutineTitle.textContent = '?섏껜 & ?닿묠 (?섏껜/?닿묠 6醫낅ぉ 異붿쿇 猷⑦떞)';
       
-      routineExercises.push({ id: 'squat', name: '스쿼트 (Squat)', category: 'legs', weight: level === 'beginner' ? 40 : level === 'intermediate' ? 85 : 120 });
-      routineExercises.push({ id: 'leg_press', name: '레그 프레스 (Leg Press)', category: 'legs', weight: level === 'beginner' ? 60 : level === 'intermediate' ? 120 : 200 });
-      routineExercises.push({ id: 'leg_extension', name: '레그 익스텐션 (Leg Extension)', category: 'legs', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 40 : 60 });
-      routineExercises.push({ id: 'overhead_press', name: '오버헤드 프레스 (Overhead Press)', category: 'shoulders', weight: level === 'beginner' ? 20 : level === 'intermediate' ? 35 : 50 });
-      routineExercises.push({ id: 'side_lateral_raise', name: '사이드 레터럴 레이즈 (Side Lateral Raise)', category: 'shoulders', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
-      routineExercises.push({ id: 'bent_over_lateral_raise', name: '벤트 오버 레터럴 레이즈 (Bent Over Lateral Raise)', category: 'shoulders', weight: level === 'beginner' ? 4 : level === 'intermediate' ? 8 : 12 });
+      // ?섏껜 ?
+      const legsPool = exercisesData.legs || [];
+      // ?닿묠 ?덉씠利?湲고? ?
+      const shoulderRaisePool = (exercisesData.shoulders || []).filter(ex => !ex.id.includes('press') && ex.id !== 'overhead_press');
+      // ?좎궛???
+      const cardioPool = exercisesData.cardio || [];
+
+      // ?섏껜?먯꽌 3媛??좏깮
+      getRandomElements(legsPool, 3).forEach(ex => routineExercises.push(ex));
+      // ?닿묠 ?덉씠利덉뿉??2媛??좏깮
+      getRandomElements(shoulderRaisePool.length > 0 ? shoulderRaisePool : exercisesData.shoulders, 2).forEach(ex => routineExercises.push(ex));
+      // ?좎궛?뚯뿉??1媛??좏깮
+      getRandomElements(cardioPool, 1).forEach(ex => routineExercises.push(ex));
+    }
+
+    // ?덉쇅 諛⑹뼱肄붾뱶
+    if (routineExercises.length < 6) {
+      const fallbackPool = [...exercisesData.chest, ...exercisesData.back, ...exercisesData.legs];
+      getRandomElements(fallbackPool, 6 - routineExercises.length).forEach(ex => routineExercises.push(ex));
     }
 
     // Map sets
     this.currentSuggestedRoutine = routineExercises.map(ex => {
+      const isCardio = ex.category === 'cardio';
       const sets = [];
-      for (let i = 0; i < setMultiplier; i++) {
-        sets.push({ weight: ex.weight, reps: repCount });
+      const recWeight = getRecommendWeight(ex.id, ex.category);
+      
+      if (isCardio) {
+        const distance = Math.round((recWeight * 0.1) * 10) / 10;
+        sets.push({ weight: recWeight, reps: distance, completed: false });
+      } else {
+        for (let i = 0; i < setMultiplier; i++) {
+          sets.push({ weight: recWeight, reps: repCount, completed: false });
+        }
       }
       return {
         id: ex.id,
         name: ex.name,
-        category: ex.category,
+        category: ex.category || (isCardio ? 'cardio' : 'custom'),
         sets: sets
       };
     });
@@ -2052,12 +2547,15 @@ class TrainerAssistant {
       el.style.border = '1px solid var(--border-color)';
       el.style.borderRadius = 'var(--radius-sm)';
       
+      const isCardio = ex.category === 'cardio';
+      const unitText = isCardio ? `${ex.sets[0].weight}遺?(${ex.sets[0].reps}km)` : `${ex.sets.length}?명듃 x ${ex.sets[0].weight}kg (${ex.sets[0].reps}??`;
+
       el.innerHTML = `
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--color-primary); color:#080b10; font-size:0.7rem; font-weight:800;">${idx + 1}</span>
           <span style="font-weight:600; font-size:0.85rem;">${ex.name.split(' (')[0]}</span>
         </div>
-        <span style="font-size:0.75rem; color:var(--text-muted);">${ex.sets.length}세트 x ${ex.sets[0].weight}kg (${ex.sets[0].reps}회)</span>
+        <span style="font-size:0.75rem; color:var(--text-muted);">${unitText}</span>
       `;
       this.suggestedRoutineList.appendChild(el);
     });
@@ -2067,32 +2565,32 @@ class TrainerAssistant {
     if (split === 'push') {
       guideHTML = `
         <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
-          <i data-lucide="info" style="width:14px; height:14px;"></i> 밀기(Push) 루틴 추천 수행 순서
+          <i data-lucide="info" style="width:14px; height:14px;"></i> 諛湲?Push) 猷⑦떞 異붿쿇 ?섑뻾 ?쒖꽌
         </div>
-        <strong>1. 선 가슴 타겟 (1~4단계)</strong>: 가장 고중량이 가능한 다관절 <strong>벤치 프레스</strong>와 <strong>인클라인 프레스</strong>를 1순위로 몰아쳐 가슴 근육에 강한 무게 과부하를 가합니다. 이어서 고립 운동인 <strong>펙 덱 플라이</strong>로 가슴 안쪽 라인을 쥐어짜고, 맨몸 <strong>푸쉬업</strong>으로 가슴 근육을 완전 탈진(Failure) 상태로 유도합니다.<br>
+        <strong>1. ??媛???寃?(1~4?④퀎)</strong>: 媛??怨좎쨷?됱씠 媛?ν븳 ?ㅺ???<strong>踰ㅼ튂 ?꾨젅??/strong>? <strong>?명겢?쇱씤 ?꾨젅??/strong>瑜?1?쒖쐞濡?紐곗븘爾?媛??洹쇱쑁??媛뺥븳 臾닿쾶 怨쇰??섎? 媛?⑸땲?? ?댁뼱??怨좊┰ ?대룞??<strong>?????뚮씪??/strong>濡?媛???덉そ ?쇱씤??伊먯뼱吏쒓퀬, 留⑤じ <strong>?몄돩??/strong>?쇰줈 媛??洹쇱쑁???꾩쟾 ?덉쭊(Failure) ?곹깭濡??좊룄?⑸땲??<br>
         <span style="display:block; margin-top:4px;"></span>
-        <strong>2. 후 삼두 타겟 (5~6단계)</strong>: 가슴 밀기 훈련 시 보조로 활성화되었던 팔 뒤쪽 삼두근을 <strong>트라이셉스 푸쉬다운</strong>과 <strong>덤벨 킥백</strong> 순으로 고립 이완/수축하여 매끈한 삼두 볼륨을 조각합니다.<br>
-        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 세트 간 휴식은 <strong>90초</strong>, 운동 전환 시에는 <strong>2~3분</strong> 충분히 호흡을 고르고 수분을 자주 섭취하세요!</div>
+        <strong>2. ???쇰몢 ?寃?(5~6?④퀎)</strong>: 媛??諛湲??덈젴 ??蹂댁“濡??쒖꽦?붾릺?덈뜕 ???ㅼそ ?쇰몢洹쇱쓣 <strong>?몃씪?댁뀎???몄돩?ㅼ슫</strong>怨?<strong>?ㅻ꺼 ?λ갚</strong> ?쒖쑝濡?怨좊┰ ?댁셿/?섏텞?섏뿬 留ㅻ걟???쇰몢 蹂쇰ⅷ??議곌컖?⑸땲??<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">?뮕 沅뚯옣 ?ы빆: ?명듃 媛??댁떇? <strong>90珥?/strong>, ?대룞 ?꾪솚 ?쒖뿉??<strong>2~3遺?/strong> 異⑸텇???명씉??怨좊Ⅴ怨??섎텇???먯＜ ??랬?섏꽭??</div>
       `;
     } else if (split === 'pull') {
       guideHTML = `
         <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
-          <i data-lucide="info" style="width:14px; height:14px;"></i> 당기기(Pull) 루틴 추천 수행 순서
+          <i data-lucide="info" style="width:14px; height:14px;"></i> ?밴린湲?Pull) 猷⑦떞 異붿쿇 ?섑뻾 ?쒖꽌
         </div>
-        <strong>1. 선 등 후면 자극 (1~4단계)</strong>: 전신 근력과 척추 기립 코어 근육 전체를 동원하는 고중량 <strong>데드리프트</strong>를 첫 번째 종목으로 배치해 가장 많은 체력을 쏟습니다. 뒤이어 <strong>랫 풀 다운</strong>과 <strong>바벨 로우</strong>로 등의 넓이/두께를 골고루 먹인 후, 광배근 끝판왕인 맨몸 <strong>풀업</strong>을 한계 횟수로 매달려 완료합니다.<br>
+        <strong>1. ?????꾨㈃ ?먭레 (1~4?④퀎)</strong>: ?꾩떊 洹쇰젰怨?泥숈텛 湲곕┰ 肄붿뼱 洹쇱쑁 ?꾩껜瑜??숈썝?섎뒗 怨좎쨷??<strong>?곕뱶由ы봽??/strong>瑜?泥?踰덉㎏ 醫낅ぉ?쇰줈 諛곗튂??媛??留롮? 泥대젰???잛뒿?덈떎. ?ㅼ씠??<strong>??? ?ㅼ슫</strong>怨?<strong>諛붾꺼 濡쒖슦</strong>濡??깆쓽 ?볦씠/?먭퍡瑜?怨④퀬猷?癒뱀씤 ?? 愿묐같洹??앺뙋?뺤씤 留⑤じ <strong>???/strong>???쒓퀎 ?잛닔濡?留ㅻ떖???꾨즺?⑸땲??<br>
         <span style="display:block; margin-top:4px;"></span>
-        <strong>2. 후 이두 타겟 (5~6단계)</strong>: 등 당기기 동작 시 예열된 이두근에 이두 봉우리를 만드는 <strong>덤벨 바이셉스 컬</strong>을 먹이고, <strong>해머 컬</strong>을 통해 전완근과 이두 바깥쪽 두께 라인을 완성합니다.<br>
-        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 등 운동은 면적이 넓어 심박수가 매우 가파르게 오릅니다. 세트 간 최소 <strong>2분</strong> 넉넉히 휴식하여 부상을 방지하세요.</div>
+        <strong>2. ???대몢 ?寃?(5~6?④퀎)</strong>: ???밴린湲??숈옉 ???덉뿴???대몢洹쇱뿉 ?대몢 遊됱슦由щ? 留뚮뱶??<strong>?ㅻ꺼 諛붿씠?됱뒪 而?/strong>??癒뱀씠怨? <strong>?대㉧ 而?/strong>???듯빐 ?꾩셿洹쇨낵 ?대몢 諛붽묑履??먭퍡 ?쇱씤???꾩꽦?⑸땲??<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">?뮕 沅뚯옣 ?ы빆: ???대룞? 硫댁쟻???볦뼱 ?щ컯?섍? 留ㅼ슦 媛?뚮Ⅴ寃??ㅻ쫭?덈떎. ?명듃 媛?理쒖냼 <strong>2遺?/strong> ?됰꼮???댁떇?섏뿬 遺?곸쓣 諛⑹??섏꽭??</div>
       `;
     } else {
       guideHTML = `
         <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
-          <i data-lucide="info" style="width:14px; height:14px;"></i> 하체 & 어깨 루틴 추천 수행 순서
+          <i data-lucide="info" style="width:14px; height:14px;"></i> ?섏껜 & ?닿묠 猷⑦떞 異붿쿇 ?섑뻾 ?쒖꽌
         </div>
-        <strong>1. 선 하체 대근육 (1~3단계)</strong>: 전신의 가장 묵직한 하체 기둥을 다스리는 프리웨이트 <strong>스쿼트</strong>를 가장 컨디션이 우수한 처음에 메인으로 진행합니다. 이어서 고중량 머신 <strong>레그 프레스</strong>를 밟아 대퇴사두를 조지고, <strong>레그 익스텐션</strong>으로 대퇴사두근의 고립 갈라짐을 쥐어짜 단련합니다.<br>
+        <strong>1. ???섏껜 ?洹쇱쑁 (1~3?④퀎)</strong>: ?꾩떊??媛??臾듭쭅???섏껜 湲곕뫁???ㅼ뒪由щ뒗 ?꾨━?⑥씠??<strong>?ㅼ옘??/strong>瑜?媛??而⑤뵒?섏씠 ?곗닔??泥섏쓬??硫붿씤?쇰줈 吏꾪뻾?⑸땲?? ?댁뼱??怨좎쨷??癒몄떊 <strong>?덇렇 ?꾨젅??/strong>瑜?諛잛븘 ??댁궗?먮? 議곗?怨? <strong>?덇렇 ?듭뒪?먯뀡</strong>?쇰줈 ??댁궗?먭렐??怨좊┰ 媛덈씪吏먯쓣 伊먯뼱吏??⑤젴?⑸땲??<br>
         <span style="display:block; margin-top:4px;"></span>
-        <strong>2. 후 어깨 3D 삼각근 (4~6단계)</strong>: 전면 어깨 프레임의 메인 스트렝스인 <strong>오버헤드 프레스</strong>를 곧게 밀어준 후, 측면 삼각근을 둥글게 키워줄 <strong>사이드 레터럴 레이즈</strong>, 그리고 입체적인 후면 마무리를 위한 <strong>벤트 오버 레터럴 레이즈</strong> 순으로 어깨 3면을 골고루 채워 완성합니다.<br>
-        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 무거운 무릎/요추 가해 하체 훈련이 포함되므로, 스쿼트와 레그프레스 사이에는 <strong>2~3분</strong> 충분히 긴 호흡으로 관절 휴식을 취해 요통을 예방하세요.</div>
+        <strong>2. ???닿묠 3D ?쇨컖洹?(4~6?④퀎)</strong>: ?꾨㈃ ?닿묠 ?꾨젅?꾩쓽 硫붿씤 ?ㅽ듃?앹뒪??<strong>?ㅻ쾭?ㅻ뱶 ?꾨젅??/strong>瑜?怨㏐쾶 諛?댁? ?? 痢〓㈃ ?쇨컖洹쇱쓣 ?κ?寃??ㅼ썙以?<strong>?ъ씠???덊꽣???덉씠利?/strong>, 洹몃━怨??낆껜?곸씤 ?꾨㈃ 留덈Т由щ? ?꾪븳 <strong>踰ㅽ듃 ?ㅻ쾭 ?덊꽣???덉씠利?/strong> ?쒖쑝濡??닿묠 3硫댁쓣 怨④퀬猷?梨꾩썙 ?꾩꽦?⑸땲??<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">?뮕 沅뚯옣 ?ы빆: 臾닿굅??臾대쫷/?붿텛 媛???섏껜 ?덈젴???ы븿?섎?濡? ?ㅼ옘?몄? ?덇렇?꾨젅???ъ씠?먮뒗 <strong>2~3遺?/strong> 異⑸텇??湲??명씉?쇰줈 愿???댁떇??痍⑦빐 ?뷀넻???덈갑?섏꽭??</div>
       `;
     }
     this.suggestedRoutineGuideBox.innerHTML = guideHTML;
@@ -2102,40 +2600,7 @@ class TrainerAssistant {
     }
   }
 
-  // Apply the generated routine directly to workout tracker log
-  applyRoutineToLog() {
-    if (!this.currentSuggestedRoutine || this.currentSuggestedRoutine.length === 0) return;
-
-    const date = this.app.selectedDate;
-    const todayWorkouts = this.app.getWorkoutsForDate(date);
-    
-    // Add only new exercises to avoid overriding manually logged ones
-    let addedCount = 0;
-    this.currentSuggestedRoutine.forEach(ex => {
-      const exists = todayWorkouts.some(w => w.id === ex.id);
-      if (!exists) {
-        todayWorkouts.push(ex);
-        addedCount++;
-      }
-    });
-
-    this.app.saveWorkoutsForDate(date, todayWorkouts);
-    
-    alert(`🤖 트레이너 맞춤 추천 루틴이 완료되었습니다!\n총 ${addedCount}개의 운동을 일지에 추가했습니다.`);
-    
-    // Reset view box
-    this.suggestedRoutineBox.style.display = 'none';
-    this.currentSuggestedRoutine = null;
-
-    // Direct tab switch to tracker to let user see it!
-    this.app.switchTab('tracker');
-  }
-}
-
-// ==========================================
-// 5. MAIN VITALFIT APPLICATION ROOT
-// ==========================================
-class VitalFitApp {
+  class VitalFitApp {
   constructor() {
     this.selectedDate = this.getTodayString();
     this.currentCalendarDate = new Date(); // 달력에서 표시할 연/월 기준

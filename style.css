@@ -6,6 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 :root {
+  color-scheme: dark;
   --bg-primary: #080c14;
   --bg-secondary: #0f172a;
   --bg-card: rgba(30, 41, 59, 0.7);
@@ -30,6 +31,11 @@
   --radius-lg: 24px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --shadow-glow: 0 0 15px var(--color-primary-glow);
+}
+
+select, option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
 }
 
 /* Reset & Global Styles */
@@ -300,14 +306,20 @@ nav.bottom-nav {
 
 /* Date Selector Modal/Popup Style */
 .datepicker-container {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  right: 20px;
+  z-index: 100;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: var(--bg-card);
-  padding: 12px 16px;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #0f172a !important; /* 불투명 배경색 강제 */
+  padding: 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
 }
 
 .date-btn {
@@ -783,6 +795,11 @@ nav.bottom-nav {
   border-radius: var(--radius-sm);
   color: var(--text-main);
   font-size: 0.9rem;
+}
+
+.form-input option {
+  background-color: #0f172a !important; /* var(--bg-secondary) */
+  color: #f8fafc !important; /* var(--text-main) */
 }
 
 .form-input:focus {
