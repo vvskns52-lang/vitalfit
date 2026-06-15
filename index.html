@@ -162,7 +162,7 @@
           <!-- Container for displaying exercises of the selected body part -->
           <div id="quick-add-sub-container" style="display: none; padding-top: 12px; border-top: 1px dashed var(--border-color); animation: fadeIn 0.3s ease-out;">
             <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;" id="quick-add-sub-title">운동 선택</span>
-            <div class="quick-add-grid" id="quick-add-sub-list" style="grid-template-columns: repeat(2, 1fr); gap: 8px;">
+            <div class="quick-add-sub-grid" id="quick-add-sub-list">
               <!-- Dynamically populated exercises list -->
             </div>
           </div>
@@ -170,7 +170,7 @@
           <!-- Custom Exercise Direct Input -->
           <div id="custom-exercise-input-container" style="margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
             <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">원하는 운동이 목록에 없나요? 부위를 지정해 영구 등록해 보세요.</span>
-            <div style="display: grid; grid-template-columns: 90px 1fr 75px; gap: 8px; align-items: center;">
+            <div class="custom-ex-form">
               <select id="custom-exercise-category" class="form-input" style="padding: 8px 4px; font-size: 0.82rem; height: 38px;">
                 <option value="chest">가슴</option>
                 <option value="back">등</option>

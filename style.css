@@ -499,6 +499,20 @@ nav.bottom-nav {
   margin-top: 12px;
 }
 
+.quick-add-sub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.custom-ex-form {
+  display: grid;
+  grid-template-columns: 90px 1fr 75px;
+  gap: 8px;
+  align-items: center;
+}
+
 .quick-add-item {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-color);
@@ -1344,6 +1358,19 @@ nav.bottom-nav {
   .quick-add-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 5px !important;
+  }
+  .quick-add-sub-grid {
+    grid-template-columns: repeat(1, 1fr) !important;
+    gap: 6px !important;
+  }
+  .custom-ex-form {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .custom-ex-form select,
+  .custom-ex-form input,
+  .custom-ex-form button {
+    width: 100% !important;
   }
   .quick-add-item {
     padding: 8px 2px !important;
