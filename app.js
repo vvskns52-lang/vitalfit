@@ -23,6 +23,7 @@ const exercisesData = {
     {
       id: "incline_db_press",
       name: "인클라인 덤벨 프레스 (Incline Dumbbell Press)",
+      image: "images/incline_db_press.png",
       target: "가슴 상부, 전면 삼각근, 삼두근",
       description: "인클라인 벤치를 활용하여 윗가슴 라인을 채워주고, 양팔을 독립적으로 움직여 대칭을 잡아줍니다.",
       steps: [
@@ -39,6 +40,7 @@ const exercisesData = {
     {
       id: "chest_fly",
       name: "덤벨 플라이 (Dumbbell Fly)",
+      image: "images/chest_fly.png",
       target: "가슴 안쪽 (대흉근 내측)",
       description: "가슴을 모아주는 운동으로, 프레스 계열 운동 후 가슴 근육에 강한 수축과 이완 자극을 전달합니다.",
       steps: [
@@ -54,6 +56,7 @@ const exercisesData = {
     {
       id: "dips",
       name: "딥스 (Dips)",
+      image: "images/dips.png",
       target: "가슴 하부, 삼두근, 전면 삼각근",
       description: "맨몸 운동의 왕으로 불리며, 가슴 하부 라인을 뚜렷하게 발달시키는 데 매우 탁월합니다.",
       steps: [
@@ -69,6 +72,7 @@ const exercisesData = {
     {
       id: "pec_deck_fly",
       name: "펙 덱 플라이 (Pec Deck Fly)",
+      image: "images/pec_deck_fly.png",
       target: "가슴 안쪽 (대흉근 내측)",
       description: "머신을 활용하여 일정한 저항을 받으며 안전하게 가슴의 안쪽 수축 자극을 타겟합니다.",
       steps: [
@@ -84,6 +88,7 @@ const exercisesData = {
     {
       id: "push_up",
       name: "푸쉬업 (Push Up)",
+      image: "images/push_up.png",
       target: "가슴 전체, 전면 삼각근, 삼두근, 코어",
       description: "장비 없이 언제 어디서나 수행할 수 있는 최고의 맨몸 가슴 및 코어 트레이닝입니다.",
       steps: [
@@ -100,6 +105,7 @@ const exercisesData = {
     {
       id: "cable_crossover",
       name: "케이블 크로스오버 (Cable Crossover)",
+      image: "images/cable_crossover.png",
       target: "가슴 하부 및 내측",
       description: "케이블의 지속적인 텐션을 통해 덤벨보다 균일한 저항으로 가슴의 끝부분 수축을 강조합니다.",
       steps: [
@@ -134,6 +140,7 @@ const exercisesData = {
     {
       id: "lat_pulldown",
       name: "랫 풀 다운 (Lat Pulldown)",
+      image: "images/lat_pulldown.png",
       target: "광배근, 대원근, 이두근",
       description: "턱걸이가 어려운 초보자도 쉽게 광배근(등 바깥쪽)을 타겟하여 넓은 등을 만들 수 있는 머신 운동입니다.",
       steps: [
@@ -150,6 +157,7 @@ const exercisesData = {
     {
       id: "bent_over_row",
       name: "바벨 로우 (Bent Over Row)",
+      image: "images/bent_over_row.png",
       target: "등 전체 (광배근, 승모근 중하부, 능형근)",
       description: "등의 두께를 키우는 데 탁월한 운동으로, 상체를 숙인 상태를 유지하여 코어 근육도 동시에 단련됩니다.",
       steps: [
@@ -165,6 +173,7 @@ const exercisesData = {
     {
       id: "pull_up",
       name: "풀업 (Pull Up)",
+      image: "images/pull_up.png",
       target: "광배근, 대원근, 승모근 하부, 이두근",
       description: "최고의 상체 후면 발달 운동으로 등 근육의 너비(V-Taper)를 넓히는 데 필수적입니다.",
       steps: [
@@ -181,6 +190,7 @@ const exercisesData = {
     {
       id: "seated_cable_row",
       name: "시티드 케이블 로우 (Seated Cable Row)",
+      image: "images/seated_cable_row.png",
       target: "능형근, 승모근 중하부, 광배근 안쪽",
       description: "앉아서 당기는 머신 운동으로 등 뒤쪽 가운데 입체감을 만들어 주고 견갑골 제어력을 길러줍니다.",
       steps: [
@@ -196,6 +206,7 @@ const exercisesData = {
     {
       id: "one_arm_db_row",
       name: "원 암 덤벨 로우 (One Arm Dumbbell Row)",
+      image: "images/one_arm_db_row.png",
       target: "광배근 하부, 대원근, 능형근",
       description: "한쪽씩 실시하여 자극의 집중도를 높이고 덤벨의 넓은 가동 범위를 이용해 광배근 밑쪽까지 자극합니다.",
       steps: [
@@ -211,6 +222,7 @@ const exercisesData = {
     {
       id: "tbar_row",
       name: "티바 로우 (T-Bar Row)",
+      image: "images/tbar_row.png",
       target: "등 전체 (두께 및 입체감)",
       description: "특수한 손잡이 궤적을 이용하여 등의 두께를 키우기 위해 고중량을 효과적으로 당길 수 있는 운동입니다.",
       steps: [
@@ -229,6 +241,7 @@ const exercisesData = {
     {
       id: "overhead_press",
       name: "오버헤드 프레스 (Overhead Press)",
+      image: "images/overhead_press.png",
       target: "전면/측면 삼각근, 삼두근, 전거근",
       description: "서서 바벨을 머리 위로 밀어 올리는 고전적인 어깨 운동으로 어깨 볼륨과 상체 코어를 함께 발달시킵니다.",
       steps: [
@@ -245,6 +258,7 @@ const exercisesData = {
     {
       id: "side_lateral_raise",
       name: "사이드 레터럴 레이즈 (Side Lateral Raise)",
+      image: "images/side_lateral_raise.png",
       target: "측면 삼각근",
       description: "어깨를 옆으로 넓어 보이게 만드는(어깨 깡패) 필수적인 측면 어깨 타겟 운동입니다.",
       steps: [
@@ -260,6 +274,7 @@ const exercisesData = {
     {
       id: "db_shoulder_press",
       name: "덤벨 숄더 프레스 (Dumbbell Shoulder Press)",
+      image: "images/db_shoulder_press.png",
       target: "전면 및 측면 삼각근, 삼두근",
       description: "덤벨을 사용하여 어깨 관절의 자연스러운 움직임을 확보하고 가동범위를 극대화해 어깨 볼륨을 키웁니다.",
       steps: [
@@ -275,6 +290,7 @@ const exercisesData = {
     {
       id: "bent_over_lateral_raise",
       name: "벤트 오버 레터럴 레이즈 (Bent Over Lateral Raise)",
+      image: "images/bent_over_lateral_raise.png",
       target: "후면 삼각근, 승모근 중부",
       description: "어깨의 입체감과 둥근 어깨 형성을 마무리하기 위해 상체를 숙여 어깨 후면을 집중 공략합니다.",
       steps: [
@@ -291,6 +307,7 @@ const exercisesData = {
     {
       id: "face_pull",
       name: "페이스 풀 (Face Pull)",
+      image: "images/face_pull.png",
       target: "후면 삼각근, 상부 승모근, 회전근개",
       description: "케이블과 로프를 사용하여 얼굴 방향으로 당기며 후면 삼각근 단련 및 라운드 숄더 교정에 최고인 운동입니다.",
       steps: [
@@ -307,6 +324,7 @@ const exercisesData = {
     {
       id: "arnold_press",
       name: "아놀드 프레스 (Arnold Press)",
+      image: "images/arnold_press.png",
       target: "전면/측면 삼각근, 삼두근",
       description: "아놀드 슈왈제네거가 고안한 운동으로 덤벨 회전을 추가하여 전면과 측면 삼각근을 고르게 자극합니다.",
       steps: [
@@ -322,6 +340,7 @@ const exercisesData = {
     {
       id: "front_raise",
       name: "프론트 레이즈 (Front Raise)",
+      image: "images/front_raise.png",
       target: "전면 삼각근",
       description: "덤벨이나 바벨을 앞으로 들어 올려 어깨의 앞부분 선명도와 입체감을 집중적으로 키웁니다.",
       steps: [
@@ -356,6 +375,7 @@ const exercisesData = {
     {
       id: "romanian_deadlift",
       name: "루마니안 데드리프트 (Romanian Deadlift)",
+      image: "images/romanian_deadlift.png",
       target: "햄스트링, 대둔근, 척추기립근",
       description: "하체 후면(뒷벅지와 엉덩이)을 집중적으로 타겟하여 탄력 있는 하체와 튼튼한 후면 사슬을 만듭니다.",
       steps: [
@@ -372,6 +392,7 @@ const exercisesData = {
     {
       id: "leg_press",
       name: "레그 프레스 (Leg Press)",
+      image: "images/leg_press.png",
       target: "대퇴사두근, 대둔근",
       description: "허리에 부담을 전혀 주지 않으면서 하체에 엄청난 중량 과부하를 안전하게 걸어 발달시키는 대표 머신입니다.",
       steps: [
@@ -388,6 +409,7 @@ const exercisesData = {
     {
       id: "leg_curl",
       name: "레그 컬 (Leg Curl)",
+      image: "images/leg_curl.png",
       target: "햄스트링 (허벅지 뒤쪽)",
       description: "스쿼트로 만들기 힘든 햄스트링의 단독 수축 고립을 통해 하체의 균형을 잡고 무릎 부상을 예방합니다.",
       steps: [
@@ -403,6 +425,7 @@ const exercisesData = {
     {
       id: "leg_extension",
       name: "레그 익스텐션 (Leg Extension)",
+      image: "images/leg_extension.png",
       target: "대퇴사두근 (허벅지 앞쪽)",
       description: "허벅지 앞쪽의 단독 고립 운동으로 대퇴사두근의 갈라짐(데피니션)을 완성하는 최고의 운동입니다.",
       steps: [
@@ -418,6 +441,7 @@ const exercisesData = {
     {
       id: "lunge",
       name: "덤벨 런지 (Dumbbell Lunge)",
+      image: "images/lunge.png",
       target: "대퇴사두근, 대둔근, 햄스트링, 코어 및 밸런스",
       description: "한 다리씩 독립적으로 동작하여 하체의 불균형을 해결하고 엉덩이와 힙업 라인을 폭발적으로 단련합니다.",
       steps: [
@@ -434,6 +458,7 @@ const exercisesData = {
     {
       id: "calf_raise",
       name: "카프 레이즈 (Calf Raise)",
+      image: "images/calf_raise.png",
       target: "종아리",
       description: "종아리 근육의 펌핑과 강화를 통해 신체 혈액순환(제2의 심장)을 돕고 점프력 및 발목 안정성을 돕습니다.",
       steps: [
@@ -451,6 +476,7 @@ const exercisesData = {
     {
       id: "db_biceps_curl",
       name: "덤벨 바이셉스 컬 (Dumbbell Biceps Curl)",
+      image: "images/db_biceps_curl.png",
       target: "상완이두근 (알통)",
       description: "팔 앞쪽 근육을 발달시키는 가장 대표적인 운동으로 이두근의 봉우리와 굵기를 키워줍니다.",
       steps: [
@@ -467,6 +493,7 @@ const exercisesData = {
     {
       id: "triceps_pushdown",
       name: "트라이셉스 푸쉬다운 (Triceps Pushdown)",
+      image: "images/triceps_pushdown.png",
       target: "상완삼두근 (팔 뒤쪽)",
       description: "케이블 머신을 활용하여 삼두근 전체를 외측두, 내측두 골고루 발달시켜 팔 뒤쪽을 탄탄하게 만듭니다.",
       steps: [
@@ -483,6 +510,7 @@ const exercisesData = {
     {
       id: "hammer_curl",
       name: "해머 컬 (Hammer Curl)",
+      image: "images/hammer_curl.png",
       target: "상완골근, 전완근, 이두 외측",
       description: "망치질을 하듯 그립을 수평으로 쥐고 하는 팔 운동으로, 팔의 너비와 아래팔 전완근을 굵게 채워줍니다.",
       steps: [
@@ -498,6 +526,7 @@ const exercisesData = {
     {
       id: "barbell_curl",
       name: "바벨 컬 (Barbell Curl)",
+      image: "images/barbell_curl.png",
       target: "상완이두근 전체",
       description: "이두근 벌크업(부피 확장)의 대표 핵심 운동으로 무거운 무게로 양팔을 강하게 수축시킵니다.",
       steps: [
@@ -513,6 +542,7 @@ const exercisesData = {
     {
       id: "lying_triceps_extension",
       name: "라잉 트라이셉스 익스텐션 (Lying Triceps Extension)",
+      image: "images/lying_triceps_extension.png",
       target: "상완삼두근 (특히 장두)",
       description: "벤치에 누워 바벨을 이마 근처로 내려 삼두근의 장두(뒤쪽에서 볼륨을 결정하는 파트)를 거대하게 만듭니다.",
       steps: [
@@ -529,6 +559,7 @@ const exercisesData = {
     {
       id: "db_kickback",
       name: "덤벨 킥백 (Dumbbell Kickback)",
+      image: "images/db_kickback.png",
       target: "상완삼두근 외측두 및 상부 수축",
       description: "팔 뒤쪽 윗라인 데피니션을 잡기 위해 가벼운 무게로 삼두근 끝 지점 수축을 극단적으로 유도합니다.",
       steps: [
@@ -544,6 +575,7 @@ const exercisesData = {
     {
       id: "preacher_curl",
       name: "프리처 컬 (Preacher Curl)",
+      image: "images/preacher_curl.png",
       target: "상완이두근 하부 (이두의 완성도)",
       description: "팔뚝 뒤쪽 삼두를 프리처 패드에 완전히 견착하고 고정함으로써 어깨나 상체 반동 개입을 0% 차단해 이두를 극단적으로 고립합니다.",
       steps: [
@@ -562,6 +594,7 @@ const exercisesData = {
     {
       id: "crunch",
       name: "크런치 (Crunch)",
+      image: "images/crunch.png",
       target: "복직근 상부 (윗배)",
       description: "허리에 무리를 주지 않으면서 상부 복근을 집중적으로 쥐어짜는 안전한 복근 운동입니다.",
       steps: [
@@ -577,6 +610,7 @@ const exercisesData = {
     {
       id: "leg_raise",
       name: "레그 레이즈 (Leg Raise)",
+      image: "images/leg_raise.png",
       target: "복직근 하부 (아랫배)",
       description: "다리의 무게를 이용하여 아래쪽 복근과 장요근을 단련시키는 효과적인 아랫배 운동입니다.",
       steps: [
@@ -592,6 +626,7 @@ const exercisesData = {
     {
       id: "plank",
       name: "플랭크 (Plank)",
+      image: "images/plank.png",
       target: "코어 머슬 전체, 복직근, 횡복근, 기립근, 둔근",
       description: "몸 전체의 척추 중립을 잡고 유지하는 전신 버티기 운동으로 신체 코어 안정성을 높이는 기둥입니다.",
       steps: [
@@ -607,6 +642,7 @@ const exercisesData = {
     {
       id: "russian_twist",
       name: "러시안 트위스트 (Russian Twist)",
+      image: "images/russian_twist.png",
       target: "외복사근, 내복사근 (옆구리)",
       description: "상체를 살짝 세워 비틀어줌으로써 복부 양옆 라인(옆구리 러브핸들 정리)을 매끈하고 선명하게 조각합니다.",
       steps: [
@@ -622,6 +658,7 @@ const exercisesData = {
     {
       id: "hanging_leg_raise",
       name: "행잉 레그 레이즈 (Hanging Leg Raise)",
+      image: "images/hanging_leg_raise.png",
       target: "복직근 하부, 장요근, 악력 및 전신 밸런스",
       description: "철봉에 매달려서 온전히 다리 무게로 아랫배를 말아 올리는 강력한 복부 코어 최종 병기입니다.",
       steps: [
@@ -637,6 +674,7 @@ const exercisesData = {
     {
       id: "ab_rollout",
       name: "어브 롤아웃 (Ab Rollout)",
+      image: "images/ab_rollout.png",
       target: "복직근 전체, 전거근, 코어 횡복근",
       description: "롤러 바퀴 장비를 굴려 온몸을 늘였다가 복근 힘만으로 복귀하는 최고의 안티-익스텐션(신전 저항) 코어 운동입니다.",
       steps: [
@@ -1099,7 +1137,11 @@ class BodyGuide {
     if (ex.image) {
       imageHTML = `
         <div class="exercise-guide-image-container">
-          <img src="${ex.image}" alt="${ex.name}" class="exercise-guide-img">
+          <img src="${ex.image}" alt="${ex.name}" class="exercise-guide-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="exercise-guide-placeholder" style="display: none; width: 100%; height: 200px; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%); border-radius: var(--radius-md); padding: 20px;">
+            <i data-lucide="dumbbell" style="width: 32px; height: 32px; color: var(--color-secondary); margin-bottom: 8px;"></i>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary);">${this.getCategoryKorean(ex.category)} 트레이닝</span>
+          </div>
         </div>
       `;
     }
@@ -1178,6 +1220,7 @@ class TrainerAssistant {
     this.suggestedRoutineTitle = document.getElementById('suggested-routine-title');
     this.suggestedRoutineLevelTag = document.getElementById('suggested-routine-level-tag');
     this.suggestedRoutineList = document.getElementById('suggested-routine-list');
+    this.suggestedRoutineGuideBox = document.getElementById('suggested-routine-guide-box');
     this.applyRoutineBtn = document.getElementById('apply-routine-btn');
 
     this.currentSuggestedRoutine = null; // Store recommended routine array temporarily
@@ -1352,7 +1395,7 @@ class TrainerAssistant {
     });
 
     // Render Preview List
-    this.currentSuggestedRoutine.forEach(ex => {
+    this.currentSuggestedRoutine.forEach((ex, idx) => {
       const el = document.createElement('div');
       el.style.display = 'flex';
       el.style.justify = 'space-between';
@@ -1363,11 +1406,53 @@ class TrainerAssistant {
       el.style.borderRadius = 'var(--radius-sm)';
       
       el.innerHTML = `
-        <span style="font-weight:600; font-size:0.85rem;">${ex.name.split(' (')[0]}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--color-primary); color:#080b10; font-size:0.7rem; font-weight:800;">${idx + 1}</span>
+          <span style="font-weight:600; font-size:0.85rem;">${ex.name.split(' (')[0]}</span>
+        </div>
         <span style="font-size:0.75rem; color:var(--text-muted);">${ex.sets.length}세트 x ${ex.sets[0].weight}kg (${ex.sets[0].reps}회)</span>
       `;
       this.suggestedRoutineList.appendChild(el);
     });
+
+    // Render Sequence Guide Tips
+    let guideHTML = '';
+    if (split === 'push') {
+      guideHTML = `
+        <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="info" style="width:14px; height:14px;"></i> 밀기(Push) 루틴 추천 수행 순서
+        </div>
+        <strong>1. 선 가슴 타겟 (1~4단계)</strong>: 가장 고중량이 가능한 다관절 <strong>벤치 프레스</strong>와 <strong>인클라인 프레스</strong>를 1순위로 몰아쳐 가슴 근육에 강한 무게 과부하를 가합니다. 이어서 고립 운동인 <strong>펙 덱 플라이</strong>로 가슴 안쪽 라인을 쥐어짜고, 맨몸 <strong>푸쉬업</strong>으로 가슴 근육을 완전 탈진(Failure) 상태로 유도합니다.<br>
+        <span style="display:block; margin-top:4px;"></span>
+        <strong>2. 후 삼두 타겟 (5~6단계)</strong>: 가슴 밀기 훈련 시 보조로 활성화되었던 팔 뒤쪽 삼두근을 <strong>트라이셉스 푸쉬다운</strong>과 <strong>덤벨 킥백</strong> 순으로 고립 이완/수축하여 매끈한 삼두 볼륨을 조각합니다.<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 세트 간 휴식은 <strong>90초</strong>, 운동 전환 시에는 <strong>2~3분</strong> 충분히 호흡을 고르고 수분을 자주 섭취하세요!</div>
+      `;
+    } else if (split === 'pull') {
+      guideHTML = `
+        <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="info" style="width:14px; height:14px;"></i> 당기기(Pull) 루틴 추천 수행 순서
+        </div>
+        <strong>1. 선 등 후면 자극 (1~4단계)</strong>: 전신 근력과 척추 기립 코어 근육 전체를 동원하는 고중량 <strong>데드리프트</strong>를 첫 번째 종목으로 배치해 가장 많은 체력을 쏟습니다. 뒤이어 <strong>랫 풀 다운</strong>과 <strong>바벨 로우</strong>로 등의 넓이/두께를 골고루 먹인 후, 광배근 끝판왕인 맨몸 <strong>풀업</strong>을 한계 횟수로 매달려 완료합니다.<br>
+        <span style="display:block; margin-top:4px;"></span>
+        <strong>2. 후 이두 타겟 (5~6단계)</strong>: 등 당기기 동작 시 예열된 이두근에 이두 봉우리를 만드는 <strong>덤벨 바이셉스 컬</strong>을 먹이고, <strong>해머 컬</strong>을 통해 전완근과 이두 바깥쪽 두께 라인을 완성합니다.<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 등 운동은 면적이 넓어 심박수가 매우 가파르게 오릅니다. 세트 간 최소 <strong>2분</strong> 넉넉히 휴식하여 부상을 방지하세요.</div>
+      `;
+    } else {
+      guideHTML = `
+        <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 8px; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="info" style="width:14px; height:14px;"></i> 하체 & 어깨 루틴 추천 수행 순서
+        </div>
+        <strong>1. 선 하체 대근육 (1~3단계)</strong>: 전신의 가장 묵직한 하체 기둥을 다스리는 프리웨이트 <strong>스쿼트</strong>를 가장 컨디션이 우수한 처음에 메인으로 진행합니다. 이어서 고중량 머신 <strong>레그 프레스</strong>를 밟아 대퇴사두를 조지고, <strong>레그 익스텐션</strong>으로 대퇴사두근의 고립 갈라짐을 쥐어짜 단련합니다.<br>
+        <span style="display:block; margin-top:4px;"></span>
+        <strong>2. 후 어깨 3D 삼각근 (4~6단계)</strong>: 전면 어깨 프레임의 메인 스트렝스인 <strong>오버헤드 프레스</strong>를 곧게 밀어준 후, 측면 삼각근을 둥글게 키워줄 <strong>사이드 레터럴 레이즈</strong>, 그리고 입체적인 후면 마무리를 위한 <strong>벤트 오버 레터럴 레이즈</strong> 순으로 어깨 3면을 골고루 채워 완성합니다.<br>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">💡 권장 사항: 무거운 무릎/요추 가해 하체 훈련이 포함되므로, 스쿼트와 레그프레스 사이에는 <strong>2~3분</strong> 충분히 긴 호흡으로 관절 휴식을 취해 요통을 예방하세요.</div>
+      `;
+    }
+    this.suggestedRoutineGuideBox.innerHTML = guideHTML;
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   // Apply the generated routine directly to workout tracker log
