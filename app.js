@@ -2882,10 +2882,10 @@ class PRDetector {
 class WorkoutStopwatch {
   constructor(app) {
     this.app = app;
-    this.displayTime = document.getElementById('stopwatch-time-display');
+    this.displayTime = document.getElementById('stopwatch-display-time');
     this.startBtn = document.getElementById('stopwatch-start-btn');
     this.finishBtn = document.getElementById('stopwatch-finish-btn');
-    this.iconStatus = document.getElementById('stopwatch-status-icon');
+    this.iconStatus = document.getElementById('stopwatch-icon-status');
     
     this.startTime = null;
     this.timerInterval = null;
