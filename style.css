@@ -412,7 +412,7 @@ nav.top-nav {
 
 .set-row {
   display: grid;
-  grid-template-columns: 40px 1fr 1.2fr 40px; /* 👈 수정됨: PC 환경에서 횟수(1.2fr) 칸 넓힘 */
+  grid-template-columns: 40px 1fr 1fr 40px; /* 👈 5:5 비율로 수정됨 (PC 화면) */
   gap: 12px;
   align-items: center;
   margin-bottom: 8px;
@@ -1376,7 +1376,7 @@ nav.top-nav {
     font-size: 0.75rem !important;
   }
   .set-row {
-    grid-template-columns: 32px 1.2fr 1.2fr 26px !important; /* 👈 수정됨: 모바일 환경에서도 횟수 칸 1.2fr로 변경 */
+    grid-template-columns: 32px 1fr 1fr 26px !important; /* 👈 5:5 비율로 수정됨 (모바일 화면) */
     gap: 4px !important;
   }
   .set-input-group {
