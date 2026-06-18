@@ -412,13 +412,12 @@ nav.top-nav {
 
 .set-row {
   display: grid;
-  /* 👈 수정됨: 체크박스(40px), 세트글자(0.6fr), kg(1fr), 회(1fr) 로 완벽 5:5 조율 */
-  grid-template-columns: 40px 0.6fr 1fr 1fr; 
-  gap: 12px;
+  /* 👈 5칸으로 설정! (체크박스 / N세트 / kg / 회 / 삭제버튼) */
+  grid-template-columns: 24px 40px 1fr 1fr 30px; 
+  gap: 10px;
   align-items: center;
   margin-bottom: 8px;
 }
-
 .set-index {
   color: var(--text-muted);
   font-size: 0.85rem;
@@ -1377,9 +1376,9 @@ nav.top-nav {
     font-size: 0.75rem !important;
   }
   .set-row {
-    /* 👈 수정됨: 모바일에서도 체크박스(32px), 세트글자(0.7fr), kg(1fr), 회(1fr) 로 완벽 분배 */
-    grid-template-columns: 32px 0.7fr 1fr 1fr !important; 
-    gap: 4px !important;
+    /* 👈 모바일도 5칸으로 비율을 맞춰줍니다 */
+    grid-template-columns: 20px 36px 1fr 1fr 26px !important; 
+    gap: 6px !important;
   }
   .set-input-group {
     padding: 4px 4px !important;
