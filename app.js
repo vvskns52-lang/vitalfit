@@ -2957,7 +2957,7 @@ class WorkoutStopwatch {
     this.startBtn.style.display = 'inline-block';
     this.finishBtn.style.display = 'none';
     
-    this.iconStatus.className = '';
+    this.iconStatus.setAttribute('class', '');
     this.iconStatus.setAttribute('data-lucide', 'play');
     this.iconStatus.style.color = 'var(--color-primary)';
     if (window.lucide) window.lucide.createIcons();
