@@ -412,7 +412,8 @@ nav.top-nav {
 
 .set-row {
   display: grid;
-  grid-template-columns: 40px 1fr 1fr 40px; /* 👈 5:5 비율로 수정됨 (PC 화면) */
+  /* 👈 수정됨: 체크박스(40px), 세트글자(0.6fr), kg(1fr), 회(1fr) 로 완벽 5:5 조율 */
+  grid-template-columns: 40px 0.6fr 1fr 1fr; 
   gap: 12px;
   align-items: center;
   margin-bottom: 8px;
@@ -811,8 +812,8 @@ nav.top-nav {
 }
 
 .form-input option {
-  background-color: #0f172a !important; /* var(--bg-secondary) */
-  color: #f8fafc !important; /* var(--text-main) */
+  background-color: #0f172a !important;
+  color: #f8fafc !important; 
 }
 
 .form-input:focus {
@@ -936,7 +937,7 @@ nav.top-nav {
 /* --- SMART REST TIMER (FLOATING WIDGET) --- */
 .floating-timer-widget {
   position: absolute;
-  bottom: 20px; /* Adjusted since bottom nav moved to top */
+  bottom: 20px; 
   right: 20px;
   width: 210px;
   background: rgba(13, 17, 23, 0.85);
@@ -981,7 +982,7 @@ nav.top-nav {
   stroke: var(--color-primary);
   stroke-width: 6;
   stroke-linecap: round;
-  stroke-dasharray: 226; /* 2 * PI * 36 = 226.19 */
+  stroke-dasharray: 226;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.1s linear;
 }
@@ -1376,7 +1377,8 @@ nav.top-nav {
     font-size: 0.75rem !important;
   }
   .set-row {
-    grid-template-columns: 32px 1fr 1fr 26px !important; /* 👈 5:5 비율로 수정됨 (모바일 화면) */
+    /* 👈 수정됨: 모바일에서도 체크박스(32px), 세트글자(0.7fr), kg(1fr), 회(1fr) 로 완벽 분배 */
+    grid-template-columns: 32px 0.7fr 1fr 1fr !important; 
     gap: 4px !important;
   }
   .set-input-group {
