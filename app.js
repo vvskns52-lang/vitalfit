@@ -2932,7 +2932,7 @@ class WorkoutStopwatch {
     this.startBtn.style.display = 'none';
     this.finishBtn.style.display = 'inline-block';
     
-    this.iconStatus.className = 'pulse-green';
+    this.iconStatus.setAttribute('class', 'pulse-green');
     this.iconStatus.setAttribute('data-lucide', 'circle-stop');
     this.iconStatus.style.color = '#ef4444'; 
     if (window.lucide) window.lucide.createIcons();
