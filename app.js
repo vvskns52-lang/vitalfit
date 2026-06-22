@@ -1280,7 +1280,7 @@ class WorkoutTracker {
       id: exerciseId,
       name: name,
       category: category,
-      sets: isCardio ? [{ weight: 30, reps: 3.0 }] : [{ weight: 40, reps: 10 }]
+      sets: isCardio ? [{ weight: 30, reps: 3.0 }] : [{ weight: this.getOverloadWeightForExercise(exerciseId, isCardio), reps: 10 }]
     };
 
     workouts.push(newWorkout);
@@ -1343,6 +1343,42 @@ class WorkoutTracker {
       }
     }
     return '';
+  }
+
+  getOverloadWeightForExercise(exerciseId, isCardio) {
+    if (isCardio) return 30;
+
+    const allWorkouts = this.app.state.workouts || {};
+    const today = this.app.selectedDate;
+    const current = new Date(today);
+    let maxWeight = 0;
+    let found = false;
+
+    for (let i = 1; i <= 7; i++) {
+      const prevDate = new Date(current);
+      prevDate.setDate(current.getDate() - i);
+      const year = prevDate.getFullYear();
+      const month = String(prevDate.getMonth() + 1).padStart(2, '0');
+      const day = String(prevDate.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+
+      const dayLogs = allWorkouts[dateStr] || [];
+      const workout = dayLogs.find(w => w.id === exerciseId);
+      if (workout && workout.sets) {
+        workout.sets.forEach(set => {
+          if (set.completed && set.weight > maxWeight) {
+            maxWeight = set.weight;
+            found = true;
+          }
+        });
+      }
+    }
+
+    if (found) {
+      return maxWeight + 2.5;
+    }
+
+    return 40;
   }
 
   saveCurrentAsTemplate() {
@@ -1892,7 +1928,7 @@ class TrainerAssistant {
         sets.push({ weight: recWeight, reps: distance, completed: false });
       } else {
         for (let i = 0; i < setMultiplier; i++) {
-          sets.push({ weight: recWeight, reps: repCount, completed: false });
+          sets.push({ weight: 0, reps: 10, completed: false });
         }
       }
       return {
@@ -1914,7 +1950,7 @@ class TrainerAssistant {
       el.style.borderRadius = 'var(--radius-sm)';
       
       const isCardio = ex.category === 'cardio';
-      const unitText = isCardio ? `${ex.sets[0].weight}분 (${ex.sets[0].reps}km)` : `${ex.sets.length}세트 x ${ex.sets[0].weight}kg (${ex.sets[0].reps}회)`;
+      const unitText = isCardio ? `${ex.sets[0].weight}분 (${ex.sets[0].reps}km)` : `${ex.sets.length}세트 x ${ex.sets[0].weight > 0 ? ex.sets[0].weight + 'kg' : '무게 설정'} (${ex.sets[0].reps}회)`;
 
       el.innerHTML = `
         <div style="display:flex; align-items:center; gap:8px;">
@@ -2137,7 +2173,7 @@ class TrainerAssistant {
           id: w.id,
           name: w.name,
           category: w.category,
-          sets: isCardio ? [{ weight: 30, reps: 3.0 }] : [{ weight: 40, reps: 10 }]
+          sets: isCardio ? [{ weight: 30, reps: 3.0 }] : [{ weight: this.app.tracker.getOverloadWeightForExercise(w.id, isCardio), reps: 10 }]
         });
         added++;
       }
@@ -2696,6 +2732,10 @@ class SmartRestTimer {
     this.btnPreset90 = document.getElementById('timer-preset-90');
     this.btnPreset120 = document.getElementById('timer-preset-120');
 
+    // Notification & Sound DOM Elements
+    this.btnRequestNotification = document.getElementById('btn-request-notification');
+    this.chkSoundAlarm = document.getElementById('chk-sound-alarm');
+
     this.timerInterval = null;
     this.totalDuration = 90; // Default 90 seconds
     this.remainingTime = 90;
@@ -2703,6 +2743,7 @@ class SmartRestTimer {
     this.audioCtx = null; // Lazy loaded Web Audio API
 
     this.initEvents();
+    this.initNotificationSettings();
   }
 
   initEvents() {
@@ -2714,6 +2755,77 @@ class SmartRestTimer {
     this.btnPreset60.addEventListener('click', () => this.resetPreset(60, this.btnPreset60));
     this.btnPreset90.addEventListener('click', () => this.resetPreset(90, this.btnPreset90));
     this.btnPreset120.addEventListener('click', () => this.resetPreset(120, this.btnPreset120));
+
+    // Audio Unlock helper
+    const unlockAudio = () => {
+      try {
+        if (!this.audioCtx) {
+          this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
+        }
+      } catch (e) {
+        console.warn('Audio unlock failed:', e);
+      }
+      window.removeEventListener('click', unlockAudio);
+      window.removeEventListener('touchstart', unlockAudio);
+    };
+    window.addEventListener('click', unlockAudio);
+    window.addEventListener('touchstart', unlockAudio);
+  }
+
+  initNotificationSettings() {
+    // Sound settings restoration
+    if (this.chkSoundAlarm) {
+      const savedSound = localStorage.getItem('vitalfit_settings_sound_alarm');
+      this.chkSoundAlarm.checked = savedSound !== 'false';
+      this.chkSoundAlarm.addEventListener('change', (e) => {
+        localStorage.setItem('vitalfit_settings_sound_alarm', e.target.checked);
+      });
+    }
+
+    // Notification request button
+    if (this.btnRequestNotification) {
+      this.updateNotificationButtonState();
+      this.btnRequestNotification.addEventListener('click', () => {
+        if (!("Notification" in window)) {
+          alert("이 브라우저는 상단바 알림을 지원하지 않습니다.");
+          return;
+        }
+        Notification.requestPermission().then(permission => {
+          this.updateNotificationButtonState(permission);
+          if (permission === 'granted') {
+            alert("알림 권한이 허용되었습니다! 휴식 종료 시 상단바 팝업 알림을 보내드립니다.");
+          } else if (permission === 'denied') {
+            alert("알림 권한이 거부되었습니다. 상단바 알림을 받으시려면 브라우저 설정에서 권한을 변경해주세요.");
+          }
+        });
+      });
+    }
+  }
+
+  updateNotificationButtonState(permission = Notification.permission) {
+    if (!this.btnRequestNotification) return;
+    if (permission === 'granted') {
+      this.btnRequestNotification.textContent = '알림 활성화됨';
+      this.btnRequestNotification.disabled = true;
+      this.btnRequestNotification.style.background = 'rgba(16, 185, 129, 0.1)';
+      this.btnRequestNotification.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      this.btnRequestNotification.style.color = 'var(--color-primary)';
+    } else if (permission === 'denied') {
+      this.btnRequestNotification.textContent = '알림 권한 거부됨';
+      this.btnRequestNotification.disabled = true;
+      this.btnRequestNotification.style.background = 'rgba(239, 68, 68, 0.1)';
+      this.btnRequestNotification.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+      this.btnRequestNotification.style.color = '#ef4444';
+    } else {
+      this.btnRequestNotification.textContent = '권한 허용 요청';
+      this.btnRequestNotification.disabled = false;
+      this.btnRequestNotification.style.background = 'rgba(255, 255, 255, 0.05)';
+      this.btnRequestNotification.style.borderColor = 'var(--border-color)';
+      this.btnRequestNotification.style.color = 'var(--text-main)';
+    }
   }
 
   start() {
@@ -2766,45 +2878,68 @@ class SmartRestTimer {
     this.widget.style.display = 'none';
   }
 
-  // Synthesize warning beep sound using Web Audio API
+  // Synthesize warning beep sound and trigger push/TTS notifications
   triggerAlarm() {
     try {
-      // 1. Play synthesize Audio Beep
-      if (!this.audioCtx) {
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (this.audioCtx && this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume();
-      }
-      
-      const playBeep = (freq, duration, delay = 0) => {
-        setTimeout(() => {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.connect(gain);
-          gain.connect(this.audioCtx.destination);
-          
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
-          
-          gain.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + duration);
-          
-          osc.start();
-          osc.stop(this.audioCtx.currentTime + duration);
-        }, delay * 1000);
-      };
+      // 1. Check sound settings
+      const isSoundEnabled = this.chkSoundAlarm ? this.chkSoundAlarm.checked : true;
 
-      // Play double high beep alert sound
-      playBeep(880, 0.25, 0);
-      playBeep(880, 0.25, 0.35);
+      if (isSoundEnabled) {
+        // Play synthesize Audio Beep
+        if (!this.audioCtx) {
+          this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
+        }
+        
+        const playBeep = (freq, duration, delay = 0) => {
+          setTimeout(() => {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.15, this.audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + duration);
+            
+            osc.start();
+            osc.stop(this.audioCtx.currentTime + duration);
+          }, delay * 1000);
+        };
+
+        // Play double high beep alert sound
+        playBeep(880, 0.25, 0);
+        playBeep(880, 0.25, 0.35);
+
+        // Play TTS Voice alert
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance("휴식 시간이 끝났습니다. 다음 세트를 시작하세요.");
+          utterance.lang = 'ko-KR';
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          window.speechSynthesis.speak(utterance);
+        }
+      }
 
       // 2. Play vibration if supported
       if (navigator.vibrate) {
         navigator.vibrate([200, 100, 200]);
       }
+
+      // 3. Show System Notification if backgrounded or optional always
+      if (document.visibilityState === 'hidden' && "Notification" in window && Notification.permission === 'granted') {
+        new Notification("🏋️ VitalFit 휴식 완료!", {
+          body: "휴식 시간이 완료되었습니다. 다음 세트를 얼른 시작하세요! 💪",
+          icon: "images/icon.png"
+        });
+      }
     } catch (err) {
-      console.warn('Audio feedback failed:', err);
+      console.warn('Notification/Audio feedback failed:', err);
     }
   }
 }

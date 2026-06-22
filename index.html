@@ -360,6 +360,27 @@
           </div>
         </div>
 
+        <!-- Notification Settings Card -->
+        <div class="card" style="border-color: rgba(16, 185, 129, 0.2); background: rgba(30, 41, 59, 0.4);">
+          <h2 class="card-title">
+            <i data-lucide="bell" style="color: var(--color-primary);"></i>
+            알림 및 소리 설정
+          </h2>
+          <p class="body-part-desc" style="margin-top: -8px; margin-bottom: 16px;">타이머 종료 시 브라우저 팝업 알림과 효과음 수신 여부를 설정합니다.</p>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">상단바 팝업 알림</span>
+              <button class="btn btn-secondary" id="btn-request-notification" style="width: auto; padding: 6px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-main);">권한 허용 요청</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-top: 1px solid var(--border-color);">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">소리 및 음성(TTS) 알림</span>
+              <label style="display: inline-flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" id="chk-sound-alarm" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--color-primary);">
+              </label>
+            </div>
+          </div>
+        </div>
+
         <!-- Weekly Routine Planner Card -->
         <div class="card" style="border-color: rgba(59, 130, 246, 0.25); background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.9) 100%);">
           <h2 class="card-title">
